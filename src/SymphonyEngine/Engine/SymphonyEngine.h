@@ -1,8 +1,11 @@
 #pragma once
 
+#include "../Common.h"
+
 #include "../Utilities/Singleton.h"
 #include "../Time/GameTimer.h"
 #include "Scene.h"
+#include "../Window/Window.h"
 
 namespace Symphony
 {
@@ -11,7 +14,7 @@ namespace Symphony
         friend class Singleton<SymphonyEngine>;
 
     public:
-        void PrintInfo();
+        const char* SymphonyEngine::Version() const;
 
         bool Initialise();
         void Run();
@@ -22,12 +25,14 @@ namespace Symphony
         void ChangeScene(unsigned int sceneID);
         
     protected:
-        bool running = true;
+        bool initialised;
+        bool running;
+        bool changeSceneFlag;
         GameTimer* gameTimer;
         std::vector<Scene*> scenes;
         Scene* currentScene;
         unsigned int nextSceneID = 0;
-        bool changeSceneFlag = false;
+        Window* window;
 
         void LoadNextScene();
 

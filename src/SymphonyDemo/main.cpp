@@ -1,10 +1,10 @@
 #pragma comment(lib, "SymphonyEngine.lib")
 
+#include <iostream>
+
 #include "../SymphonyEngine/Engine/SymphonyEngine.h"
 
 #include "TestScene.h"
-
-#include <iostream>
 
 using namespace Symphony;
 
@@ -15,14 +15,16 @@ int main(int argc, char* args[])
     if (!sEngine->Initialise())
     {
         std::cout << "Error trying to initialise Symphony Engine" << std::endl;
+        system("pause");
         return -1;
     }
 
+    //std::cout << glGetString(GL_VERSION) << std::endl;
     sEngine->AddScene(new TestScene());
     sEngine->Run();
     sEngine->Release();
 
-    system("pause");
-
+    //system("pause");
+    
     return 0;
 }

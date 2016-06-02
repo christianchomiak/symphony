@@ -146,6 +146,7 @@
     <ClInclude Include="Time\GameTimer.h" />
     <ClInclude Include="Time\GameTimerWindows.h" />
     <ClInclude Include="Utilities\Singleton.h" />
+    <ClInclude Include="Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\Debugging.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="Time\GameTimer.cpp" />
     <ClCompile Include="Time\GameTimerWindows.cpp" />
+    <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

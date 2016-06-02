@@ -9,7 +9,10 @@ namespace Symphony
     {
         gameTimer = GameTimer::CreateTimer();
         currentScene = nullptr;
+        window = nullptr;
         running = true;
+        initialised = false;
+        changeSceneFlag = true;
     }
 
     SymphonyEngine::~SymphonyEngine()
@@ -19,22 +22,40 @@ namespace Symphony
             delete s;
         }
         delete gameTimer;
+        delete window;
     }
     
-    void SymphonyEngine::PrintInfo()
+    const char* SymphonyEngine::Version() const
     {
-        std::cout << std::endl << "Symphony Engine - v0.1.0 \"Bittersweet\"" << std::endl << std::endl;
+        return "Symphony Engine - v0.1.0 \"Bittersweet\"";
     }
 
     bool SymphonyEngine::Initialise()
     {
         std::cout.setf(std::ios::boolalpha);
-        return true;
+
+        window = new Window(Version(), 800, 600);
+
+        initialised = window->Initialise();
+
+        if (!initialised)
+        {
+            delete window;
+            window = nullptr;
+        }
+
+        return initialised;
     }
 
     void SymphonyEngine::Run()
     {
-        PrintInfo();
+        if (!initialised)
+        {
+            Debug::LogError("Symphony Engine hasn't been initialised yet");
+            return;
+        }
+
+        std::cout << std::endl << Version() << std::endl << std::endl;
 
         float deltaTime;
 
@@ -44,8 +65,9 @@ namespace Symphony
         float nextTimeLap = frameEndTime + 1.0f;
         std::stringstream ss;
         
-        ChangeScene(1);
-
+        ChangeScene(0);
+        LoadNextScene();
+        
         if (!currentScene)
         {
             Debug::LogError("No initial scene was found");
@@ -54,20 +76,29 @@ namespace Symphony
 
         while (running)
         {
+            window->Clear();
+
             if (changeSceneFlag)
             {
                 LoadNextScene();
             }
-
+            
             gameTimer->Update();
             deltaTime = gameTimer->GetDeltaTime();
 
             //frameStartTime = gameTimer->GetMS();
             
-            if (currentScene) currentScene->Update(deltaTime);
+            glBegin(GL_TRIANGLES);
+            glVertex2f(-0.5f, -0.5f);
+            glVertex2f(0.0f, 0.5f);
+            glVertex2f(0.5f, -0.5f);
+            glEnd();
+
+
+            /*if (currentScene) currentScene->Update(deltaTime);
             Debug::Log("");
-            _WATCHPOINT
-            running = false;
+            _WATCHPOINT*/
+            //running = false;
             
             //TO-DO: Code regarding FPS check could be enabled/disabled by the user
             //Frame-rendering performance check
@@ -84,6 +115,9 @@ namespace Symphony
                 numberOfFrames = 0;
                 nextTimeLap = frameEndTime + 100.0f;
             }*/
+
+            window->Update();
+            running &= !window->Closed();
         }
     }
 
