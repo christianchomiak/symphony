@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLEW_STATIC
+#include <GLEW/GL/glew.h> //GLEW must be included before any other GL-related header files
 #include <GLFW/glfw3.h>
 
 namespace Symphony

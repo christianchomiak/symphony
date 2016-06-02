@@ -44,9 +44,20 @@ bool Symphony::Window::Initialise()
         glfwTerminate();
         return false;
     }
-
+    
     glfwMakeContextCurrent(window);
     glfwSetWindowSizeCallback(window, WindowResizeCallback);
+    
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK)
+    {
+        Debug::LogError("Could not initialise GLEW!");
+        return false;
+    }
+
+    std::cout << "Using OpenGL " << glGetString(GL_VERSION) << std::endl;
+    //Debug::Log();
+
     return true;
 }
 

@@ -33,6 +33,8 @@ namespace Symphony
     bool SymphonyEngine::Initialise()
     {
         std::cout.setf(std::ios::boolalpha);
+        
+        std::cout << std::endl << Version() << std::endl << std::endl;
 
         window = new Window(Version(), 800, 600);
 
@@ -54,8 +56,6 @@ namespace Symphony
             Debug::LogError("Symphony Engine hasn't been initialised yet");
             return;
         }
-
-        std::cout << std::endl << Version() << std::endl << std::endl;
 
         float deltaTime;
 
