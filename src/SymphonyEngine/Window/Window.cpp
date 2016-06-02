@@ -2,13 +2,11 @@
 
 #include "../Debugging/Debugging.h"
 
-//TO-DO: Figure out a better way to avoid having to use a boolean
-//       to check if the window was resized and instead handle the resizeing right away
-bool Symphony::Window::windowResized = false;
 
 void WindowResizeCallback(GLFWwindow* window, int width, int height)
 {
-    Symphony::Window::windowResized = true;
+    Symphony::Window* w = static_cast<Symphony::Window*>(glfwGetWindowUserPointer(window));
+    w->HandleResize();
 }
 
 Symphony::Window::Window(const char * name, int width, int height)
@@ -46,6 +44,7 @@ bool Symphony::Window::Initialise()
     }
     
     glfwMakeContextCurrent(window);
+    glfwSetWindowUserPointer(window, this);
     glfwSetWindowSizeCallback(window, WindowResizeCallback);
     
     glewExperimental = GL_TRUE;
@@ -55,7 +54,9 @@ bool Symphony::Window::Initialise()
         return false;
     }
 
-    std::cout << "Using OpenGL " << glGetString(GL_VERSION) << std::endl;
+    glViewport(0, 0, width, height);
+    OutputRenderingInfo();
+    
     //Debug::Log();
 
     return true;
@@ -63,7 +64,8 @@ bool Symphony::Window::Initialise()
 
 void Symphony::Window::Clear() const
 {
-    glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+    //glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
@@ -71,9 +73,6 @@ void Symphony::Window::Update()
 {
     /* Poll for and process events */
     glfwPollEvents();
-
-    //Resize window
-    if (Window::windowResized) HandleResize();
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
@@ -92,11 +91,18 @@ void Symphony::Window::ChangeName(const char* newName)
 }
 
 void Symphony::Window::HandleResize()
-{
-    Symphony::Window::windowResized = false;
-    
+{    
     //glfwGetWindowSize(window, &width, &height);
     
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
+}
+
+void Symphony::Window::OutputRenderingInfo() const
+{
+    std::cout << "Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
+    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl << std::endl;
 }

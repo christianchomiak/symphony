@@ -3,4 +3,5 @@ Basic game engine made in C++
 
 ##Dependencies:
 
-GLFW 3.1.2
+GLFW 3.2.0
+GLEW 1.13.0

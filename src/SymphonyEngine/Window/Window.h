@@ -18,17 +18,16 @@ namespace Symphony
         bool Closed() const;
 
         void ChangeName(const char* newName);
+        void OutputRenderingInfo() const;
 
         inline const int Width() const { return width; }
         inline const int Height() const { return height; }
 
-        static bool windowResized;
+        void HandleResize();
 
     protected:
         const char* name;
         int width, height;
         GLFWwindow* window;
-
-        void HandleResize();
     };
 }
