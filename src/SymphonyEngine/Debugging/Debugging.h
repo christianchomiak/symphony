@@ -6,7 +6,7 @@
 #include <list>
 //#include <string>
 
-#define _WATCHPOINT Debug::Watchpoint(__FILE__, __LINE__, __FUNCTION__)
+#define _WATCHPOINT Debug::Watchpoint(__FILE__, __LINE__, __FUNCTION__);
 
 namespace Symphony
 {

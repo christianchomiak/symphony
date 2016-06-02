@@ -1,18 +1,28 @@
+#pragma comment(lib, "SymphonyEngine.lib")
+
 #include "../SymphonyEngine/Engine/SymphonyEngine.h"
 
-#pragma comment(lib, "SymphonyEngine.lib")
+#include "TestScene.h"
 
 #include <iostream>
 
 using namespace Symphony;
 
 int main(int argc, char* args[])
-{
-    std::cout.setf(std::ios::boolalpha);
-    
+{    
     SymphonyEngine* sEngine = SymphonyEngine::Instance();
+    
+    if (!sEngine->Initialise())
+    {
+        std::cout << "Error trying to initialise Symphony Engine" << std::endl;
+        return -1;
+    }
+
+    sEngine->AddScene(new TestScene());
     sEngine->Run();
     sEngine->Release();
 
     system("pause");
+
+    return 0;
 }
