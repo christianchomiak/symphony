@@ -6,9 +6,10 @@
 
 namespace Symphony
 {
+    SymphonyEngine* SymphonyEngine::instance = nullptr;
+    
     SymphonyEngine::SymphonyEngine()
     {
-        gameTimer = GameTimer::CreateTimer();
         currentScene = nullptr;
         window = nullptr;
         running = true;
@@ -22,7 +23,6 @@ namespace Symphony
         {
             delete s;
         }
-        delete gameTimer;
         delete window;
     }
     
@@ -75,11 +75,12 @@ namespace Symphony
             running = false;
         }
         
-        Keyboard* keyboard = InputManager::Instance()->GetKeyboard();
+        Keyboard* keyboard = InputManager::GetKeyboard();
+        Mouse* mouse = InputManager::GetMouse();
         while (running)
         {
             window->Clear();
-            keyboard->Update();
+            InputManager::Update();
             window->Update();
 
             if (changeSceneFlag)
@@ -87,9 +88,10 @@ namespace Symphony
                 LoadNextScene();
             }
             
-            gameTimer->Update();
-            deltaTime = gameTimer->GetDeltaTime();
-
+            Time::Update();
+            deltaTime = Time::DeltaTime(); //gameTimer->GetDeltaTime();
+            window->ChangeName(std::to_string(deltaTime).c_str());
+            
             //frameStartTime = gameTimer->GetMS();
             
             glBegin(GL_TRIANGLES);
@@ -99,7 +101,11 @@ namespace Symphony
             glEnd();
 
 
-            if (currentScene) currentScene->Update(deltaTime);
+            if (currentScene)
+            {
+                currentScene->Update(deltaTime);
+            }
+
             /*Debug::Log("");
             _WATCHPOINT*/
             //running = false;
@@ -119,8 +125,7 @@ namespace Symphony
                 numberOfFrames = 0;
                 nextTimeLap = frameEndTime + 100.0f;
             }*/
-
-
+            
             window->SwapBuffers();
             running &= !window->Closed() && !keyboard->KeyDown(Keyboard::KEY_ESC);
         }

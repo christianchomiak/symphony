@@ -1,15 +1,14 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include "Input.h"
 
 namespace Symphony
 {
     class Keyboard
     {
         friend class InputManager;
-    public:
-        enum KeyState { IDLE, DOWN, UP, HOLD };
-        
+    public:        
         Keyboard();
         ~Keyboard();
 
@@ -26,12 +25,12 @@ namespace Symphony
             return (id >= 0 && id < numberOfKeys);
         }
 
-        void Update();
     protected:
         bool anyKeyPressed = false;
         int numberOfKeys;
-        KeyState* keys;
+        InputState* keys;
 
+        void Update();
         void UpdateKey(int id, int state);
         void Reset();
         

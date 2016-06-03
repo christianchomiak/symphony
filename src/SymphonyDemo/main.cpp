@@ -22,9 +22,9 @@ int main(int argc, char* args[])
     //std::cout << glGetString(GL_VERSION) << std::endl;
     sEngine->AddScene(new TestScene());
     sEngine->Run();
-    sEngine->Release();
-
-    //system("pause");
+    sEngine->Shutdown();
+    
+    system("pause");
     
     return 0;
 }

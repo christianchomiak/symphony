@@ -73,13 +73,13 @@
     <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin\$(Configuration)\Engine</IntDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\Engine\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin\$(Configuration)\Engine</IntDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\Engine\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,10 +147,11 @@
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SymphonyEngine.h" />
     <ClInclude Include="Engine\Transform.h" />
+    <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Input\Keyboard.h" />
-    <ClInclude Include="Time\GameTimer.h" />
-    <ClInclude Include="Time\GameTimerWindows.h" />
+    <ClInclude Include="Input\Mouse.h" />
+    <ClInclude Include="Time\Time.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>
@@ -162,8 +163,8 @@
     <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
-    <ClCompile Include="Time\GameTimer.cpp" />
-    <ClCompile Include="Time\GameTimerWindows.cpp" />
+    <ClCompile Include="Input\Mouse.cpp" />
+    <ClCompile Include="Time\Time.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

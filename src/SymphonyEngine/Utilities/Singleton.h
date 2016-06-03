@@ -16,7 +16,7 @@ protected:
 
     Singleton() {};
     //Singleton() { instance = static_cast <T*> (this); };
-    virtual ~Singleton() {  };
+    virtual ~Singleton() { };
 };
 
 template<typename T>

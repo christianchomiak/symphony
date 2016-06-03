@@ -5,8 +5,8 @@
 
 Symphony::Keyboard::Keyboard()
 {
-    numberOfKeys = GLFW_KEY_LAST;
-    keys = new KeyState[numberOfKeys];
+    numberOfKeys = GLFW_KEY_LAST + 1;
+    keys = new InputState[numberOfKeys];
     Reset();
 }
 
@@ -22,7 +22,7 @@ bool Symphony::Keyboard::KeyPressed(int key) const
         std::cerr << "Trying to query unknow key" << std::endl;
         return false;
     }
-    return keys[key] == KeyState::HOLD || keys[key] == KeyState::DOWN;
+    return keys[key] == InputState::HOLD || keys[key] == InputState::DOWN;
 }
 
 bool Symphony::Keyboard::KeyUp(int key) const
@@ -32,7 +32,7 @@ bool Symphony::Keyboard::KeyUp(int key) const
         std::cerr << "Trying to query unknow key" << std::endl;
         return false;
     }
-    return keys[key] == KeyState::UP;
+    return keys[key] == InputState::UP;
 }
 
 bool Symphony::Keyboard::KeyDown(int key) const
@@ -42,7 +42,7 @@ bool Symphony::Keyboard::KeyDown(int key) const
         std::cerr << "Trying to query unknow key" << std::endl;
         return false;
     }
-    return keys[key] == KeyState::DOWN;
+    return keys[key] == InputState::DOWN;
 }
 
 bool Symphony::Keyboard::KeyHold(int key) const
@@ -52,7 +52,7 @@ bool Symphony::Keyboard::KeyHold(int key) const
         std::cerr << "Trying to query unknow key" << std::endl;
         return false;
     }
-    return keys[key] == KeyState::HOLD;
+    return keys[key] == InputState::HOLD;
 }
 
 int Symphony::Keyboard::KeyStatus(int key) const
@@ -71,18 +71,18 @@ void Symphony::Keyboard::Update()
     anyKeyPressed = false;
     for (size_t i = 0; i < (size_t)numberOfKeys; ++i)
     {
-        if (keys[i] == KeyState::DOWN)
+        if (keys[i] == InputState::DOWN)
         {
-            keys[i] = KeyState::HOLD;
+            keys[i] = InputState::HOLD;
             anyKeyPressed = true;
         }
-        else if (keys[i] == KeyState::HOLD)
+        else if (keys[i] == InputState::HOLD)
         {
             anyKeyPressed = true;
         }
-        else if (keys[i] == KeyState::UP)
+        else if (keys[i] == InputState::UP)
         {
-            keys[i] = KeyState::IDLE; 
+            keys[i] = InputState::IDLE;
         }
     }
 }
@@ -97,11 +97,11 @@ void Symphony::Keyboard::UpdateKey(int id, int state)
     
     if (state == GLFW_PRESS)
     {
-        keys[id] = KeyState::DOWN;
+        keys[id] = InputState::DOWN;
     }
     else if (state == GLFW_RELEASE)
     {
-        keys[id] = KeyState::UP;
+        keys[id] = InputState::UP;
     }
 }
 
@@ -111,5 +111,5 @@ void Symphony::Keyboard::Reset()
     {
         keys[i] = KeyState::IDLE;
     }*/
-    std::memset(keys, KeyState::IDLE, GLFW_KEY_LAST);
+    std::memset(keys, InputState::IDLE, numberOfKeys);
 }

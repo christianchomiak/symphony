@@ -10,11 +10,12 @@ void WindowResizeCallback(GLFWwindow* window, int width, int height)
     w->HandleResize();
 }
 
-Symphony::Window::Window(const char * name, int width, int height)
+Symphony::Window::Window(const char* name, int width, int height)
 {
     this->name = name;
     this->width = width;
     this->height = height;
+    cursorMode = CursorMode::NORMAL;
     window = nullptr;
 }
 
@@ -36,6 +37,17 @@ bool Symphony::Window::Initialise()
         return false;
     }
     
+    glfwSetErrorCallback(Window::glfwErrorCallback);
+    
+    //TO-DO: Setting a minimum OpenGL context seems to break the basic
+    //triangle rendering used so far during development. Test again this
+    //with an actual OpenGL application with proper usage of the OpenGL API
+
+    //We suggest GLFW to create an OpenGL context using v3.3, at least
+    //If the required minimum version is not supported on the machine, context (and window) creation fails.
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+
     window = glfwCreateWindow(width, height, name, NULL, NULL);
     
     if (!window)
@@ -48,7 +60,9 @@ bool Symphony::Window::Initialise()
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this);
     glfwSetWindowSizeCallback(window, WindowResizeCallback);
-    glfwSetKeyCallback(window, InputManager::KeyCallback);
+    glfwSetKeyCallback(window, InputManager::KeyboardKeyCallback);
+    glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
+    glfwSetCursorPosCallback(window, InputManager::MousePositionCallback);
     
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -59,8 +73,8 @@ bool Symphony::Window::Initialise()
 
     glViewport(0, 0, width, height);
     OutputRenderingInfo();
-    
-    //Debug::Log();
+
+    ChangeCursorMode(cursorMode);
 
     return true;
 }
@@ -115,4 +129,30 @@ void Symphony::Window::OutputRenderingInfo() const
     int major, minor, revision;
     glfwGetVersion(&major, &minor, &revision);
     printf("Running against GLFW %i.%i.%i\n", major, minor, revision);
+}
+
+void Symphony::Window::ChangeCursorMode(CursorMode newMode)
+{
+    cursorMode = newMode;
+    
+    switch (cursorMode)
+    {
+    case CursorMode::DISABLED:
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        break;
+    case CursorMode::NORMAL:
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        break;
+    case CursorMode::HIDDEN:
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        break;
+    default:
+        Debug::LogWarning("Trying to set the cursor of the window in an unavailable state.");
+        break;
+    }
+}
+
+void Symphony::Window::glfwErrorCallback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
 }

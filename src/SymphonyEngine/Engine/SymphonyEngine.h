@@ -3,16 +3,14 @@
 #include "../Common.h"
 
 #include "../Utilities/Singleton.h"
-#include "../Time/GameTimer.h"
+#include "../Time/Time.h"
 #include "Scene.h"
 #include "../Window/Window.h"
 
 namespace Symphony
 {
-    class SymphonyEngine : public Singleton<SymphonyEngine>
+    class SymphonyEngine
     {
-        friend class Singleton<SymphonyEngine>;
-
     public:
         const char* SymphonyEngine::Version() const;
 
@@ -24,11 +22,23 @@ namespace Symphony
         void ChangeScene(std::string sceneName);
         void ChangeScene(unsigned int sceneID);
         
+        static inline SymphonyEngine* Instance()
+        {
+            if (!instance) instance = new SymphonyEngine();
+            return instance;
+        }
+        static inline void Shutdown()
+        {
+            if (instance)
+            {
+                delete instance;
+                instance = nullptr;
+            }
+        }
     protected:
         bool initialised;
         bool running;
         bool changeSceneFlag;
-        GameTimer* gameTimer;
         std::vector<Scene*> scenes;
         Scene* currentScene;
         unsigned int nextSceneID = 0;
@@ -37,7 +47,9 @@ namespace Symphony
         void LoadNextScene();
 
     private:
+        static SymphonyEngine* instance;
         SymphonyEngine();
-        virtual ~SymphonyEngine();
+        SymphonyEngine(SymphonyEngine&) = delete;
+        ~SymphonyEngine();
     };
 }

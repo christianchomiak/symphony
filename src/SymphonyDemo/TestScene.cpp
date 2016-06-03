@@ -59,7 +59,7 @@ void TestScene::Update(float deltaTime)
     //Debug::Log("Updating scene #" + std::to_string(id) + " (" + name + ")");
     Scene::Update(deltaTime);
 
-    const Keyboard* keyboard = InputManager::Instance()->GetKeyboard();
+    const Keyboard* keyboard = InputManager::GetKeyboard();
     if (keyboard->KeyDown(Keyboard::KEY_D ))
     {
         Debug::Log("`D` DOWN");
@@ -77,4 +77,14 @@ void TestScene::Update(float deltaTime)
     {
         Debug::Log("`Q` PRESSED");
     }
+    
+    const Mouse* mouse = InputManager::GetMouse();
+    if (mouse->ButtonDown(Mouse::BUTTON_LEFT)) Debug::Log("LEFT BUTTON");
+    if (mouse->ButtonDown(Mouse::BUTTON_RIGHT)) Debug::Log("RIGHT BUTTON");
+    if (mouse->ButtonDown(Mouse::BUTTON_MIDDLE)) Debug::Log("MIDDLE BUTTON");
+    if (mouse->ButtonDown(Mouse::BUTTON_4)) Debug::Log("BUTTON 4");
+    if (mouse->ButtonDown(Mouse::BUTTON_5)) Debug::Log("BUTTON 5");
+    if (mouse->ButtonDown(Mouse::BUTTON_6)) Debug::Log("BUTTON 6");
+    if (mouse->ButtonDown(Mouse::BUTTON_7)) Debug::Log("BUTTON 7");
+    if (mouse->ButtonDown(Mouse::BUTTON_8)) Debug::Log("BUTTON 8");
 }
