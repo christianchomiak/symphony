@@ -12,4 +12,5 @@ public:
     
     virtual void Initialise() override;
     virtual void Clean() override;
+    virtual void Update(float deltaTime) override;
 };

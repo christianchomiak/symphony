@@ -72,13 +72,13 @@
     <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath);..\$(Configuration);$(SolutionDir)bin\$(Configuration)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin\$(Configuration)\Intermediate\</IntDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\Demo</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath);..\$(Configuration);$(SolutionDir)bin\$(Configuration)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin\$(Configuration)\Intermediate\</IntDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\Demo</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

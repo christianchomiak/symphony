@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include "../Debugging/Debugging.h"
+#include "../Input/InputManager.h"
 
 namespace Symphony
 {
@@ -60,10 +61,10 @@ namespace Symphony
         float deltaTime;
 
         //TO-DO: Code regarding FPS check could be enabled/disabled by the user
-        int numberOfFrames = 0;
+        /*int numberOfFrames = 0;
         float frameStartTime, frameEndTime = 0.0f, frameTotalTime;
         float nextTimeLap = frameEndTime + 1.0f;
-        std::stringstream ss;
+        std::stringstream ss;*/
         
         ChangeScene(0);
         LoadNextScene();
@@ -73,10 +74,13 @@ namespace Symphony
             Debug::LogError("No initial scene was found");
             running = false;
         }
-
+        
+        Keyboard* keyboard = InputManager::Instance()->GetKeyboard();
         while (running)
         {
             window->Clear();
+            keyboard->Update();
+            window->Update();
 
             if (changeSceneFlag)
             {
@@ -95,8 +99,8 @@ namespace Symphony
             glEnd();
 
 
-            /*if (currentScene) currentScene->Update(deltaTime);
-            Debug::Log("");
+            if (currentScene) currentScene->Update(deltaTime);
+            /*Debug::Log("");
             _WATCHPOINT*/
             //running = false;
             
@@ -116,9 +120,12 @@ namespace Symphony
                 nextTimeLap = frameEndTime + 100.0f;
             }*/
 
-            window->Update();
-            running &= !window->Closed();
+
+            window->SwapBuffers();
+            running &= !window->Closed() && !keyboard->KeyDown(Keyboard::KEY_ESC);
         }
+
+        Debug::Log("Symphony Engine has now finished execution");
     }
 
     void SymphonyEngine::AddScene(Scene* newScene)

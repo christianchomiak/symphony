@@ -15,7 +15,7 @@ namespace Symphony
         virtual void Initialise() = 0;
         virtual void Clean() = 0;
 
-        void Update(float deltaTime);
+        virtual void Update(float deltaTime);
         void AddGameObject(GameObject*);
 
         unsigned int GetID() const { return id; }

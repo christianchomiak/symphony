@@ -15,7 +15,6 @@ Symphony::Scene::~Scene()
 
 void Symphony::Scene::Update(float deltaTime)
 {
-    Debug::Log("Updating scene #" + std::to_string(id) + " (" + name + ")");
     root->Update();
 }
 

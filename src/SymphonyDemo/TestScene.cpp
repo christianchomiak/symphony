@@ -1,5 +1,8 @@
 #include "TestScene.h"
 
+#include "../SymphonyEngine/Debugging/Debugging.h"
+#include "../SymphonyEngine/Input/InputManager.h"
+
 TestScene::TestScene()
 {
     name = "TEST_SCENE1";
@@ -49,4 +52,29 @@ void TestScene::Initialise()
 void TestScene::Clean()
 {
     delete root;
+}
+
+void TestScene::Update(float deltaTime)
+{
+    //Debug::Log("Updating scene #" + std::to_string(id) + " (" + name + ")");
+    Scene::Update(deltaTime);
+
+    const Keyboard* keyboard = InputManager::Instance()->GetKeyboard();
+    if (keyboard->KeyDown(Keyboard::KEY_D ))
+    {
+        Debug::Log("`D` DOWN");
+    }
+    else if (keyboard->KeyUp(Keyboard::KEY_U))
+    {
+        Debug::Log("`U` UP");
+    }
+    else if (keyboard->KeyHold(Keyboard::KEY_H))
+    {
+        Debug::Log("`H` HELD");
+    }
+
+    if (keyboard->KeyPressed(Keyboard::KEY_Q))
+    {
+        Debug::Log("`Q` PRESSED");
+    }
 }

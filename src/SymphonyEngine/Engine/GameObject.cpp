@@ -28,7 +28,7 @@ Symphony::GameObject::~GameObject()
 
 void Symphony::GameObject::Update()
 {
-    Debug::Log("Visiting the: " + name);
+    //Debug::Log("Visiting the: " + name);
 
     for (GameObject* go : children)
     {

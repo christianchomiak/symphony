@@ -1,6 +1,7 @@
 #include "Window.h"
 
 #include "../Debugging/Debugging.h"
+#include "../Input/InputManager.h"
 
 
 void WindowResizeCallback(GLFWwindow* window, int width, int height)
@@ -19,8 +20,9 @@ Symphony::Window::Window(const char * name, int width, int height)
 
 Symphony::Window::~Window()
 {
+    glfwDestroyWindow(window);
     glfwTerminate();
-
+    
     //TO-DO: is `window` being freed by glfwTerminate?
     //delete window;
 }
@@ -33,7 +35,7 @@ bool Symphony::Window::Initialise()
         Debug::LogError("Failed to initialise GLFW");
         return false;
     }
-
+    
     window = glfwCreateWindow(width, height, name, NULL, NULL);
     
     if (!window)
@@ -46,6 +48,7 @@ bool Symphony::Window::Initialise()
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this);
     glfwSetWindowSizeCallback(window, WindowResizeCallback);
+    glfwSetKeyCallback(window, InputManager::KeyCallback);
     
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -69,13 +72,16 @@ void Symphony::Window::Clear() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void Symphony::Window::SwapBuffers() const
+{
+    /* Swap front and back buffers */
+    glfwSwapBuffers(window);
+}
+
 void Symphony::Window::Update()
 {
     /* Poll for and process events */
     glfwPollEvents();
-
-    /* Swap front and back buffers */
-    glfwSwapBuffers(window);
 }
 
 bool Symphony::Window::Closed() const
@@ -105,4 +111,8 @@ void Symphony::Window::OutputRenderingInfo() const
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
     std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl << std::endl;
+
+    int major, minor, revision;
+    glfwGetVersion(&major, &minor, &revision);
+    printf("Running against GLFW %i.%i.%i\n", major, minor, revision);
 }

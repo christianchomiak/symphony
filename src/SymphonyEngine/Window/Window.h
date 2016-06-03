@@ -14,6 +14,7 @@ namespace Symphony
 
         bool Initialise();
         void Clear() const;
+        void SwapBuffers() const;
         void Update();
         bool Closed() const;
 
