@@ -33,12 +33,30 @@ namespace Symphony
 
     bool SymphonyEngine::Initialise()
     {
+        Window::WindowProperties wProperties = Window::WindowProperties();
+        /*wProperties.cursorMode = Window::CursorMode::NORMAL;
+        wProperties.decorated = true;
+        wProperties.fullscreen = false;
+        wProperties.width = 800;
+        wProperties.height = 600;
+        wProperties.maximised = false;
+        wProperties.resizeable = true;
+        wProperties.title = "Symphony Engine demo";
+        wProperties.switchableToOtherModes = false;*/
+
+        return Initialise(wProperties);
+    }
+
+    bool SymphonyEngine::Initialise(Window::WindowProperties& windowProperties)
+    {
         std::cout.setf(std::ios::boolalpha);
         
         std::cout << std::endl << Version() << std::endl << std::endl;
-
-        window = new Window(Version(), 800, 600);
-
+        
+        //window = new Window(Version(), 800, 600, true, true, true, false);
+        //window = Window::CreateFullScreenWindow(Version(), 1920, 1080, false);
+        window = new Window(windowProperties);
+        
         initialised = window->Initialise();
 
         if (!initialised)
@@ -90,7 +108,7 @@ namespace Symphony
             
             Time::Update();
             deltaTime = Time::DeltaTime(); //gameTimer->GetDeltaTime();
-            window->ChangeName(std::to_string(deltaTime).c_str());
+            window->SetTitle(std::to_string(deltaTime).c_str());
             
             //frameStartTime = gameTimer->GetMS();
             
@@ -104,6 +122,11 @@ namespace Symphony
             if (currentScene)
             {
                 currentScene->Update(deltaTime);
+            }
+
+            if (keyboard->KeyDown(Keyboard::KEY_SPACE))
+            {
+                window->ChangeMode();
             }
 
             /*Debug::Log("");

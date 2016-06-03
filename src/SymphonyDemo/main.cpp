@@ -9,7 +9,7 @@
 using namespace Symphony;
 
 int main(int argc, char* args[])
-{    
+{
     SymphonyEngine* sEngine = SymphonyEngine::Instance();
     
     if (!sEngine->Initialise())

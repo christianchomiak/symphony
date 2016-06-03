@@ -15,6 +15,7 @@ namespace Symphony
         const char* SymphonyEngine::Version() const;
 
         bool Initialise();
+        bool Initialise(Window::WindowProperties& windowProperties);
         void Run();
 
         void AddScene(Scene* newScene);
@@ -27,6 +28,7 @@ namespace Symphony
             if (!instance) instance = new SymphonyEngine();
             return instance;
         }
+
         static inline void Shutdown()
         {
             if (instance)
