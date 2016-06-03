@@ -6,8 +6,6 @@
 Symphony::Mouse::Mouse()
 {
     anyButtonPressed = false;
-    xPosition = 0.0;
-    yPosition = 0.0;
     numberOfButtons = GLFW_MOUSE_BUTTON_LAST + 1;
     buttons = new InputState[numberOfButtons];
     Reset();

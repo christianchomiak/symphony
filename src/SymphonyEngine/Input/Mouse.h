@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
 #include "Input.h"
 
 namespace Symphony
@@ -17,8 +18,9 @@ namespace Symphony
         bool ButtonDown(int button)  const;
         bool ButtonHold(int button)  const;
         
-        inline double PositionX() const { return xPosition; }
-        inline double PositionY() const { return yPosition; }
+        inline double PositionX() const { return position.x; }
+        inline double PositionY() const { return position.y; }
+        inline glm::vec2 Position() const { return position; }        
 
         inline bool CheckButtonID(int id) const
         {
@@ -26,7 +28,7 @@ namespace Symphony
         }
         
     protected:
-        double xPosition, yPosition;
+        glm::vec2 position;
         int numberOfButtons;
         bool anyButtonPressed;
         InputState* buttons;
