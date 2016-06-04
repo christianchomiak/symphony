@@ -3,13 +3,17 @@
 #include "../SymphonyEngine/Debugging/Debugging.h"
 #include "../SymphonyEngine/Input/InputManager.h"
 
+#include "SimpleRenderer.h"
+
 TestScene::TestScene()
 {
     name = "TEST_SCENE1";
+    renderer = new SimpleRenderer();
 }
 
 TestScene::~TestScene()
 {
+    delete renderer;
 }
 
 void TestScene::Initialise()
@@ -87,4 +91,12 @@ void TestScene::Update(float deltaTime)
     if (mouse->ButtonDown(Mouse::BUTTON_6)) Debug::Log("BUTTON 6");
     if (mouse->ButtonDown(Mouse::BUTTON_7)) Debug::Log("BUTTON 7");
     if (mouse->ButtonDown(Mouse::BUTTON_8)) Debug::Log("BUTTON 8");
+}
+
+void TestScene::Render()
+{
+    if (renderer)
+    {
+        renderer->Render();
+    }
 }

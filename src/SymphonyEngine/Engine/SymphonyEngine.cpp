@@ -3,6 +3,7 @@
 #include <sstream>
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
+#include "../Rendering/Shader.h"
 
 namespace Symphony
 {
@@ -97,7 +98,6 @@ namespace Symphony
         Mouse* mouse = InputManager::GetMouse();
         while (running)
         {
-            window->Clear();
             InputManager::Update();
             window->Update();
 
@@ -112,22 +112,23 @@ namespace Symphony
             
             //frameStartTime = gameTimer->GetMS();
             
-            glBegin(GL_TRIANGLES);
+            /*glBegin(GL_TRIANGLES);
             glVertex2f(-0.5f, -0.5f);
             glVertex2f(0.0f, 0.5f);
             glVertex2f(0.5f, -0.5f);
-            glEnd();
-
-
+            glEnd();*/
+            
             if (currentScene)
             {
                 currentScene->Update(deltaTime);
+                currentScene->Render();
             }
 
-            if (keyboard->KeyDown(Keyboard::KEY_SPACE))
+
+            /*if (keyboard->KeyDown(Keyboard::KEY_SPACE))
             {
                 window->ChangeMode();
-            }
+            }*/
 
             /*Debug::Log("");
             _WATCHPOINT*/
@@ -152,6 +153,8 @@ namespace Symphony
             window->SwapBuffers();
             running &= !window->Closed() && !keyboard->KeyDown(Keyboard::KEY_ESC);
         }
+
+        Unload();
 
         Debug::Log("Symphony Engine has now finished execution");
     }
@@ -209,6 +212,14 @@ namespace Symphony
         nextSceneID = newSceneID;
         changeSceneFlag = true;
     }
+    
+    void SymphonyEngine::LoadShader(const string& shaderName, 
+                                    const vector<string>& attributes, const vector<string>& uniforms, 
+                                    const string& vertexShaderFilename, const string& fragmentShaderFilename,
+                                    const string& geometryShaderFilename) const
+    {
+        Shader::CreateNewShader(shaderName, attributes, uniforms, vertexShaderFilename, fragmentShaderFilename, geometryShaderFilename);
+    }
 
     void SymphonyEngine::LoadNextScene()
     {
@@ -221,5 +232,10 @@ namespace Symphony
 
         currentScene = scenes[nextSceneID];
         currentScene->Initialise();
+    }
+    
+    void SymphonyEngine::Unload()
+    {
+        Shader::DeleteAllShaders();
     }
 }

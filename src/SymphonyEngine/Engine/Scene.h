@@ -5,6 +5,8 @@
 
 namespace Symphony
 {
+    class Renderer;
+
     class Scene
     {
         friend class SymphonyEngine;
@@ -16,6 +18,7 @@ namespace Symphony
         virtual void Clean() = 0;
 
         virtual void Update(float deltaTime);
+        virtual void Render() = 0;
         void AddGameObject(GameObject*);
 
         unsigned int GetID() const { return id; }
@@ -25,6 +28,7 @@ namespace Symphony
         GameObject* root;
         unsigned int id;
         std::string name;
+        Renderer* renderer;
 
         void SetID(unsigned int);
     };

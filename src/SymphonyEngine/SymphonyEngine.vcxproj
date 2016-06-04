@@ -151,6 +151,10 @@
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Input\Mouse.h" />
+    <ClInclude Include="Rendering\Color.h" />
+    <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\Shader.h" />
     <ClInclude Include="Time\Time.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="Window\Window.h" />
@@ -164,6 +168,8 @@
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
+    <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Time\Time.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>

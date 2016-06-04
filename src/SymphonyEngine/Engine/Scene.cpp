@@ -5,6 +5,7 @@
 Symphony::Scene::Scene()
 {
     root = new GameObject();
+    renderer = nullptr;
 	id = 0;
 }
 

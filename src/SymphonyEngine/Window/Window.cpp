@@ -54,9 +54,9 @@ namespace Symphony
 
         //We suggest GLFW to create an OpenGL context using v3.3, at least
         //If the required minimum version is not supported on the machine, context (and window) creation fails.
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         if (properties.fullscreen)
         {
@@ -99,13 +99,6 @@ namespace Symphony
         ChangeCursorMode(properties.cursorMode);
 
         return true;
-    }
-
-    void Window::Clear() const
-    {
-        //glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void Window::SwapBuffers() const
