@@ -17,6 +17,8 @@ namespace Symphony
         GameObject();
         virtual ~GameObject();
         
+        //TO-DO: Should the update of the GameObject's logic be independent
+        //       from the update of its transformation matrix?
         virtual void Update();
 
         void AddChild(GameObject* child);

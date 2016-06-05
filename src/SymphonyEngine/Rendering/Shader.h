@@ -16,15 +16,9 @@ namespace Symphony
         void Release()   const;
         
         //An indexer that returns the location of the attribute/uniform
-        inline unsigned int operator[](const std::string& attribute)
-        {
-            return attributeList[attribute];
-        }
-
-        inline unsigned int operator()(const std::string& uniform)
-        {
-            return uniformLocationList[uniform];
-        }
+        unsigned int operator[](const std::string& attribute);
+        unsigned int operator()(const std::string& uniform);
+        unsigned int ID() const;
 
         static Shader* GetShader(const std::string& shaderName);
 
@@ -32,6 +26,10 @@ namespace Symphony
         std::string name;
         unsigned int programID;
         unsigned int shaders[3];
+
+        //TO-DO: Figure out if caching locations improves perfomance.
+        //       If so, determine whether a vector might be more suitable than a map for 
+        //       small sets of values like locations in a shader
         std::map<std::string, unsigned int> attributeList;
         std::map<std::string, unsigned int> uniformLocationList;
         
@@ -53,4 +51,20 @@ namespace Symphony
         static void DeleteAllShaders();
         static std::map<std::string, Shader*> shaderPool;
     };
+    
+
+    inline unsigned int Shader::operator[](const std::string& attribute)
+    {
+        return attributeList[attribute];
+    }
+
+    inline unsigned int Shader::operator()(const std::string& uniform)
+    {
+        return uniformLocationList[uniform];
+    }
+
+    inline unsigned int Shader::ID() const
+    {
+        return programID;
+    }
 }

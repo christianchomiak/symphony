@@ -1,9 +1,11 @@
 #include "TestScene.h"
 
+#include "SimpleRenderer.h"
 #include "../SymphonyEngine/Debugging/Debugging.h"
 #include "../SymphonyEngine/Input/InputManager.h"
 
-#include "SimpleRenderer.h"
+#include "../SymphonyEngine/Engine/Camera/PerspectiveCamera.h"
+
 
 TestScene::TestScene()
 {

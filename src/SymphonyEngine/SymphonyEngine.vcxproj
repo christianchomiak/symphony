@@ -143,6 +143,10 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
+    <ClInclude Include="Engine\Camera\Camera.h" />
+    <ClInclude Include="Engine\Camera\OrthographicCamera.h" />
+    <ClInclude Include="Engine\Camera\PerspectiveCamera.h" />
+    <ClInclude Include="Engine\Camera\ViewPort.h" />
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\Scene.h" />
     <ClInclude Include="Engine\SymphonyEngine.h" />
@@ -157,10 +161,14 @@
     <ClInclude Include="Rendering\Shader.h" />
     <ClInclude Include="Time\Time.h" />
     <ClInclude Include="Utilities\Singleton.h" />
+    <ClInclude Include="Window\Screen.h" />
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\Debugging.cpp" />
+    <ClCompile Include="Engine\Camera\Camera.cpp" />
+    <ClCompile Include="Engine\Camera\OrthographicCamera.cpp" />
+    <ClCompile Include="Engine\Camera\PerspectiveCamera.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\Scene.cpp" />
     <ClCompile Include="Engine\SymphonyEngine.cpp" />
@@ -171,6 +179,7 @@
     <ClCompile Include="Rendering\Mesh.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Time\Time.cpp" />
+    <ClCompile Include="Window\Screen.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

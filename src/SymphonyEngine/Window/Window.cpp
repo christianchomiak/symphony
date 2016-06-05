@@ -3,6 +3,7 @@
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 
+#include "Screen.h"
 
 void WindowResizeCallback(GLFWwindow* window, int width, int height)
 {
@@ -131,6 +132,9 @@ namespace Symphony
 
         glfwGetFramebufferSize(window, &properties.width, &properties.height);
         glViewport(0, 0, properties.width, properties.height);
+
+        Screen::width = properties.width;
+        Screen::height = properties.height;
     }
 
     void Window::OutputRenderingInfo() const

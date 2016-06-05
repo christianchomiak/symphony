@@ -111,13 +111,7 @@ namespace Symphony
             window->SetTitle(std::to_string(deltaTime).c_str());
             
             //frameStartTime = gameTimer->GetMS();
-            
-            /*glBegin(GL_TRIANGLES);
-            glVertex2f(-0.5f, -0.5f);
-            glVertex2f(0.0f, 0.5f);
-            glVertex2f(0.5f, -0.5f);
-            glEnd();*/
-            
+                        
             if (currentScene)
             {
                 currentScene->Update(deltaTime);

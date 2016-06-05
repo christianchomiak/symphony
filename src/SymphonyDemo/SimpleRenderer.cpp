@@ -10,7 +10,7 @@
 
 SimpleRenderer::SimpleRenderer()
 {
-    m = Mesh::Triangle();
+    m = Mesh::Quad();
     s = Shader::GetShader("UNLIT_COLOR");
 }
 
@@ -32,10 +32,10 @@ void SimpleRenderer::Render()
         std::cout << "NO SHADER FOUND" << std::endl;
         return;
     }
+    Shader& ss = *s;
 
-    s->Use();
-
-    glUniformMatrix4fv((*s)("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
+    ss.Use();
+    glUniformMatrix4fv(ss("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
 
     m->Render();
 

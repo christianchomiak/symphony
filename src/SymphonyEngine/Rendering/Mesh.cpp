@@ -3,6 +3,8 @@
 #define GLEW_STATIC
 #include <GLEW/GL/glew.h> //GLEW must be included before any other GL-related header files
 
+#include "../Debugging/Debugging.h"
+
 namespace Symphony
 {
     Mesh::Mesh()
@@ -36,7 +38,7 @@ namespace Symphony
         delete[] normals;
         delete[] textureCoordinates;
     }
-        
+
     //TO-DO: Could it be benefitial to cache the result of operations such as `numberOfVertices * sizeof(glm::vec3)`?
     void Mesh::BufferData()
     {
@@ -85,7 +87,7 @@ namespace Symphony
             glVertexAttribPointer(NORMAL_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, 0);
             glEnableVertexAttribArray(NORMAL_BUFFER);
         }
-
+        
         if (tangents)
         {
             glGenBuffers(1, &vboID[TANGENT_BUFFER]);
@@ -102,7 +104,7 @@ namespace Symphony
     void Mesh::Render()
     {
         glBindVertexArray(vaoID);
-
+        
         if (vboID[INDEX_BUFFER])
         {
             glDrawElements(typeOfPrimitive, numberOfIndices, GL_UNSIGNED_INT, 0);
@@ -129,9 +131,9 @@ namespace Symphony
         mesh->vertices[2] = glm::vec3(0, 1, 0);
 
         mesh->colours = new glm::vec4[mesh->numberOfVertices];
-        mesh->colours[0] = Color::White();
-        mesh->colours[1] = Color::White();
-        mesh->colours[2] = Color::White();
+        mesh->colours[0] = Color::Red();    //Color::White();
+        mesh->colours[1] = Color::Green();  //Color::White();
+        mesh->colours[2] = Color::Blue();   //Color::White();
 
         mesh->numberOfIndices = 3;
         mesh->indices = new GLuint[mesh->numberOfIndices];
@@ -160,13 +162,20 @@ namespace Symphony
         mesh->vertices[1] = glm::vec3(1.0f, -1.0f, 0.0f);
         mesh->vertices[2] = glm::vec3(-1.0f, 1.0f, 0.0f);
         mesh->vertices[3] = glm::vec3(1.0f, 1.0f, 0.0f);
+        
+        mesh->numberOfIndices = 4;
+        mesh->indices = new GLuint[mesh->numberOfIndices];
+        mesh->indices[0] = 0;
+        mesh->indices[1] = 1;
+        mesh->indices[2] = 2;
+        mesh->indices[3] = 3;
 
         mesh->colours = new glm::vec4[mesh->numberOfVertices];
-        mesh->colours[0] = Color::White();
-        mesh->colours[1] = Color::White();
-        mesh->colours[2] = Color::White();
-        mesh->colours[3] = Color::White();
-
+        mesh->colours[0] = Color::Red();
+        mesh->colours[1] = Color::Green();
+        mesh->colours[2] = Color::Blue();
+        mesh->colours[3] = Color::Yellow();
+        
         mesh->normals = new glm::vec3[mesh->numberOfVertices];
         mesh->normals[0] = glm::vec3(0, 0, 1);
         mesh->normals[1] = glm::vec3(0, 0, 1);
@@ -184,9 +193,7 @@ namespace Symphony
         mesh->textureCoordinates[1] = glm::vec2(1.f, 0.f);
         mesh->textureCoordinates[2] = glm::vec2(0.f, 1.f);
         mesh->textureCoordinates[3] = glm::vec2(1.f, 1.f);
-
-        mesh->numberOfIndices = 0;
-
+        
         mesh->BufferData();
 
         return mesh;
