@@ -198,5 +198,41 @@ namespace Symphony
 
         return mesh;
     }
+
+    Mesh * Mesh::CoordinateSystem(float size)
+    {
+        Mesh* mesh = new Mesh();
+        mesh->typeOfPrimitive = GL_LINES;
+        
+        mesh->numberOfVertices = 6;
+
+        mesh->vertices = new glm::vec3[mesh->numberOfVertices];
+        mesh->colours = new glm::vec4[mesh->numberOfVertices];
+        
+        //x axis arrow
+        mesh->vertices[0] = glm::vec3(0.0f, 0.0f, 0.0f);
+        mesh->vertices[1] = glm::vec3(size, 0.0f, 0.0f);
+
+        mesh->colours[0] = Color::Red();
+        mesh->colours[1] = Color::Red();
+
+        //y axis
+        mesh->vertices[2] = glm::vec3(0.0f, 0.0f, 0.0f);
+        mesh->vertices[3] = glm::vec3(0.0f, size, 0.0f);
+
+        mesh->colours[2] = Color::Green();
+        mesh->colours[3] = Color::Green();
+
+        //z axis
+        mesh->vertices[4] = glm::vec3(0.0f, 0.0f, 0.0f);
+        mesh->vertices[5] = glm::vec3(0.0f, 0.0f, size);
+
+        mesh->colours[4] = Color::Blue();
+        mesh->colours[5] = Color::Blue();
+
+        mesh->BufferData();
+        
+        return mesh;
+    }
 }
 

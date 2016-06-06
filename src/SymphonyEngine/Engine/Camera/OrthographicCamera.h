@@ -15,7 +15,7 @@ namespace Symphony
         OrthographicCamera(float nearPlane, float farPlane, float left, float right, float top, float bottom);
         OrthographicCamera(float left, float right, float top, float bottom);
         OrthographicCamera(float left, float right, float top, float bottom, ViewPort& viewport);
-        virtual ~OrthographicCamera();
+        virtual ~OrthographicCamera() {};
 
         virtual void Update() override;
         virtual void SetViewPort(ViewPort& newViewPort) override;

@@ -10,21 +10,28 @@
 
 SimpleRenderer::SimpleRenderer()
 {
-    m = Mesh::Quad();
     s = Shader::GetShader("UNLIT_COLOR");
 }
 
 SimpleRenderer::~SimpleRenderer()
 {
-    delete m;
 }
 
-void SimpleRenderer::Render()
+void SimpleRenderer::Render(const std::vector<Camera*>& cameras, const GameObject* sceneRoot)
 {
-    glm::mat4  P = glm::mat4(1);
-    glm::mat4 MV = glm::mat4(1);
+    std::vector<const GameObject*> objs;
+    PrepareObjects(sceneRoot, objs);
     
+    for (Camera* cam : cameras)
+    {
+        RenderCamera(cam, objs);
+    }
+}
+
+void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObject*>& objects)
+{
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (!s)
@@ -33,11 +40,31 @@ void SimpleRenderer::Render()
         return;
     }
     Shader& ss = *s;
+    ss.Use(); 
 
-    ss.Use();
-    glUniformMatrix4fv(ss("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
-
-    m->Render();
+    glm::mat4 P = cam->ProjectionMatrix(); //glm::mat4(1);
+    glm::mat4 V = glm::mat4(1); //cam->BuildViewMatrix();
+    
+    glm::mat4 M;
+    for (auto go : objects)
+    {
+        M = go->transform.GetWorldTransformMatrix();
+        glUniformMatrix4fv(ss("MVP"), 1, GL_FALSE, glm::value_ptr(P*V*M));
+        go->mesh->Render();
+    }
 
     s->Release();
+}
+
+void SimpleRenderer::PrepareObjects(const GameObject* obj, std::vector<const GameObject*>& objsOut)
+{
+    if (obj->mesh != nullptr)
+    {
+        objsOut.push_back(obj);
+    }
+
+    for (GameObject* o : obj->GetChildren())
+    {
+        PrepareObjects(o, objsOut);
+    }
 }

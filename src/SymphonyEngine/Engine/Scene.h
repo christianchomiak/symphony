@@ -1,7 +1,8 @@
 #pragma once
 
-//#include <vector>
+#include <vector>
 #include "GameObject.h"
+#include "Camera\Camera.h"
 
 namespace Symphony
 {
@@ -20,6 +21,7 @@ namespace Symphony
         virtual void Update(float deltaTime);
         virtual void Render() = 0;
         void AddGameObject(GameObject*);
+        void AddGameObject(Camera*);
 
         unsigned int GetID() const { return id; }
         std::string GetName() const { return name; }
@@ -29,6 +31,8 @@ namespace Symphony
         unsigned int id;
         std::string name;
         Renderer* renderer;
+
+        std::vector<Camera*> cameras;
 
         void SetID(unsigned int);
     };

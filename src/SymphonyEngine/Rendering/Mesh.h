@@ -45,5 +45,6 @@ namespace Symphony
     public:
         static Mesh* Triangle();
         static Mesh* Quad();
+        static Mesh* CoordinateSystem(float size = 1.f);
     };
 }

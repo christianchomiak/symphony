@@ -11,8 +11,10 @@ class SimpleRenderer : public Renderer
 public:
     SimpleRenderer();
     virtual ~SimpleRenderer();
-    virtual void Render() override;
+    virtual void Render(const std::vector<Camera*>& cameras, const GameObject* sceneRoot) override;
 protected:
-    Mesh* m;
     Shader* s;
+
+    void RenderCamera(Camera* cam, const std::vector<const GameObject*>& objects);
+    void PrepareObjects(const GameObject* obj, std::vector<const GameObject*>& objsOut);
 };

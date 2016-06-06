@@ -5,10 +5,10 @@
 //TO-DO: Figure out a better way to remove elements than by using <algorithm>
 #include <algorithm>
 
-Symphony::GameObject::GameObject()
+Symphony::GameObject::GameObject() : name("New GameObject")
 {
-    name = "New GameObject";
     enabled = true;
+    mesh = nullptr;
 }
 
 Symphony::GameObject::~GameObject()
@@ -24,11 +24,13 @@ Symphony::GameObject::~GameObject()
             delete go;
         }
     }
+
+    delete mesh;
 }
 
 void Symphony::GameObject::Update()
 {
-    //Debug::Log("Visiting the: " + name);
+    transform.UpdateWorldMatrix();
 
     for (GameObject* go : children)
     {

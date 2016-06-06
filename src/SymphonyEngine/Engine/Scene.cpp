@@ -23,6 +23,18 @@ void Symphony::Scene::AddGameObject(GameObject* go)
 {
     if (go == nullptr) return;
 
+    Debug::Log("Added a GAMEOBJECT");
+
+    root->AddChild(go);
+}
+
+void Symphony::Scene::AddGameObject(Camera* go)
+{
+    if (go == nullptr) return;
+    
+    Debug::Log("Added a CAMERA");
+    cameras.push_back(go);
+
     root->AddChild(go);
 }
 

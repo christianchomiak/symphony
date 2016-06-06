@@ -14,9 +14,10 @@ namespace Symphony
         PerspectiveCamera(float nearPlane, float farPlane, float fov);
         PerspectiveCamera(float nearPlane, float farPlane, float fov, ViewPort& viewport);
         PerspectiveCamera(ViewPort& viewport);
+        PerspectiveCamera(float fov);
         PerspectiveCamera(float fov, ViewPort& viewport);
 
-        virtual ~PerspectiveCamera();
+        virtual ~PerspectiveCamera() {};
         
         virtual void Update() override;
         virtual void SetViewPort(ViewPort& newViewPort) override;

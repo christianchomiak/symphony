@@ -6,11 +6,13 @@ namespace Symphony
 {
     struct ViewPort
     {
-    public:
+    protected:
         int startXPosition;
         int startYPosition;
         int width;
         int height;
+        float aspectRatio;
+    public:
 
         ViewPort() : ViewPort(ViewPort::FullScreen())
         {
@@ -19,6 +21,7 @@ namespace Symphony
         ViewPort(int x, int y, int w, int h)
             : startXPosition(x), startYPosition(y), width(w), height(h)
         {
+            aspectRatio = (float)width / (float)height;
         }
 
         ViewPort(const ViewPort& vp) : ViewPort(vp.startXPosition, vp.startYPosition, vp.width, vp.height)
@@ -32,7 +35,7 @@ namespace Symphony
     };
 
     inline float ViewPort::AspectRatio() const {
-        return (float)width / (float)height;
+        return aspectRatio;
     }
 
     inline ViewPort ViewPort::FullScreen()
