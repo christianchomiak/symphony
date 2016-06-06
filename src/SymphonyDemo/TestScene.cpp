@@ -7,6 +7,8 @@
 #include "../SymphonyEngine/Engine/Camera/PerspectiveCamera.h"
 #include "../SymphonyEngine/Engine/Camera/OrthographicCamera.h"
 
+#include "../SymphonyEngine/Rendering/TextureManager.h"
+
 TestScene::TestScene()
 {
     name = "TEST_SCENE1";
@@ -23,16 +25,17 @@ void TestScene::Initialise()
     coord = new GameObject();
     coord->name = "Coordinate System";
     AddGameObject(coord);
-    coord->mesh = Mesh::CoordinateSystem();
-    //coord->mesh = Mesh::Quad();
+    coord->AddRenderObject(new RenderObject(Mesh::CoordinateSystem(), Texture(), Shader::GetShader("UNLIT_COLOR")));
     coord->transform.SetLocalPosition(0, 0, -2.5f);
-    //coord->transform.SetLocalRotation(10, 45, 0);
-
-    /*coord = new GameObject();
-    coord->name = "Object";
-    AddGameObject(coord);
-    coord->mesh = Mesh::Quad();
-    coord->transform.SetLocalPosition(0, 0, -0.5f);*/
+    
+    GameObject* go = new GameObject();
+    go->name = "Object";
+    AddGameObject(go);
+    go->AddRenderObject(
+        new RenderObject(Mesh::Quad(),
+        TextureManager::LoadTexture("../../resources/Textures/wall.jpg", Texture::WrappingType::REPEAT, true), 
+        Shader::GetShader("UNLIT_TEXTURE")));
+    go->transform.SetLocalPosition(0, 0, -3.f);
     
     PerspectiveCamera* cam = new PerspectiveCamera(45.f);
     //OrthographicCamera* cam = new OrthographicCamera(-1, 1, 1, -1);
@@ -117,6 +120,8 @@ void TestScene::Update(float deltaTime)
     }
 
     coord->transform.Translate(dir.x * deltaTime, dir.y * deltaTime, dir.z * deltaTime);
+
+    if (mouse->ButtonDown(Mouse::BUTTON_LEFT)) coord->enabled = !coord->enabled;
 }
 
 void TestScene::Render()

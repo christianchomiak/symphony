@@ -16,11 +16,11 @@ namespace Symphony
         void Release()   const;
         
         //An indexer that returns the location of the attribute/uniform
-        unsigned int operator[](const std::string& attribute);
-        unsigned int operator()(const std::string& uniform);
+        unsigned int operator[](const char* attribute);
+        unsigned int operator()(const char* uniform);
         unsigned int ID() const;
 
-        static Shader* GetShader(const std::string& shaderName);
+        static Shader* GetShader(const char* shaderName);
 
     protected:
         std::string name;
@@ -30,35 +30,35 @@ namespace Symphony
         //TO-DO: Figure out if caching locations improves perfomance.
         //       If so, determine whether a vector might be more suitable than a map for 
         //       small sets of values like locations in a shader
-        std::map<std::string, unsigned int> attributeList;
-        std::map<std::string, unsigned int> uniformLocationList;
+        std::map<const char*, unsigned int> attributeList;
+        std::map<const char*, unsigned int> uniformLocationList;
         
     private:
         
         Shader();
         ~Shader();
         bool CreateAndLink();
-        void AddAttribute(const std::string& attribute);
-        void AddUniform(const std::string& uniform);
-        bool LoadFromString(ShaderType typeOfShader, const std::string& source);
-        bool LoadFromFile(ShaderType typeOfShader, const std::string& filename);
+        void AddAttribute(const char* attribute);
+        void AddUniform(const char* uniform);
+        bool LoadFromString(ShaderType typeOfShader, const char* source);
+        bool LoadFromFile(ShaderType typeOfShader, const char* filename);
         
     protected:
-        static Shader* CreateNewShader(const std::string& shaderName, const std::vector<std::string>& attributes, const std::vector<std::string>& uniforms,
-                                       const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename, const std::string& geometryShaderFilename = nullptr);
-        static bool ShaderExists(const std::string& shaderName);
-        static void DeleteShader(const std::string& shaderName);
+        static Shader* CreateNewShader(const char* shaderName, const std::vector<const char*>& attributes, const std::vector<const char*>& uniforms,
+            const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* geometryShaderFilename = nullptr);
+        static bool ShaderExists(const char* shaderName);
+        static void DeleteShader(const char* shaderName);
         static void DeleteAllShaders();
-        static std::map<std::string, Shader*> shaderPool;
+        static std::map<const char*, Shader*> shaderPool;
     };
     
 
-    inline unsigned int Shader::operator[](const std::string& attribute)
+    inline unsigned int Shader::operator[](const char* attribute)
     {
         return attributeList[attribute];
     }
 
-    inline unsigned int Shader::operator()(const std::string& uniform)
+    inline unsigned int Shader::operator()(const char* uniform)
     {
         return uniformLocationList[uniform];
     }

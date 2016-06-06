@@ -11,12 +11,12 @@ using namespace std;
 
 namespace Symphony
 {
-    map<string, Shader*> Shader::shaderPool;
+    map<const char*, Shader*> Shader::shaderPool;
     
     void Shader::Use()       const { glUseProgram(programID); };
     void Shader::Release()   const { glUseProgram(0); };
 
-    Shader* Shader::GetShader(const std::string & shaderName)
+    Shader* Shader::GetShader(const char* shaderName)
     {
         if (ShaderExists(shaderName))
         {
@@ -84,7 +84,7 @@ namespace Symphony
         return true;
     }
 
-    bool Shader::LoadFromString(ShaderType typeOfShader, const string& source)
+    bool Shader::LoadFromString(ShaderType typeOfShader, const char* source)
     {
         GLenum whichShader;
 
@@ -94,8 +94,9 @@ namespace Symphony
         
         GLuint shader = glCreateShader(whichShader);
 
-        const char * ptmp = source.c_str();
-        glShaderSource(shader, 1, &ptmp, NULL);
+        glShaderSource(shader, 1, &source, NULL);
+        //const char * ptmp = source.c_str();
+        //glShaderSource(shader, 1, &ptmp, NULL);
 
         //check whether the shader loads fine
         GLint status;
@@ -125,7 +126,7 @@ namespace Symphony
         return true;
     }
 
-    bool Shader::LoadFromFile(ShaderType typeOfShader, const string& filename)
+    bool Shader::LoadFromFile(ShaderType typeOfShader, const char* filename)
     {
         char* shaderName;
         
@@ -136,7 +137,7 @@ namespace Symphony
         cout << endl << "> Loading " << shaderName << " shader (" << filename << ")" << endl;
         
         ifstream fp;
-        fp.open(filename.c_str(), ios_base::in);
+        fp.open(filename, ios_base::in);
 
         if (fp)
         {
@@ -147,7 +148,7 @@ namespace Symphony
                 buffer.append("\r\n");
             }
             //copy to source
-            return LoadFromString(typeOfShader, buffer);
+            return LoadFromString(typeOfShader, buffer.c_str());
         }
 
         cerr << "Error loading " << shaderName << " shader: " << filename << endl;
@@ -155,20 +156,20 @@ namespace Symphony
         return false;
     }
     
-    void Shader::AddAttribute(const std::string& attribute)
+    void Shader::AddAttribute(const char* attribute)
     {
-        attributeList[attribute] = glGetAttribLocation(programID, attribute.c_str());
+        attributeList[attribute] = glGetAttribLocation(programID, attribute);
     }
     
-    void Shader::AddUniform(const std::string& uniform)
+    void Shader::AddUniform(const char* uniform)
     {
-        uniformLocationList[uniform] = glGetUniformLocation(programID, uniform.c_str());
+        uniformLocationList[uniform] = glGetUniformLocation(programID, uniform);
     }
 
-    Shader* Shader::CreateNewShader(const string& shaderName,
-                                    const vector<string>& attributes, const vector<string>& uniforms,
-                                    const string& vertexShaderFilename, const string& fragmentShaderFilename, 
-                                    const string& geometryShaderFilename)
+    Shader* Shader::CreateNewShader(const char* shaderName,
+                                    const vector<const char*>& attributes, const vector<const char*>& uniforms,
+                                    const char* vertexShaderFilename, const char* fragmentShaderFilename,
+                                    const char* geometryShaderFilename)
     {
         //There's no point in creating the same shader over and over again
         if (ShaderExists(shaderName))
@@ -185,7 +186,8 @@ namespace Symphony
         if (!newShader->LoadFromFile(ShaderType::FRAGMENT_SHADER, fragmentShaderFilename))
             return nullptr;
         
-        if (!geometryShaderFilename.empty() && !newShader->LoadFromFile(ShaderType::GEOMETRY_SHADER, geometryShaderFilename))
+        if (geometryShaderFilename != nullptr && geometryShaderFilename[0] != '\0' 
+            && !newShader->LoadFromFile(ShaderType::GEOMETRY_SHADER, geometryShaderFilename))
             return nullptr;
         
         //compile and link shader
@@ -215,12 +217,12 @@ namespace Symphony
         return newShader;
     }
     
-    bool Shader::ShaderExists(const std::string & shaderName)
+    bool Shader::ShaderExists(const char* shaderName)
     {
         return shaderPool.find(shaderName) != shaderPool.end();
     }
     
-    void Shader::DeleteShader(const std::string & shaderName)
+    void Shader::DeleteShader(const char* shaderName)
     {
         if (ShaderExists(shaderName))
         {
@@ -233,7 +235,7 @@ namespace Symphony
     {
         for (auto it = shaderPool.begin(); it != shaderPool.end(); ++it)
         {
-            //string key = it->first;
+            //const char* key = it->first;
             delete it->second;
         }
         shaderPool.clear();

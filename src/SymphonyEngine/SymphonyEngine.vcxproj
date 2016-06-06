@@ -158,7 +158,10 @@
     <ClInclude Include="Rendering\Color.h" />
     <ClInclude Include="Rendering\Mesh.h" />
     <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\RenderObject.h" />
     <ClInclude Include="Rendering\Shader.h" />
+    <ClInclude Include="Rendering\Texture.h" />
+    <ClInclude Include="Rendering\TextureManager.h" />
     <ClInclude Include="Time\Time.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="Window\Screen.h" />
@@ -177,7 +180,10 @@
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />
     <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\RenderObject.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
+    <ClCompile Include="Rendering\TextureManager.cpp" />
     <ClCompile Include="Time\Time.cpp" />
     <ClCompile Include="Window\Screen.cpp" />
     <ClCompile Include="Window\Window.cpp" />

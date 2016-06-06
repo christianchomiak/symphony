@@ -26,9 +26,9 @@ namespace Symphony
         void ChangeScene(unsigned int sceneID);
         
         //TO-DO: Perhaps this could be done via a text file?
-        void LoadShader(const string& shaderName, const vector<string>& attributes, const vector<string>& uniforms,
-                        const string& vertexShaderFilename, const string& fragmentShaderFilename,
-                        const string& geometryShaderFilename = "") const;
+        void LoadShader(const char* shaderName, const vector<const char*>& attributes, const vector<const char*>& uniforms,
+                        const char* vertexShaderFilename, const char* fragmentShaderFilename,
+                        const char* geometryShaderFilename = nullptr) const;
 
         static inline SymphonyEngine* Instance()
         {

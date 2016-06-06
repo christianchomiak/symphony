@@ -67,8 +67,8 @@ namespace Symphony
             glBindBuffer(GL_ARRAY_BUFFER, vboID[TEXTURE_BUFFER]);
             glBufferData(GL_ARRAY_BUFFER, numberOfVertices * sizeof(glm::vec2), textureCoordinates, GL_STATIC_DRAW);
 
-            glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, 0, 0);
             glEnableVertexAttribArray(TEXTURE_BUFFER);
+            glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, 0, 0);
         }
 
         if (indices)
@@ -187,12 +187,13 @@ namespace Symphony
         mesh->tangents[1] = glm::vec3(1, 0, 0);
         mesh->tangents[2] = glm::vec3(1, 0, 0);
         mesh->tangents[3] = glm::vec3(1, 0, 0);
-
+        
+        //TO-DO: For some reason, the texture coordinates were swapped in the Y axis?
         mesh->textureCoordinates = new glm::vec2[mesh->numberOfVertices];
-        mesh->textureCoordinates[0] = glm::vec2(0.f, 0.f);
-        mesh->textureCoordinates[1] = glm::vec2(1.f, 0.f);
-        mesh->textureCoordinates[2] = glm::vec2(0.f, 1.f);
-        mesh->textureCoordinates[3] = glm::vec2(1.f, 1.f);
+        mesh->textureCoordinates[0] = glm::vec2(0.f, 1.f);
+        mesh->textureCoordinates[1] = glm::vec2(1.f, 1.f);
+        mesh->textureCoordinates[2] = glm::vec2(0.f, 0.f);
+        mesh->textureCoordinates[3] = glm::vec2(1.f, 0.f);
         
         mesh->BufferData();
 

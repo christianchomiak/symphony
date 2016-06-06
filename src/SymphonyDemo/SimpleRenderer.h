@@ -13,8 +13,6 @@ public:
     virtual ~SimpleRenderer();
     virtual void Render(const std::vector<Camera*>& cameras, const GameObject* sceneRoot) override;
 protected:
-    Shader* s;
-
     void RenderCamera(Camera* cam, const std::vector<const GameObject*>& objects);
     void PrepareObjects(const GameObject* obj, std::vector<const GameObject*>& objsOut);
 };

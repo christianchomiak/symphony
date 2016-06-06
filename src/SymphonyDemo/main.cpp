@@ -13,12 +13,19 @@ SymphonyEngine* sEngine = nullptr;
 
 void LoadShaders()
 {
-    vector<string> attributes;
-    vector<string> uniforms;
+    vector<const char*> attributes;
+    vector<const char*> uniforms;
         
     attributes = { "position", "color" };
-    uniforms = { "MVP" }; // { "modelMatrix", "viewMatrix", "projMatrix" };
-    sEngine->LoadShader("UNLIT_COLOR", attributes, uniforms, "../../resources/Shaders/Unlit/colored.vert.glsl", "../../resources/Shaders/Unlit/colored.frag.glsl");
+    uniforms = { "MVP" };
+    sEngine->LoadShader("UNLIT_COLOR", attributes, uniforms, 
+                        "../../resources/Shaders/Unlit/colored.vert.glsl",
+                        "../../resources/Shaders/Unlit/colored.frag.glsl");
+
+    attributes = { "position", "textureCoordinate" };
+    sEngine->LoadShader("UNLIT_TEXTURE", attributes, uniforms, 
+                        "../../resources/Shaders/Unlit/textured.vert.glsl",
+                        "../../resources/Shaders/Unlit/textured.frag.glsl");
     attributes.clear();
     uniforms.clear();
 }

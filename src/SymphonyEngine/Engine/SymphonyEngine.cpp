@@ -4,6 +4,7 @@
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 #include "../Rendering/Shader.h"
+#include "../Rendering/TextureManager.h"
 
 namespace Symphony
 {
@@ -207,10 +208,10 @@ namespace Symphony
         changeSceneFlag = true;
     }
     
-    void SymphonyEngine::LoadShader(const string& shaderName, 
-                                    const vector<string>& attributes, const vector<string>& uniforms, 
-                                    const string& vertexShaderFilename, const string& fragmentShaderFilename,
-                                    const string& geometryShaderFilename) const
+    void SymphonyEngine::LoadShader(const char* shaderName,
+                                    const vector<const char*>& attributes, const vector<const char*>& uniforms,
+                                    const char* vertexShaderFilename, const char* fragmentShaderFilename,
+                                    const char* geometryShaderFilename) const
     {
         Shader::CreateNewShader(shaderName, attributes, uniforms, vertexShaderFilename, fragmentShaderFilename, geometryShaderFilename);
     }
@@ -230,6 +231,9 @@ namespace Symphony
     
     void SymphonyEngine::Unload()
     {
+        //These could be done on the detructor of the engine but
+        //I can't find any reason not to do it in here, before that.
         Shader::DeleteAllShaders();
+        TextureManager::ClearTextureCache();
     }
 }
