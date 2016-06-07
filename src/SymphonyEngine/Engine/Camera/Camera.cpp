@@ -34,8 +34,11 @@ void Symphony::Camera::SetViewPort(ViewPort& newViewPort)
 const glm::mat4& Symphony::Camera::BuildViewMatrix() const
 {
     //TO-DO: create a way for the camera to keep track of an object
-    //return glm::lookAt(transform.GetLocalPosition(), transform.GetLocalPosition() + transform.Forward(), transform.Up());
 
-    return glm::toMat4(transform.GetLocalRotation())
-         * glm::translate(-transform.GetLocalPosition());
+    //TO-DO: This is not working properly when the camera's rotation is affected
+    //       by another, because Forward() and Up() use its local rotation instead of the globl
+    return glm::lookAt(transform.GetPosition(), transform.GetPosition() - transform.Forward(), transform.Up());
+    
+    /*return glm::toMat4(transform.GetLocalRotation())
+         * glm::translate(-transform.GetPosition());*/
 }

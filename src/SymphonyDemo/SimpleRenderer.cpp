@@ -53,6 +53,7 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
 
         ss.Release();
     }
+    glActiveTexture(0);
 }
 
 void SimpleRenderer::PrepareObjects(const GameObject* obj, std::vector<const GameObject*>& objsOut)

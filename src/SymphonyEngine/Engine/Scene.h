@@ -22,6 +22,7 @@ namespace Symphony
         virtual void Render() = 0;
         void AddGameObject(GameObject*);
         void AddGameObject(Camera*);
+        void RegisterCamera(Camera*);
 
         unsigned int GetID() const { return id; }
         std::string GetName() const { return name; }

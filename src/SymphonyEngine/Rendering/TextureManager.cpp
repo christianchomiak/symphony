@@ -8,14 +8,24 @@ namespace Symphony
 {
     std::map<const char*, unsigned int> TextureManager::texturePool;
 
-    Texture TextureManager::LoadTexture(const char* textureFilename, Texture::WrappingType typeOfWrapping, bool filtering)
+    Texture TextureManager::LoadTexture(const char* textureFilename, Texture::WrappingType typeOfWrapping, Texture::FilteringType filtering, bool flipY)
     {
         Texture newTexture = Texture(0, typeOfWrapping, filtering);
         auto id = texturePool[textureFilename];
 
         if (id == 0) //The texture doesn't exist
         {
-            id = SOIL_load_OGL_texture(textureFilename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+            //SOIL_FLAG_GL_MIPMAPS
+            //SOIL_FLAG_MIPMAPS
+
+            if (flipY)
+            {
+                id = SOIL_load_OGL_texture(textureFilename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y);
+            }
+            else
+            {
+                id = SOIL_load_OGL_texture(textureFilename, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+            }
 
             if (id == 0)
             {

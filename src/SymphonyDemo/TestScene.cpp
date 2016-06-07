@@ -7,6 +7,8 @@
 #include "../SymphonyEngine/Engine/Camera/PerspectiveCamera.h"
 #include "../SymphonyEngine/Engine/Camera/OrthographicCamera.h"
 
+#include "FreeRoamCamera.h"
+
 #include "../SymphonyEngine/Rendering/TextureManager.h"
 
 TestScene::TestScene()
@@ -22,25 +24,50 @@ TestScene::~TestScene()
 
 void TestScene::Initialise()
 {
-    coord = new GameObject();
+    GameObject* coord = new GameObject();
     coord->name = "Coordinate System";
     AddGameObject(coord);
     coord->AddRenderObject(new RenderObject(Mesh::CoordinateSystem(), Texture(), Shader::GetShader("UNLIT_COLOR")));
-    coord->transform.SetLocalPosition(0, 0, -2.5f);
+    //coord->transform.SetLocalPosition(0, 0, 10.f);
     
-    GameObject* go = new GameObject();
-    go->name = "Object";
-    AddGameObject(go);
-    go->AddRenderObject(
-        new RenderObject(Mesh::Quad(),
-        TextureManager::LoadTexture("../../resources/Textures/wall.jpg", Texture::WrappingType::REPEAT, true), 
-        Shader::GetShader("UNLIT_TEXTURE")));
-    go->transform.SetLocalPosition(0, 0, -3.f);
+    GameObject* hMap = new GameObject();
+    hMap->name = "Height Map";
+    AddGameObject(hMap);
+    hMap->AddRenderObject(
+        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm2.png", 16.f, 16.f, 5.f),
+            TextureManager::LoadTexture("../../resources/Textures/hmTexture.jpg", Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
+            Shader::GetShader("UNLIT_TEXTURE")));
+    hMap->transform.SetLocalPosition(0, 0, -100);
+    hMap->transform.Scale(0.1f);
+
+   /* GameObject* emptyGo = new GameObject();
+    AddGameObject(emptyGo);
+    emptyGo->transform.Translate(2.5f, 0, 5);
+    emptyGo->transform.Rotate(0, 25, 0);*/
     
-    PerspectiveCamera* cam = new PerspectiveCamera(45.f);
+    cube = new GameObject();
+    cube->name = "Cube";
+    AddGameObject(cube);
+    cube->AddRenderObject(
+        new RenderObject(Mesh::Cube(),
+            //TextureManager::LoadTexture("../../resources/Textures/face.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR),
+            Shader::GetShader("UNLIT_COLOR")));
+    //emptyGo->AddChild(cube);
+    cube->transform.SetLocalPosition(0, 0, -30.f);
+
+    FreeRoamCamera* cam = new FreeRoamCamera();
+    cam->name = "Camera";
+    //RegisterCamera(cam);
+    //emptyGo->AddChild(cam);
+    cam->transform.Translate(0, 5, 5);
+    cam->transform.Rotate(0, 90, 0);
+    AddGameObject(cam);
+
+
+    /*PerspectiveCamera* cam = new PerspectiveCamera(45.f);
     //OrthographicCamera* cam = new OrthographicCamera(-1, 1, 1, -1);
     cam->name = "Camera";
-    AddGameObject(cam);
+    AddGameObject(cam);*/
 }
 
 void TestScene::Clean()
@@ -50,27 +77,9 @@ void TestScene::Clean()
 
 void TestScene::Update(float deltaTime)
 {
-    //Debug::Log("Updating scene #" + std::to_string(id) + " (" + name + ")");
     Scene::Update(deltaTime);
 
-    const Keyboard* keyboard = InputManager::GetKeyboard();
-    /*if (keyboard->KeyDown(Keyboard::KEY_D ))
-    {
-        Debug::Log("`D` DOWN");
-    }
-    else if (keyboard->KeyUp(Keyboard::KEY_U))
-    {
-        Debug::Log("`U` UP");
-    }
-    else if (keyboard->KeyHold(Keyboard::KEY_H))
-    {
-        Debug::Log("`H` HELD");
-    }
-    
-    if (keyboard->KeyPressed(Keyboard::KEY_Q))
-    {
-        Debug::Log("`Q` PRESSED");
-    }*/
+    /*const Keyboard* keyboard = InputManager::GetKeyboard();
     
     const Mouse* mouse = InputManager::GetMouse();
     if (mouse->ButtonDown(Mouse::BUTTON_LEFT)) Debug::Log("LEFT BUTTON");
@@ -83,10 +92,10 @@ void TestScene::Update(float deltaTime)
     if (mouse->ButtonDown(Mouse::BUTTON_8)) Debug::Log("BUTTON 8");
     
     float speed = 20.f;
-    if (keyboard->KeyPressed(Keyboard::KEY_ARROW_UP)) coord->transform.Rotate(-speed * deltaTime, 0, 0);
-    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_DOWN)) coord->transform.Rotate(speed * deltaTime, 0, 0);
-    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_LEFT)) coord->transform.Rotate(0, -speed * deltaTime, 0);
-    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_RIGHT)) coord->transform.Rotate(0, speed * deltaTime, 0);
+    if (keyboard->KeyPressed(Keyboard::KEY_ARROW_UP)) go->transform.Rotate(-speed * deltaTime, 0, 0);
+    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_DOWN)) go->transform.Rotate(speed * deltaTime, 0, 0);
+    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_LEFT)) go->transform.Rotate(0, -speed * deltaTime, 0);
+    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_RIGHT)) go->transform.Rotate(0, speed * deltaTime, 0);
 
     if (keyboard->KeyPressed(Keyboard::KEY_W))
     {
@@ -96,32 +105,32 @@ void TestScene::Update(float deltaTime)
     glm::vec3 dir;
     if (keyboard->KeyPressed(Keyboard::KEY_U))
     {
-        dir = coord->transform.Up();
+        dir = go->transform.Up();
     }
     else if (keyboard->KeyPressed(Keyboard::KEY_D))
     {
-        dir = -coord->transform.Up();
+        dir = -go->transform.Up();
     }
     else if (keyboard->KeyPressed(Keyboard::KEY_F))
     {
-        dir = coord->transform.Forward();
+        dir = go->transform.Forward();
     }
     else if (keyboard->KeyPressed(Keyboard::KEY_B))
     {
-        dir = -coord->transform.Forward();
+        dir = -go->transform.Forward();
     }
     else if (keyboard->KeyPressed(Keyboard::KEY_L))
     {
-        dir = -coord->transform.Right();
+        dir = -go->transform.Right();
     }
     else if (keyboard->KeyPressed(Keyboard::KEY_R))
     {
-        dir = coord->transform.Right();
+        dir = go->transform.Right();
     }
 
-    coord->transform.Translate(dir.x * deltaTime, dir.y * deltaTime, dir.z * deltaTime);
+    go->transform.Translate(dir.x * deltaTime, dir.y * deltaTime, dir.z * deltaTime);
 
-    if (mouse->ButtonDown(Mouse::BUTTON_LEFT)) coord->enabled = !coord->enabled;
+    if (mouse->ButtonDown(Mouse::BUTTON_LEFT)) go->enabled = !go->enabled;*/
 }
 
 void TestScene::Render()

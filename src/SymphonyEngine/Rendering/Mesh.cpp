@@ -2,6 +2,7 @@
 
 #define GLEW_STATIC
 #include <GLEW/GL/glew.h> //GLEW must be included before any other GL-related header files
+#include <SOIL2/SOIL2.h>
 
 #include "../Debugging/Debugging.h"
 
@@ -188,19 +189,166 @@ namespace Symphony
         mesh->tangents[2] = glm::vec3(1, 0, 0);
         mesh->tangents[3] = glm::vec3(1, 0, 0);
         
-        //TO-DO: For some reason, the texture coordinates were swapped in the Y axis?
         mesh->textureCoordinates = new glm::vec2[mesh->numberOfVertices];
-        mesh->textureCoordinates[0] = glm::vec2(0.f, 1.f);
-        mesh->textureCoordinates[1] = glm::vec2(1.f, 1.f);
-        mesh->textureCoordinates[2] = glm::vec2(0.f, 0.f);
-        mesh->textureCoordinates[3] = glm::vec2(1.f, 0.f);
+        mesh->textureCoordinates[0] = glm::vec2(0.f, 0.f);
+        mesh->textureCoordinates[1] = glm::vec2(1.f, 0.f);
+        mesh->textureCoordinates[2] = glm::vec2(0.f, 1.f);
+        mesh->textureCoordinates[3] = glm::vec2(1.f, 1.f);
         
         mesh->BufferData();
 
         return mesh;
     }
 
-    Mesh * Mesh::CoordinateSystem(float size)
+    Mesh* Mesh::Cube()
+    {
+        Mesh* m = new Mesh();
+
+        m->typeOfPrimitive = GL_TRIANGLES;
+
+        //TO-DO: Check these vertices, the cube isn't rendered correctly when
+        //       disabling rendering by indexes.
+        m->numberOfVertices = 8;
+        m->vertices = new glm::vec3[m->numberOfVertices];
+        m->vertices[0] = glm::vec3(-1.0f, -1.0f, 1.0f);
+        m->vertices[1] = glm::vec3(1.0f, -1.0f, 1.0f);
+        m->vertices[2] = glm::vec3(1.0f, 1.0f, 1.0f);
+        m->vertices[3] = glm::vec3(-1.0f, 1.0f, 1.0f);
+
+        m->vertices[4] = glm::vec3(-1.0f, -1.0f, -1.0f);
+        m->vertices[5] = glm::vec3(1.0f, -1.0f, -1.0f);
+        m->vertices[6] = glm::vec3(1.0f, 1.0f, -1.0f);
+        m->vertices[7] = glm::vec3(-1.0f, 1.0f, -1.0f);
+
+        m->colours = new glm::vec4[m->numberOfVertices];
+        m->colours[0] = Color::Black();
+        m->colours[1] = Color::Red();
+        m->colours[2] = Color::Yellow();
+        m->colours[3] = Color::Green();
+        m->colours[4] = Color::White();
+        m->colours[5] = Color::Blue();
+        m->colours[6] = Color::Magenta();
+        m->colours[7] = Color::Cyan();
+
+        m->numberOfIndices = 36;
+        m->indices = new GLuint[m->numberOfIndices]
+        {
+            // front
+            0, 1, 2,
+            2, 3, 0,
+            // top
+            3, 2, 6,
+            6, 7, 3,
+            // back
+            7, 6, 5,
+            5, 4, 7,
+            // bottom
+            4, 5, 1,
+            1, 0, 4,
+            // left
+            4, 0, 3,
+            3, 7, 4,
+            // right
+            1, 5, 6,
+            6, 2, 1
+        };
+
+        m->BufferData();
+
+        return m;
+    }
+
+    Mesh* Mesh::HeightMap(const char* heigtmapFileName, float sizeX, float sizeZ, float maxHeight)
+    {
+        int width, height, channels;
+        unsigned char *ht_map = SOIL_load_image
+        (
+            heigtmapFileName,
+            &width, &height, &channels,
+            SOIL_LOAD_L
+        );
+        
+        //TO-DO: Handle the case when the image loading fails
+
+        Mesh* hMap = Surface(width, height, sizeX, sizeZ);
+        
+        size_t offset = 0;
+        for (size_t x = 0; x < width; ++x)
+        {
+            for (size_t z = 0; z < height; ++z)
+            {
+                offset = (x * width) + z;
+                hMap->vertices[offset] = glm::vec3(hMap->vertices[offset].x, maxHeight * ht_map[offset], hMap->vertices[offset].z);
+            }
+        }
+        SOIL_free_image_data(ht_map);
+        hMap->BufferData();
+
+        return hMap;
+    }
+
+    Mesh* Mesh::Surface(size_t width, size_t height, float sizeX, float sizeZ)
+    {
+        Mesh* m = new Mesh();
+
+        m->typeOfPrimitive = GL_TRIANGLES;
+
+        m->numberOfVertices = width * height;
+        m->vertices = new glm::vec3[m->numberOfVertices];
+        m->textureCoordinates = new glm::vec2[m->numberOfVertices];
+        m->colours = new glm::vec4[m->numberOfVertices];
+
+        float textureX = 1.f / sizeX;
+        float textureZ = 1.f / sizeZ;
+
+        //TO-DO: Center the surface to its origin, right now it's being created in the XZ plane.
+        size_t offset = 0;
+        for (size_t x = 0; x < width; ++x)
+        {
+            for (size_t z = 0; z < height; ++z)
+            {
+                offset = (x * width) + z;
+                m->vertices[offset] = glm::vec3(x * sizeX, 0.f, z * sizeZ);
+                m->colours[offset] = Color::White();
+                m->textureCoordinates[offset] = glm::vec2(x * textureX, z * textureZ);
+            }
+        }
+
+        m->numberOfIndices = (width - 1) * (height - 1) * 6;
+        m->indices = new GLuint[m->numberOfIndices];
+        
+        unsigned int index = 0;
+
+        for (size_t x = 0; x < width - 1; ++x)
+        {
+            for (size_t z = 0; z < height - 1; ++z)
+            {
+                int a = (x * width) + z;
+                int b = ((x + 1) * width) + z;
+                int c = ((x + 1) * width) + (z + 1);
+                int d = (x * width) + (z + 1);
+
+                m->indices[index++] = c;
+                m->indices[index++] = b;
+                m->indices[index++] = a;
+
+                m->indices[index++] = a;
+                m->indices[index++] = d;
+                m->indices[index++] = c;
+            }
+        }
+
+        /*for (size_t i = 0; i < m->numberOfVertices; ++i)
+        {
+            m->colours[i] = Color::White();
+        }*/
+
+        m->BufferData();
+
+        return m;
+    }
+
+    Mesh* Mesh::CoordinateSystem(float size)
     {
         Mesh* mesh = new Mesh();
         mesh->typeOfPrimitive = GL_LINES;

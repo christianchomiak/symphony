@@ -12,6 +12,11 @@ namespace Symphony
     {
     }
 
+    RenderObject::RenderObject(Mesh* m, Shader* s)
+        : mesh(m), shader(s)
+    {
+    }
+
     RenderObject::~RenderObject()
     {
         delete mesh;

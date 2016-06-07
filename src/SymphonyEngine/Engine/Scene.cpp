@@ -28,14 +28,19 @@ void Symphony::Scene::AddGameObject(GameObject* go)
     root->AddChild(go);
 }
 
-void Symphony::Scene::AddGameObject(Camera* go)
+void Symphony::Scene::AddGameObject(Camera* cam)
 {
-    if (go == nullptr) return;
+    if (cam == nullptr) return;
     
     Debug::Log("Added a CAMERA");
-    cameras.push_back(go);
+    cameras.push_back(cam);
 
-    root->AddChild(go);
+    root->AddChild(cam);
+}
+
+void Symphony::Scene::RegisterCamera(Camera* cam)
+{
+    cameras.push_back(cam);
 }
 
 void Symphony::Scene::SetID(unsigned int newID)

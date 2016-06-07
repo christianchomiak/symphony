@@ -121,11 +121,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FreeRoamCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SimpleRenderer.cpp" />
     <ClCompile Include="TestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FreeRoamCamera.h" />
     <ClInclude Include="SimpleRenderer.h" />
     <ClInclude Include="TestScene.h" />
   </ItemGroup>

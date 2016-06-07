@@ -13,7 +13,7 @@ namespace Symphony
     public:
         static Texture LoadTexture(const char* textureFilename,
                                    Texture::WrappingType typeOfWrapping = Texture::WrappingType::REPEAT,
-                                   bool filtering = false);
+                                   Texture::FilteringType filtering = Texture::FilteringType::NEAREST, bool flipY = true);
         
         //TO-DO: Figure out a better way to handle textures as they might
         //       be freed in OPENGL but other texture structs could still be

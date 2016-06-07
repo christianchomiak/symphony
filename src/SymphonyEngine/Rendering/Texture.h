@@ -6,14 +6,18 @@ namespace Symphony
     {
     public:
         enum WrappingType { REPEAT, MIRRORED_REPEAT, CLAMP, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
+        enum FilteringType { NEAREST, LINEAR, TRILINEAR };
 
-        WrappingType typeOfWrapping;
-        bool filter;
+        WrappingType wrapping;
+
+        //TO-DO: Perhaps there should be separate filtering options for MIN & MAG properties
+        FilteringType filter;
+
         unsigned int id;
         
     public:
-        Texture(unsigned int newID = 0, WrappingType wrapping = WrappingType::REPEAT, bool filter = false)
-            : id(newID), typeOfWrapping(wrapping), filter(filter)
+        Texture(unsigned int newID = 0, WrappingType wrapping = WrappingType::REPEAT, FilteringType filter = FilteringType::NEAREST)
+            : id(newID), wrapping(wrapping), filter(filter)
         {
         }
         

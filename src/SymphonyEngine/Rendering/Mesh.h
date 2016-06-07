@@ -45,6 +45,9 @@ namespace Symphony
     public:
         static Mesh* Triangle();
         static Mesh* Quad();
+        static Mesh* Cube();
+        static Mesh* HeightMap(const char* heigtmapFileName, float sizeX, float sizeZ, float maxHeight = 1.f);
+        static Mesh* Surface(size_t width, size_t height, float sizeX, float sizeZ);
         static Mesh* CoordinateSystem(float size = 1.f);
     };
 }

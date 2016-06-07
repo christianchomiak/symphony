@@ -27,6 +27,8 @@ namespace Symphony
         glm::mat4 localTransformMatrix;
         glm::mat4 worldTransformMatrix;
 
+        glm::quat invertedLocalRotation;
+
         bool localTransformMatrixDeprecated;
 
     public:
@@ -45,6 +47,8 @@ namespace Symphony
         const glm::vec3& GetLocalScale() const;
         const glm::quat& GetLocalRotation() const;
 
+        glm::vec3 GetPosition() const;
+
         virtual const glm::vec3& Forward() const;
         virtual const glm::vec3& Up() const;
         virtual const glm::vec3& Right() const;
@@ -62,7 +66,9 @@ namespace Symphony
 
         friend std::ostream& operator<<(std::ostream& os, const Transform& obj)
         {
-            os << "Position: (" << obj.localPosition.x << ", " << obj.localPosition.y << ", " << obj.localPosition.z << ")" << std::endl;
+            glm::vec3 gp = obj.GetPosition();
+            os << "Global Position: (" << gp.x << ", " << gp.y << ", " << gp.z << ")" << std::endl;
+            os << "Local Position: (" << obj.localPosition.x << ", " << obj.localPosition.y << ", " << obj.localPosition.z << ")" << std::endl;
             os << "Scale: (" << obj.localScale.x << ", " << obj.localScale.y << ", " << obj.localScale.z << ")" << std::endl;
 
             // transform quaternion
@@ -71,6 +77,9 @@ namespace Symphony
 
             return os;
         }
+    
+    protected:
+        static glm::vec4 WORLD_UP, WORLD_FORWARD;
     };
     
     inline const glm::mat4x4& Symphony::Transform::GetLocalTransformMatrix()
@@ -107,6 +116,11 @@ namespace Symphony
         return localRotation;
     }
     
+    inline glm::vec3 Symphony::Transform::GetPosition() const
+    {
+        return glm::vec3(worldTransformMatrix[3]);
+    }
+
     inline const glm::vec3& Symphony::Transform::Forward() const {
         return forward;
     }

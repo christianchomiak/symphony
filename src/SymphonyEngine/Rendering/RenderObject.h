@@ -15,6 +15,7 @@ namespace Symphony
     public:
         RenderObject();
         RenderObject(Mesh*, Texture, Shader*);
+        RenderObject(Mesh*, Shader*);
 
         void SetMesh(Mesh*);
         void SetTexture(const Texture& t);
@@ -43,7 +44,7 @@ namespace Symphony
     inline void RenderObject::SetTexture(const Texture & t)
     {
         texture.id = t.id;
-        texture.typeOfWrapping = t.typeOfWrapping;
+        texture.wrapping = t.wrapping;
         texture.filter = t.filter;
     }
 
