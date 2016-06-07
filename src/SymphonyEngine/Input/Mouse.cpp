@@ -24,6 +24,7 @@ void Symphony::Mouse::Reset()
 void Symphony::Mouse::Update()
 {
     anyButtonPressed = false;
+    
     for (size_t i = 0; i < (size_t)numberOfButtons; ++i)
     {
         if (buttons[i] == InputState::DOWN)
@@ -39,6 +40,9 @@ void Symphony::Mouse::Update()
         {
             buttons[i] = InputState::IDLE;
         }
+
+        deltaPosition.x = 0;
+        deltaPosition.y = 0;
     }
 }
 
@@ -58,6 +62,15 @@ void Symphony::Mouse::UpdateButton(int id, int state)
     {
         buttons[id] = InputState::UP;
     }
+}
+
+void Symphony::Mouse::UpdatePosition(float newX, float newY)
+{
+    glm::vec2 newPosition = glm::vec2(newX, newY);
+    deltaPosition.x = newPosition.x - position.x;
+    deltaPosition.y = position.y - newPosition.y;
+    position.x = newX;
+    position.y = newY;
 }
 
 bool Symphony::Mouse::ButtonPressed(int button) const

@@ -30,7 +30,7 @@ namespace Symphony
             Window::CursorMode cursorMode;
 
             WindowProperties()
-            : WindowProperties("Symphony Window", 1280, 720, false, true, true, false, false, Window::CursorMode::NORMAL)
+            : WindowProperties("Symphony Window", 800, 600, false, true, true, false, false, Window::CursorMode::NORMAL)
             {
             }
 

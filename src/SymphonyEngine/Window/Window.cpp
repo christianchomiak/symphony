@@ -98,6 +98,11 @@ namespace Symphony
         OutputRenderingInfo();
 
         ChangeCursorMode(properties.cursorMode);
+        
+        if (!properties.fullscreen)
+        {
+            glfwSetWindowPos(window, properties.width / 4, properties.height / 4);
+        }
 
         return true;
     }
@@ -125,7 +130,8 @@ namespace Symphony
         properties.title = newName;
         glfwSetWindowTitle(window, properties.title);
     }
-
+    
+    //TO-DO: Camera viewports should be updated whenever the window changes size
     void Window::HandleResize()
     {
         //glfwGetWindowSize(window, &width, &height);

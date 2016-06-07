@@ -23,8 +23,9 @@ namespace Symphony
         static void MousePositionCallback(GLFWwindow* window, double xpos, double ypos)
         {
             Mouse* mouse = Instance()->mouse;
-            mouse->position.x = (float) xpos;
-            mouse->position.y = (float) ypos;
+            //mouse->position.x = (float) xpos;
+            //mouse->position.y = (float) ypos;
+            mouse->UpdatePosition((float)xpos, (float)ypos);
         }
 
         static Keyboard* GetKeyboard() { return Instance()->keyboard; }

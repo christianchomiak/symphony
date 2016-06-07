@@ -10,27 +10,30 @@ namespace Symphony
     {
         friend class InputManager;
     public:
-        
-        inline bool AnyButtonPressed() const { return anyButtonPressed; }
+        float filter;
+    public:
+        bool AnyButtonPressed() const;
 
-        bool ButtonPressed(int button) const;
-        bool ButtonUp(int button)    const;
-        bool ButtonDown(int button)  const;
-        bool ButtonHold(int button)  const;
+        bool      ButtonUp(int button)  const;
+        bool    ButtonDown(int button)  const;
+        bool    ButtonHold(int button)  const;
+        bool ButtonPressed(int button)  const;
         
-        inline double PositionX() const { return position.x; }
-        inline double PositionY() const { return position.y; }
-        inline glm::vec2 Position() const { return position; }        
+        double PositionX() const;
+        double PositionY() const;
 
-        inline bool CheckButtonID(int id) const
-        {
-            return (id >= 0 && id < numberOfButtons);
-        }
+        glm::vec2      Position() const;
+        glm::vec2 DeltaPosition() const;
+        
+        bool CheckButtonID(int id) const;
         
     protected:
-        glm::vec2 position;
         int numberOfButtons;
         bool anyButtonPressed;
+
+        glm::vec2 position;
+        glm::vec2 deltaPosition;
+
         InputState* buttons;
 
         Mouse();
@@ -39,8 +42,40 @@ namespace Symphony
         void Reset();
         void Update();
         void UpdateButton(int id, int state);
+        void UpdatePosition(float newX, float newY);
     };
+
+    inline bool Mouse::AnyButtonPressed() const
+    { 
+        return anyButtonPressed;
+    }
+
+    inline double Mouse::PositionX() const
+    { 
+        return position.x; 
+    }
     
+    inline double Mouse::PositionY() const
+    { 
+        return position.y;
+    }
+
+    inline glm::vec2 Mouse::Position() const
+    {
+        return position;
+    
+    }
+
+    inline glm::vec2 Mouse::DeltaPosition() const
+    {
+        return deltaPosition;
+    }
+    
+    inline bool Mouse::CheckButtonID(int id) const
+    {
+        return (id >= 0 && id < numberOfButtons);
+    }
+
     namespace Button
     {
         const int LEFT   = GLFW_MOUSE_BUTTON_1;

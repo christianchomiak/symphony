@@ -11,4 +11,8 @@ public:
     virtual ~FreeRoamCamera() {}
 
     virtual void Update() override;
+protected:
+    float pitch = 0.f;
+    float yaw = 0.f;
+    float sensitivity = 0.05f;
 };

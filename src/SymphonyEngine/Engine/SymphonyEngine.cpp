@@ -36,16 +36,16 @@ namespace Symphony
     bool SymphonyEngine::Initialise()
     {
         Window::WindowProperties wProperties = Window::WindowProperties();
-        /*wProperties.cursorMode = Window::CursorMode::NORMAL;
+        wProperties.cursorMode = Window::CursorMode::DISABLED;
         wProperties.decorated = true;
         wProperties.fullscreen = false;
-        wProperties.width = 800;
-        wProperties.height = 600;
+        wProperties.width = 1280;
+        wProperties.height = 720;
         wProperties.maximised = false;
         wProperties.resizeable = true;
         wProperties.title = "Symphony Engine demo";
-        wProperties.switchableToOtherModes = false;*/
-
+        wProperties.switchableToOtherModes = false;
+        
         return Initialise(wProperties);
     }
 

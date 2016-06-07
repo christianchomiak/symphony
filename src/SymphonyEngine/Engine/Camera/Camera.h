@@ -38,6 +38,9 @@ namespace Symphony
     inline void Camera::Update()
     {
         GameObject::Update();
+
+        //TO-DO: Find a way to cache this, there's no point in computing it
+        //       over and over again for objects that don't move or rotate that often.
         viewMatrix = BuildViewMatrix();
     }
 
