@@ -16,29 +16,29 @@ void FreeRoamCamera::Update()
     float speed = 50.f;
 
     glm::vec3 dir;
-    if (keyboard->KeyPressed(Keyboard::KEY_Q))
+    if (keyboard->KeyPressed(Key::KEY_Q))
     {
         dir += transform.Up();
     }
-    else if (keyboard->KeyPressed(Keyboard::KEY_E))
+    else if (keyboard->KeyPressed(Key::KEY_E))
     {
         dir += -transform.Up();
     }
 
-    if (keyboard->KeyPressed(Keyboard::KEY_W))
+    if (keyboard->KeyPressed(Key::KEY_W))
     {
         dir -= transform.Forward();
     }
-    else if (keyboard->KeyPressed(Keyboard::KEY_S))
+    else if (keyboard->KeyPressed(Key::KEY_S))
     {
         dir += transform.Forward();
     }
 
-    if (keyboard->KeyPressed(Keyboard::KEY_A))
+    if (keyboard->KeyPressed(Key::KEY_A))
     {
         dir-= transform.Right();
     }
-    else if (keyboard->KeyPressed(Keyboard::KEY_D))
+    else if (keyboard->KeyPressed(Key::KEY_D))
     {
         dir += transform.Right();
     }
@@ -51,16 +51,16 @@ void FreeRoamCamera::Update()
     }
 
     float rotationSpeed = 60.f;
-    if (keyboard->KeyPressed(Keyboard::KEY_LEFT))
+    if (keyboard->KeyPressed(Key::ARROW_LEFT))
     {
         transform.Rotate(0, -rotationSpeed * deltaTime, 0);
     }
-    else if (keyboard->KeyPressed(Keyboard::KEY_RIGHT))
+    else if (keyboard->KeyPressed(Key::ARROW_RIGHT))
     {
         transform.Rotate(0, rotationSpeed * deltaTime, 0);
     }
     
-    if (keyboard->KeyPressed(Keyboard::KEY_ENTER))
+    if (keyboard->KeyPressed(Key::ENTER))
     std::cout << transform << std::endl;
 }
 

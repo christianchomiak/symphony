@@ -272,6 +272,12 @@ namespace Symphony
 
         Mesh* hMap = Surface(width, height, sizeX, sizeZ);
         
+        //`ht_map` contains unsigned chars that range from 0 to 255 in value.
+        //This is a workaround to treat them as percentages instead.
+        maxHeight /= 255.f;
+
+        //TO-DO: We just spent time building the surface, there's no need
+        //       to spend even more time visiting every vertex to modify it...
         size_t offset = 0;
         for (size_t x = 0; x < width; ++x)
         {
@@ -279,6 +285,10 @@ namespace Symphony
             {
                 offset = (x * width) + z;
                 hMap->vertices[offset] = glm::vec3(hMap->vertices[offset].x, maxHeight * ht_map[offset], hMap->vertices[offset].z);
+                
+                /*if (ht_map[offset] < 20) hMap->colours[offset] = Color::Blue();
+                else if (ht_map[offset] < 204) hMap->colours[offset] = Color::Green(); 
+                else hMap->colours[offset] = Color::White();*/
             }
         }
         SOIL_free_image_data(ht_map);

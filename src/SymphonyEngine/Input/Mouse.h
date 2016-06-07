@@ -39,19 +39,21 @@ namespace Symphony
         void Reset();
         void Update();
         void UpdateButton(int id, int state);
-
-    public:
-        static const int BUTTON_LEFT    = GLFW_MOUSE_BUTTON_1;
-        static const int BUTTON_RIGHT   = GLFW_MOUSE_BUTTON_2;
-        static const int BUTTON_MIDDLE  = GLFW_MOUSE_BUTTON_3;
-
-        static const int BUTTON_1 = GLFW_MOUSE_BUTTON_1;
-        static const int BUTTON_2 = GLFW_MOUSE_BUTTON_2;
-        static const int BUTTON_3 = GLFW_MOUSE_BUTTON_3;
-        static const int BUTTON_4 = GLFW_MOUSE_BUTTON_4;
-        static const int BUTTON_5 = GLFW_MOUSE_BUTTON_5;
-        static const int BUTTON_6 = GLFW_MOUSE_BUTTON_6;
-        static const int BUTTON_7 = GLFW_MOUSE_BUTTON_7;
-        static const int BUTTON_8 = GLFW_MOUSE_BUTTON_8;
     };
+    
+    namespace Button
+    {
+        const int LEFT   = GLFW_MOUSE_BUTTON_1;
+        const int RIGHT  = GLFW_MOUSE_BUTTON_2;
+        const int MIDDLE = GLFW_MOUSE_BUTTON_3;
+
+        const int BTN_1 = GLFW_MOUSE_BUTTON_1;
+        const int BTN_2 = GLFW_MOUSE_BUTTON_2;
+        const int BTN_3 = GLFW_MOUSE_BUTTON_3;
+        const int BTN_4 = GLFW_MOUSE_BUTTON_4;
+        const int BTN_5 = GLFW_MOUSE_BUTTON_5;
+        const int BTN_6 = GLFW_MOUSE_BUTTON_6;
+        const int BTN_7 = GLFW_MOUSE_BUTTON_7;
+        const int BTN_8 = GLFW_MOUSE_BUTTON_8;
+    }
 }

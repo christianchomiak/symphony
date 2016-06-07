@@ -146,7 +146,7 @@ namespace Symphony
             }*/
             
             window->SwapBuffers();
-            running &= !window->Closed() && !keyboard->KeyDown(Keyboard::KEY_ESC);
+            running &= !window->Closed() && !keyboard->KeyDown(Key::ESC);
         }
 
         Unload();

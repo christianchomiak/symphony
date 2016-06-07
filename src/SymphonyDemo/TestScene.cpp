@@ -34,7 +34,7 @@ void TestScene::Initialise()
     hMap->name = "Height Map";
     AddGameObject(hMap);
     hMap->AddRenderObject(
-        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm2.png", 16.f, 16.f, 5.f),
+        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm2.png", 16.f, 16.f, 1000.f),
             TextureManager::LoadTexture("../../resources/Textures/hmTexture.jpg", Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
             Shader::GetShader("UNLIT_TEXTURE")));
     hMap->transform.SetLocalPosition(0, 0, -100);
