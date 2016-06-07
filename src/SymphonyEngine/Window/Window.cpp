@@ -104,6 +104,19 @@ namespace Symphony
             glfwSetWindowPos(window, properties.width / 4, properties.height / 4);
         }
 
+        //TO-DO: Set the window's icon
+        /*int width, height, channels;
+        GLFWimage* icon = new GLFWimage();
+        icon->pixels = SOIL_load_image
+        (
+        "../../icon.png",
+        &width, &height, &channels,
+        SOIL_LOAD_AUTO
+        );
+        icon->width = width;
+        icon->height = height;
+        glfwSetWindowIcon(window, 1, icon);*/
+
         return true;
     }
 

@@ -4,6 +4,8 @@
 #include "../GameObject.h"
 #include "ViewPort.h"
 
+#include "Frustum.h"
+
 namespace Symphony
 {
     class Camera : public GameObject
@@ -18,13 +20,16 @@ namespace Symphony
         const glm::mat4& Camera::ProjectionMatrix() const;
 
         virtual void SetViewPort(ViewPort& newViewPort);
-        const glm::mat4& BuildViewMatrix() const;
-        
+
+        const glm::mat4& ViewMatrix() const;
+                
+        const Frustum& GetFrustum() const;
     protected:
         float nearPlane, farPlane;
         glm::mat4 projectionMatrix;
         glm::mat4 viewMatrix;
         ViewPort viewport;
+        Frustum frustum;
 
     protected:
         Camera();
@@ -32,20 +37,22 @@ namespace Symphony
         Camera(float nearPlane, float farPlane, ViewPort& vp);
         Camera(ViewPort& vp);
 
+        const glm::mat4& BuildViewMatrix() const;
         virtual void RecomputeProjectionMatrix() = 0;
     };
-    
-    inline void Camera::Update()
-    {
-        GameObject::Update();
-
-        //TO-DO: Find a way to cache this, there's no point in computing it
-        //       over and over again for objects that don't move or rotate that often.
-        viewMatrix = BuildViewMatrix();
-    }
 
     inline const glm::mat4& Camera::ProjectionMatrix() const
     {
         return projectionMatrix;
+    }
+
+    inline const Frustum& Camera::GetFrustum() const
+    {
+        return frustum;
+    }
+
+    inline const glm::mat4& Camera::ViewMatrix() const
+    {
+        return viewMatrix;
     }
 }

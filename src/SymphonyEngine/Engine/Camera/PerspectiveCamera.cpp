@@ -49,6 +49,7 @@ namespace Symphony
     //TO-DO: Update the camera when the viewport changes
     void PerspectiveCamera::RecomputeProjectionMatrix()
     {
-        projectionMatrix = glm::perspective(glm::radians(fieldOfView), viewport.AspectRatio(), nearPlane, farPlane);
+        float fov = fieldOfView < 0.f ? -fieldOfView : fieldOfView;
+        projectionMatrix = glm::perspective(glm::radians(fov), viewport.AspectRatio(), nearPlane, farPlane);
     }
 }

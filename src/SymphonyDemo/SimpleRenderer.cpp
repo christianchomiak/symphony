@@ -19,11 +19,13 @@ SimpleRenderer::~SimpleRenderer()
 void SimpleRenderer::Render(const std::vector<Camera*>& cameras, const GameObject* sceneRoot)
 {
     std::vector<const GameObject*> objs;
-    PrepareObjects(sceneRoot, objs);
     
     for (Camera* cam : cameras)
     {
+        PrepareObjects(cam, sceneRoot, objs);
+        //std::cout << "Rendering " << objs.size() << " object(s)" << std::endl;
         RenderCamera(cam, objs);
+        objs.clear();
     }
 }
 
@@ -32,12 +34,14 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+
     glm::mat4 P = cam->ProjectionMatrix(); //glm::mat4(1);
-    glm::mat4 V = cam->BuildViewMatrix();
+    glm::mat4 V = cam->ViewMatrix();
     
     for (auto go : objects)
     {
+        //std::cout << "Rendering object: " << go->name << std::endl;
+
         auto rObject = go->GetRenderObject();
         Shader& ss = *(rObject->GetShader());
         ss.Use();
@@ -56,17 +60,18 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
     glActiveTexture(0);
 }
 
-void SimpleRenderer::PrepareObjects(const GameObject* obj, std::vector<const GameObject*>& objsOut)
+void SimpleRenderer::PrepareObjects(const Camera* camera, const GameObject* obj, std::vector<const GameObject*>& objsOut)
 {
     if (obj == nullptr || !obj->enabled) return;
 
-    if (obj->GetRenderObject() != nullptr && obj->GetRenderObject()->OkToRender())
+    if (obj->GetRenderObject() != nullptr && obj->GetRenderObject()->OkToRender() 
+        && camera->GetFrustum().InsideFrustrum(obj->transform.GetPosition(), obj->GetRenderObject()->GetBoundingRadius()))
     {
         objsOut.push_back(obj);
     }
 
     for (GameObject* o : obj->GetChildren())
     {
-        PrepareObjects(o, objsOut);
+        PrepareObjects(camera, o, objsOut);
     }
 }

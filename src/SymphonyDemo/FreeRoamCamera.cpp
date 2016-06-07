@@ -14,50 +14,16 @@ void FreeRoamCamera::Update()
     Mouse* mouse = InputManager::GetMouse();
 
     glm::vec2 mouseOffset = mouse->DeltaPosition();
-    mouseOffset *= sensitivity;
-    
-    if (glm::abs(mouseOffset.x) < 0.25f)
-    {
-        mouseOffset.x = 0.f;
-    }
-    if (glm::abs(mouseOffset.y) < 0.25f)
-    {
-        mouseOffset.y = 0.f;
-    }
 
-    if (true)
-    {
-        yaw -= mouseOffset.x;
-        pitch += mouseOffset.y;
-        if (pitch > 89.f) pitch = 89.f;
-        else if (pitch < -89.f) pitch = -89.f;
-        transform.SetLocalRotation(pitch, yaw, 0.f);
-    }
-    else
-    {
-        transform.Rotate(-mouseOffset.y, mouseOffset.x, 0);
-    }
+    yaw -= mouseOffset.x;
+    pitch += mouseOffset.y;
 
-
-    /*float mouseXOffset = mouse->PositionX() - mouseXLast;
-    float mouseYOffset = mouseYLast - mouse->PositionY();
-
-    mouseXLast = mouse->PositionX();
-    mouseYLast = mouse->PositionY();
-
-    mouseXOffset *= sensitivity;
-    mouseYOffset *= sensitivity;
-    
-    yaw += mouseXOffset;
-    pitch += mouseYOffset;
-
-    std::cout << "Yaw: " << yaw << ", Pitch: " << pitch << std::endl;
-
-    if (pitch > 89.f) pitch = 89.f;
+    if      (pitch >  89.f) pitch = 89.f;
     else if (pitch < -89.f) pitch = -89.f;
-    //transform.SetLocalRotation(pitch, yaw, 0.f);
-    */
 
+    transform.SetLocalRotation(pitch, yaw, 0.f);
+
+    //transform.Rotate(-mouseOffset.y, mouseOffset.x, 0);
 
     Keyboard* keyboard = InputManager::GetKeyboard();
 
@@ -90,27 +56,15 @@ void FreeRoamCamera::Update()
     {
         dir += transform.Right();
     }
-
-    float deltaTime = Time::DeltaTime();
+    
     if (dir.length() > 0.f)
     {
-        dir *= speed;
-        transform.Translate(dir.x * deltaTime, dir.y * deltaTime, dir.z * deltaTime);
-    }
-
-    float rotationSpeed = 60.f;
-    if (keyboard->KeyPressed(Key::ARROW_LEFT))
-    {
-        transform.Rotate(0, -rotationSpeed * deltaTime, 0);
-    }
-    else if (keyboard->KeyPressed(Key::ARROW_RIGHT))
-    {
-        transform.Rotate(0, rotationSpeed * deltaTime, 0);
+        dir *= speed * Time::DeltaTime();
+        transform.Translate(dir.x, dir.y, dir.z);
     }
     
     PerspectiveCamera::Update();
 
-    if (keyboard->KeyDown(Key::SPACE))
-    std::cout << transform << std::endl;
+    if (keyboard->KeyDown(Key::SPACE)) std::cout << transform << std::endl;
 }
 

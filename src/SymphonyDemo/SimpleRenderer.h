@@ -14,5 +14,5 @@ public:
     virtual void Render(const std::vector<Camera*>& cameras, const GameObject* sceneRoot) override;
 protected:
     void RenderCamera(Camera* cam, const std::vector<const GameObject*>& objects);
-    void PrepareObjects(const GameObject* obj, std::vector<const GameObject*>& objsOut);
+    void PrepareObjects(const Camera* camera, const GameObject* obj, std::vector<const GameObject*>& objsOut);
 };

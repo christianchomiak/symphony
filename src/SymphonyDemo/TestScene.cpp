@@ -34,7 +34,7 @@ void TestScene::Initialise()
     hMap->name = "Height Map";
     AddGameObject(hMap);
     hMap->AddRenderObject(
-        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm2.png", 16.f, 16.f, 1000.f),
+        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm.png", 16.f, 16.f, 1000.f),
             TextureManager::LoadTexture("../../resources/Textures/hmTexture.jpg", Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
             Shader::GetShader("UNLIT_TEXTURE")));
     hMap->transform.SetLocalPosition(0, 0, -100);
@@ -45,23 +45,27 @@ void TestScene::Initialise()
     emptyGo->transform.Translate(2.5f, 0, 5);
     emptyGo->transform.Rotate(0, 25, 0);*/
     
-    cube = new GameObject();
-    cube->name = "Cube";
-    AddGameObject(cube);
-    cube->AddRenderObject(
-        new RenderObject(Mesh::Cube(),
-            //TextureManager::LoadTexture("../../resources/Textures/face.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR),
-            Shader::GetShader("UNLIT_COLOR")));
-    //emptyGo->AddChild(cube);
-    cube->transform.SetLocalPosition(0, 0, -30.f);
 
     FreeRoamCamera* cam = new FreeRoamCamera();
     cam->name = "Camera";
     //RegisterCamera(cam);
     //emptyGo->AddChild(cam);
-    cam->transform.Translate(0, 5, 5);
+    cam->transform.Translate(0, 150, 5);
     cam->transform.Rotate(0, 90, 0);
     AddGameObject(cam);
+
+    cube = new GameObject();
+    cube->name = "Cube";
+    AddGameObject(cube);
+    //cam->AddChild(cube);
+    cube->AddRenderObject(
+        new RenderObject(Mesh::Cube(),
+            //TextureManager::LoadTexture("../../resources/Textures/face.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR),
+            Shader::GetShader("UNLIT_COLOR")));
+    //emptyGo->AddChild(cube);
+    cube->transform.SetLocalPosition(0, 150, -10.f);
+    cube->GetRenderObject()->SetBoundingRadius(1.5f);
+
 
 
     /*PerspectiveCamera* cam = new PerspectiveCamera(45.f);

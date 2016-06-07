@@ -27,10 +27,18 @@ namespace Symphony
 
         bool OkToRender() const;
         
+        float GetBoundingRadius() const;
+        void SetBoundingRadius(float);
+
+        //static bool CompareByCameraDistance(RenderObject*, RenderObject*);
+
     protected:
         Mesh* mesh;
         Texture texture;    //TO-DO: Textures should be part of a material, together with the shader reference
         Shader* shader;
+
+        //TO-DO: this value should be calculated using the proportions from the mesh
+        float boundingRadius;
 
     protected:
         ~RenderObject();
@@ -71,5 +79,15 @@ namespace Symphony
     inline bool RenderObject::OkToRender() const
     {
         return mesh != nullptr && shader != nullptr;
+    }
+
+    inline float RenderObject::GetBoundingRadius() const
+    {
+        return boundingRadius;
+    }
+    
+    inline void RenderObject::SetBoundingRadius(float br)
+    {
+        boundingRadius = br;
     }
 }

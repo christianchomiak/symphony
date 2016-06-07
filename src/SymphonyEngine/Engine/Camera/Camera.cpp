@@ -42,3 +42,14 @@ const glm::mat4& Symphony::Camera::BuildViewMatrix() const
     /*return glm::toMat4(transform.GetLocalRotation())
          * glm::translate(-transform.GetPosition());*/
 }
+
+void Symphony::Camera::Update()
+{
+    GameObject::Update();
+
+    //TO-DO: Find a way to cache this, there's no point in computing it
+    //       over and over again for objects that don't move or rotate that often.
+    viewMatrix = BuildViewMatrix();
+
+    frustum.FromMatrix(projectionMatrix * viewMatrix);
+}

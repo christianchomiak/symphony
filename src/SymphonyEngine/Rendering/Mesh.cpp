@@ -268,6 +268,13 @@ namespace Symphony
             SOIL_LOAD_L
         );
         
+        if (ht_map == nullptr)
+        {
+            std::cerr << "SOIL loading error: " << SOIL_last_result() << std::endl;
+            std::cerr << "Couldn't load heightmap: " << heigtmapFileName << std::endl;
+            return nullptr;
+        }
+
         //TO-DO: Handle the case when the image loading fails
 
         Mesh* hMap = Surface(width, height, sizeX, sizeZ);
@@ -310,6 +317,8 @@ namespace Symphony
 
         float textureX = 1.f / sizeX;
         float textureZ = 1.f / sizeZ;
+        
+        glm::vec3 originOffset = glm::vec3(width * sizeX * -0.5f, 0.f, height * sizeZ * -0.5f);
 
         //TO-DO: Center the surface to its origin, right now it's being created in the XZ plane.
         size_t offset = 0;
@@ -318,7 +327,7 @@ namespace Symphony
             for (size_t z = 0; z < height; ++z)
             {
                 offset = (x * width) + z;
-                m->vertices[offset] = glm::vec3(x * sizeX, 0.f, z * sizeZ);
+                m->vertices[offset] = glm::vec3(x * sizeX, 0.f, z * sizeZ) + originOffset;
                 m->colours[offset] = Color::White();
                 m->textureCoordinates[offset] = glm::vec2(x * textureX, z * textureZ);
             }

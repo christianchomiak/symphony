@@ -8,6 +8,7 @@ Symphony::Mouse::Mouse()
     anyButtonPressed = false;
     numberOfButtons = GLFW_MOUSE_BUTTON_LAST + 1;
     buttons = new InputState[numberOfButtons];
+    sensitivity = 0.05f;
     Reset();
 }
 
@@ -71,6 +72,7 @@ void Symphony::Mouse::UpdatePosition(float newX, float newY)
     deltaPosition.y = position.y - newPosition.y;
     position.x = newX;
     position.y = newY;
+    deltaPosition *= sensitivity;
 }
 
 bool Symphony::Mouse::ButtonPressed(int button) const
@@ -111,4 +113,17 @@ bool Symphony::Mouse::ButtonHold(int button) const
         return false;
     }
     return buttons[button] == InputState::HOLD;
+}
+
+
+void Symphony::Mouse::SetSensitivity(float newSensitivity)
+{
+    if (newSensitivity >= 0.f)
+    {
+        sensitivity = newSensitivity;
+    }
+    else
+    {
+        std::cout << "Trying to set a negative sensitivity to the mouse. Current value not overwritten." << std::endl;
+    }
 }

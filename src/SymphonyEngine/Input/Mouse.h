@@ -26,6 +26,7 @@ namespace Symphony
         glm::vec2 DeltaPosition() const;
         
         bool CheckButtonID(int id) const;
+        void SetSensitivity(float sensitivity);
         
     protected:
         int numberOfButtons;
@@ -33,6 +34,8 @@ namespace Symphony
 
         glm::vec2 position;
         glm::vec2 deltaPosition;
+
+        float sensitivity;
 
         InputState* buttons;
 

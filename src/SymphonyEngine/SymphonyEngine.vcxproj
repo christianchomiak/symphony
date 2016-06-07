@@ -144,8 +144,10 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
     <ClInclude Include="Engine\Camera\Camera.h" />
+    <ClInclude Include="Engine\Camera\Frustum.h" />
     <ClInclude Include="Engine\Camera\OrthographicCamera.h" />
     <ClInclude Include="Engine\Camera\PerspectiveCamera.h" />
+    <ClInclude Include="Engine\Camera\Plane.h" />
     <ClInclude Include="Engine\Camera\ViewPort.h" />
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\Scene.h" />
@@ -170,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="Debugging\Debugging.cpp" />
     <ClCompile Include="Engine\Camera\Camera.cpp" />
+    <ClCompile Include="Engine\Camera\Frustum.cpp" />
     <ClCompile Include="Engine\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="Engine\Camera\PerspectiveCamera.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
