@@ -27,12 +27,13 @@ namespace Symphony
 
     void PointLight::UpdateShader(const Shader* s) const
     {
-        glUniform4fv(glGetUniformLocation(s->ID(), "light.position"), 1, glm::value_ptr(glm::vec4(transform.GetPosition(), 1.0f)));
-        
-        glUniform4fv(glGetUniformLocation(s->ID(), "light.position"), 1, glm::value_ptr(glm::vec4(transform.Forward(), 0.0f)));
-        glUniform4fv(glGetUniformLocation(s->ID(), "light.ambient"), 1, glm::value_ptr(ambient));
-        glUniform4fv(glGetUniformLocation(s->ID(), "light.diffuse"), 1, glm::value_ptr(diffuse));
-        glUniform4fv(glGetUniformLocation(s->ID(), "light.specular"), 1, glm::value_ptr(specular));
+        glUniform1i(glGetUniformLocation(s->ID(), "light.type"), -1);
+
+        glUniform3fv(glGetUniformLocation(s->ID(), "light.position"), 1, glm::value_ptr(transform.GetPosition()));
+
+        glUniform3fv(glGetUniformLocation(s->ID(), "light.ambient"), 1, glm::value_ptr(ambient));
+        glUniform3fv(glGetUniformLocation(s->ID(), "light.diffuse"), 1, glm::value_ptr(diffuse));
+        glUniform3fv(glGetUniformLocation(s->ID(), "light.specular"), 1, glm::value_ptr(specular));
 
         glUniform1f(glGetUniformLocation(s->ID(), "light.constant"), constantTerm);
         glUniform1f(glGetUniformLocation(s->ID(), "light.linear"), linearTerm);
@@ -48,4 +49,3 @@ namespace Symphony
         quadraticTerm = quadratic;
     }
 }
-

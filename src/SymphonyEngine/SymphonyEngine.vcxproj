@@ -154,6 +154,7 @@
     <ClInclude Include="Scene\Light\DirectionalLight.h" />
     <ClInclude Include="Scene\Light\Light.h" />
     <ClInclude Include="Scene\Light\PointLight.h" />
+    <ClInclude Include="Scene\Light\Spotlight.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Engine\SymphonyEngine.h" />
     <ClInclude Include="Scene\Transform.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="Scene\Light\DirectionalLight.cpp" />
     <ClCompile Include="Scene\Light\Light.cpp" />
     <ClCompile Include="Scene\Light\PointLight.cpp" />
+    <ClCompile Include="Scene\Light\Spotlight.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Engine\SymphonyEngine.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />

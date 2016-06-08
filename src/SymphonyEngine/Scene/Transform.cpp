@@ -27,9 +27,9 @@ namespace Symphony
                              * RotationMatrix                   //glm::toMat4(localRotation)
                              * glm::scale(localScale);
 
-        up      = glm::vec3(RotationMatrix * WORLD_UP);
+        /*up      = glm::vec3(RotationMatrix * WORLD_UP);
         forward = glm::vec3(RotationMatrix * WORLD_FORWARD);
-        right   = glm::cross(up, forward);
+        right   = glm::cross(up, forward);*/
         
         //invertedLocalRotation = glm::inverse(localRotation);
 
@@ -47,6 +47,10 @@ namespace Symphony
             worldTransformMatrix = parent->transform.GetWorldTransformMatrix() * GetLocalTransformMatrix();
         }
         
+        up = glm::vec3(worldTransformMatrix * WORLD_UP);
+        forward = glm::vec3(worldTransformMatrix * WORLD_FORWARD);
+        right = glm::cross(up, forward);
+
         //We only need to compute two of the directions as the third one
         //can be computed as the cross product of the previous ones
         /*glm::mat3 worldMat3 = glm::inverse( glm::mat3(worldTransformMatrix));

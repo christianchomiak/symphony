@@ -6,8 +6,10 @@
 
 #include "../SymphonyEngine/Scene/Camera/PerspectiveCamera.h"
 #include "../SymphonyEngine/Scene/Camera/OrthographicCamera.h"
+
 #include "../SymphonyEngine/Scene/Light/PointLight.h"
 #include "../SymphonyEngine/Scene/Light/DirectionalLight.h"
+#include "../SymphonyEngine/Scene/Light/Spotlight.h"
 
 #include "FreeRoamCamera.h"
 
@@ -46,51 +48,76 @@ void TestScene::Initialise()
     cam->transform.Translate(0, 150, -30);
     //cam->transform.Rotate(0, 90, 0);
     AddGameObject(cam);
-        
 
-    if (false)
+    Light* light;
+
+    int lightType = 1;
+    if (lightType < 0)
     {
+        light = new PointLight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), 
+                               50.f, 1.0f, 0.014f, 0.0007f);
+        light->name = "Point Light";
+
         /*PointLight* pLight = new PointLight(Color::White(), 50.f, 1.f, 0.09f, 0.032f);
         pLight->name = "Point Light";
         AddGameObject(pLight);
         pLight->transform.SetLocalPosition(0, 150, -10.f);*/
+        
+        cam->AddChild(light);
+        RegisterLight(light);
+    }
+    else if (lightType == 0)
+    {
+        light = new DirectionalLight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f));
+        light->name = "Directional Light";
+        /*cam->AddChild(dLight);
+        RegisterLight(dLight);*/
+
+        AddGameObject(light);
+        light->transform.SetLocalPosition(0, 100, -10.f);
+        light->transform.SetLocalRotation(45, 0, 0);
     }
     else
     {
-        DirectionalLight* dLight = new DirectionalLight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f));
-        dLight->name = "Directional Light";
-        AddGameObject(dLight);
-        dLight->transform.SetLocalPosition(0, 150, -10.f);
-        dLight->transform.SetLocalRotation(45, 0, 0);
-        /*cam->AddChild(dLight);
-        RegisterLight(dLight);*/
-        
-        GameObject* coord = new GameObject();
-        coord->name = "Coordinate System";
-        //AddGameObject(coord);
-        coord->AddRenderObject(new RenderObject(Mesh::CoordinateSystem(), Texture(), Shader::GetShader("UNLIT_COLOR")));
-        //coord->transform.SetLocalPosition(0, 150, -10.f);
-        dLight->AddChild(coord);
-        
+        light = new Spotlight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f),
+                             20.f, 25.f, 1.0f, 0.007, 0.0002f);
+        light->name = "Spotlight";
 
-        GameObject* cube = new GameObject();
-        cube->name = "Cube";
-        AddGameObject(cube);
-        cube->AddRenderObject(
-            new RenderObject(Mesh::Cube(),
-                TextureManager::LoadTexture("../../resources/Textures/wood.jpg", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR),
-                Shader::GetShader("PHONG")));
-        //dLight->AddChild(cube);
-        cube->GetRenderObject()->SetBoundingRadius(1.5f);
-        cube->transform.SetLocalPosition(dLight->transform.GetLocalPosition());
-        cube->transform.Translate(0, 0, -10);
-        cube->transform.Scale(5.f);
-        /*cube->GetRenderObject()->material = Material(glm::vec3(1.f, 1.f, 1.f),          //Ambient
-                                                     glm::vec3(1.f, 1.f, 1.f),          //Diffuse
-                                                     glm::vec3(1.f, 1.f, 1.f),          //Specular
-                                                     0.1f);                             //Shininess
-        */
+        cam->AddChild(light);
+        RegisterLight(light);
+        light->transform.SetLocalRotation(0, 180, 0);
+        /*AddGameObject(light);
+        light->transform.SetLocalPosition(0, 50, -10.f);
+        light->transform.SetLocalRotation(15, 0, 0);*/
     }
+
+    GameObject* coord = new GameObject();
+    coord->name = "Coordinate System";
+    //AddGameObject(coord);
+    coord->AddRenderObject(new RenderObject(Mesh::CoordinateSystem(), Texture(), Shader::GetShader("UNLIT_COLOR")));
+    //coord->transform.SetLocalPosition(0, 150, -10.f);
+    light->AddChild(coord);
+
+    GameObject* cube = new GameObject();
+    cube->name = "Cube";
+    AddGameObject(cube);
+    cube->AddRenderObject(
+        new RenderObject(Mesh::Cube(),
+            TextureManager::LoadTexture("../../resources/Textures/wood.jpg", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR),
+            Shader::GetShader("PHONG")));
+    cube->GetRenderObject()->SetBoundingRadius(1.5f);
+    
+    //GetPosition doesn't work at this stage because the scene tree hasn't been updated yet.
+    //TO-DO: find a workaround to this issue.
+    cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
+
+    cube->transform.Translate(0, 0, 5);
+    cube->transform.Scale(5.f);
+    /*cube->GetRenderObject()->material = Material(glm::vec3(1.f, 1.f, 1.f),          //Ambient
+    glm::vec3(1.f, 1.f, 1.f),          //Diffuse
+    glm::vec3(1.f, 1.f, 1.f),          //Specular
+    0.1f);                             //Shininess
+    */
 
 
     /*PerspectiveCamera* cam = new PerspectiveCamera(45.f);
