@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "../Engine/Camera/Camera.h"
+#include "../Scene/Scene.h"
 
 namespace Symphony
 {
@@ -9,7 +9,7 @@ namespace Symphony
     {
     public:
         virtual ~Renderer() {};
-        virtual void Render(const std::vector<Camera*>& cameras, const GameObject* sceneRoot) = 0;
+        virtual void Render(const GameObject* sceneRoot, const std::vector<Camera*>& cameras, const std::vector<Light*>& lights) = 0;
         void ProcessTexture(const Texture& t) const;
     };
 }

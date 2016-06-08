@@ -23,8 +23,6 @@ void Symphony::Scene::AddGameObject(GameObject* go)
 {
     if (go == nullptr) return;
 
-    Debug::Log("Added a GAMEOBJECT");
-
     root->AddChild(go);
 }
 
@@ -32,15 +30,32 @@ void Symphony::Scene::AddGameObject(Camera* cam)
 {
     if (cam == nullptr) return;
     
-    Debug::Log("Added a CAMERA");
     cameras.push_back(cam);
-
     root->AddChild(cam);
 }
 
+void Symphony::Scene::AddGameObject(Light* light)
+{
+    if (light == nullptr) return;
+
+    lights.push_back(light);
+    root->AddChild(light);
+}
+
+//TO-DO: Make absolutely sure that cameras that are are registered
+//       also belong to the scene tree
 void Symphony::Scene::RegisterCamera(Camera* cam)
 {
+    if (cam == nullptr) return;
     cameras.push_back(cam);
+}
+
+//TO-DO: Make absolutely sure that lights that are are registered
+//       also belong to the scene tree
+void Symphony::Scene::RegisterLight(Light* light)
+{
+    if (light == nullptr) return;
+    lights.push_back(light);
 }
 
 void Symphony::Scene::SetID(unsigned int newID)

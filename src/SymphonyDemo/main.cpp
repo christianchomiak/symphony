@@ -17,7 +17,7 @@ void LoadShaders()
     vector<const char*> uniforms;
         
     attributes = { "position", "color" };
-    uniforms = { "MVP" };
+    uniforms = { "modelMatrix", "viewMatrix", "projectionMatrix" };
     sEngine->LoadShader("UNLIT_COLOR", attributes, uniforms, 
                         "../../resources/Shaders/Unlit/colored.vert.glsl",
                         "../../resources/Shaders/Unlit/colored.frag.glsl");
@@ -26,6 +26,14 @@ void LoadShaders()
     sEngine->LoadShader("UNLIT_TEXTURE", attributes, uniforms, 
                         "../../resources/Shaders/Unlit/textured.vert.glsl",
                         "../../resources/Shaders/Unlit/textured.frag.glsl");
+    attributes.clear();
+    uniforms.clear();
+
+    attributes = { "position", "color", "textureCoordinate", "normal" };
+    uniforms = { "modelMatrix", "viewMatrix", "projectionMatrix" };
+    sEngine->LoadShader("PHONG", attributes, uniforms,
+        "../../resources/Shaders/phong.vert.glsl",
+        "../../resources/Shaders/phong.frag.glsl");
     attributes.clear();
     uniforms.clear();
 }
@@ -48,7 +56,7 @@ int main(int argc, char* args[])
     sEngine->Run();
     sEngine->Shutdown();
     
-    system("pause");
+    //system("pause");
     
     return 0;
 }

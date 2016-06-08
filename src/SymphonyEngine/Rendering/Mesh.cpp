@@ -3,6 +3,7 @@
 #define GLEW_STATIC
 #include <GLEW/GL/glew.h> //GLEW must be included before any other GL-related header files
 #include <SOIL2/SOIL2.h>
+#include <glm/geometric.hpp>
 
 #include "../Debugging/Debugging.h"
 
@@ -25,6 +26,60 @@ namespace Symphony
         for (unsigned short i = 0; i < MAX_BUFFER; ++i)
         {
             vboID[i] = 0;
+        }
+    }
+
+    void Mesh::GenerateNormals()
+    {
+        glm::vec3 n;
+
+        if (!normals)
+            normals = new glm::vec3[numberOfVertices];
+
+        for (unsigned int i = 0; i < numberOfVertices; ++i)
+            normals[i] = glm::vec3();
+
+        if (indices) //Generate per-vertex normals
+        {
+            unsigned int a;
+            unsigned int b;
+            unsigned int c;
+
+            for (unsigned int i = 0; i < numberOfIndices; i += 3)
+            {
+                a = indices[i];
+                b = indices[i + 1];
+                c = indices[i + 2];
+
+                n = glm::cross(vertices[b] - vertices[a], vertices[c] - vertices[a]);
+
+                normals[a] += n;
+                normals[b] += n;
+                normals[c] += n;
+            }
+        }
+        else //It's just a list of triangles, so generate face normals
+        {
+            for (unsigned int i = 0; i < numberOfVertices; i += 3)
+            {
+                glm::vec3& a = vertices[i];
+                glm::vec3& b = vertices[i + 1];
+                glm::vec3& c = vertices[i + 2];
+
+                n = glm::cross(b - a, c - a);
+
+                normals[i] = n;
+                normals[i + 1] = n;
+                normals[i + 2] = n;
+            }
+        }
+
+        //std::cout << "Number of indices: " << numberOfIndices << std::endl;
+
+        //TO-DO: this could be done inside the previous FORs
+        for (unsigned int i = 0; i < numberOfVertices; ++i)
+        {
+            glm::normalize(normals[i]);
         }
     }
 
@@ -118,7 +173,6 @@ namespace Symphony
         glBindVertexArray(0);
     }
 
-
     Mesh* Mesh::Triangle()
     {
         Mesh* mesh = new Mesh();
@@ -202,60 +256,172 @@ namespace Symphony
 
     Mesh* Mesh::Cube()
     {
-        Mesh* m = new Mesh();
+        Mesh* mesh = new Mesh();
 
-        m->typeOfPrimitive = GL_TRIANGLES;
+        mesh->typeOfPrimitive = GL_TRIANGLES;
 
-        //TO-DO: Check these vertices, the cube isn't rendered correctly when
-        //       disabling rendering by indexes.
-        m->numberOfVertices = 8;
-        m->vertices = new glm::vec3[m->numberOfVertices];
-        m->vertices[0] = glm::vec3(-1.0f, -1.0f, 1.0f);
-        m->vertices[1] = glm::vec3(1.0f, -1.0f, 1.0f);
-        m->vertices[2] = glm::vec3(1.0f, 1.0f, 1.0f);
-        m->vertices[3] = glm::vec3(-1.0f, 1.0f, 1.0f);
+        ///VERTEX DATA
+        float v = 0.5f;
+        mesh->numberOfVertices = 36;
+        mesh->vertices = new glm::vec3[mesh->numberOfVertices];
+        
+        unsigned int index = 0;
+        //Bottom
+        mesh->vertices[index++] = glm::vec3(-v, -v, -v);
+        mesh->vertices[index++] = glm::vec3( v, -v, -v);
+        mesh->vertices[index++] = glm::vec3(-v, -v,  v);
+        mesh->vertices[index++] = glm::vec3( v, -v, -v);
+        mesh->vertices[index++] = glm::vec3( v, -v,  v);
+        mesh->vertices[index++] = glm::vec3(-v, -v,  v);
+                
+        //Top
+        mesh->vertices[index++] = glm::vec3(-v, v, -v);
+        mesh->vertices[index++] = glm::vec3(-v, v,  v);
+        mesh->vertices[index++] = glm::vec3( v, v, -v);
+        mesh->vertices[index++] = glm::vec3( v, v, -v);
+        mesh->vertices[index++] = glm::vec3(-v, v,  v);
+        mesh->vertices[index++] = glm::vec3( v, v,  v);
 
-        m->vertices[4] = glm::vec3(-1.0f, -1.0f, -1.0f);
-        m->vertices[5] = glm::vec3(1.0f, -1.0f, -1.0f);
-        m->vertices[6] = glm::vec3(1.0f, 1.0f, -1.0f);
-        m->vertices[7] = glm::vec3(-1.0f, 1.0f, -1.0f);
+        //Front
+        mesh->vertices[index++] = glm::vec3(-v,-v, v);
+        mesh->vertices[index++] = glm::vec3( v,-v, v);
+        mesh->vertices[index++] = glm::vec3(-v, v, v);
+        mesh->vertices[index++] = glm::vec3( v,-v, v);
+        mesh->vertices[index++] = glm::vec3( v, v, v);
+        mesh->vertices[index++] = glm::vec3(-v, v, v);
 
-        m->colours = new glm::vec4[m->numberOfVertices];
-        m->colours[0] = Color::Black();
+        //Back
+        mesh->vertices[index++] = glm::vec3(-v,-v, -v);
+        mesh->vertices[index++] = glm::vec3(-v, v, -v);
+        mesh->vertices[index++] = glm::vec3( v,-v, -v);
+        mesh->vertices[index++] = glm::vec3( v,-v, -v);
+        mesh->vertices[index++] = glm::vec3(-v, v, -v);
+        mesh->vertices[index++] = glm::vec3( v, v, -v);
+
+        //Left
+        mesh->vertices[index++] = glm::vec3(-v,-v,  v);
+        mesh->vertices[index++] = glm::vec3(-v, v, -v);
+        mesh->vertices[index++] = glm::vec3(-v,-v, -v);
+        mesh->vertices[index++] = glm::vec3(-v,-v,  v);
+        mesh->vertices[index++] = glm::vec3(-v, v,  v);
+        mesh->vertices[index++] = glm::vec3(-v, v, -v);
+
+        //Right
+        mesh->vertices[index++] = glm::vec3(v,-v,  v);
+        mesh->vertices[index++] = glm::vec3(v,-v, -v);
+        mesh->vertices[index++] = glm::vec3(v, v, -v);
+        mesh->vertices[index++] = glm::vec3(v,-v,  v);
+        mesh->vertices[index++] = glm::vec3(v, v, -v);
+        mesh->vertices[index++] = glm::vec3(v, v,  v);
+
+        index = 0;
+        ///TEXTURE COORDINATE DATA
+        mesh->textureCoordinates = new glm::vec2[mesh->numberOfVertices];
+
+        //Bottom
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+
+        //Top
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+
+        //Front
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+
+        //Back
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+
+        //Left
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+
+        //Right
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+
+
+
+        ///COLOR DATA
+        mesh->colours = new glm::vec4[mesh->numberOfVertices];
+        for (size_t i = 0; i < mesh->numberOfVertices; ++i)
+        {
+            mesh->colours[i] = Color::White();
+        }
+       /* m->colours[0] = Color::Black();
         m->colours[1] = Color::Red();
         m->colours[2] = Color::Yellow();
         m->colours[3] = Color::Green();
         m->colours[4] = Color::White();
         m->colours[5] = Color::Blue();
         m->colours[6] = Color::Magenta();
-        m->colours[7] = Color::Cyan();
+        m->colours[7] = Color::Cyan();*/
 
-        m->numberOfIndices = 36;
-        m->indices = new GLuint[m->numberOfIndices]
-        {
-            // front
-            0, 1, 2,
-            2, 3, 0,
-            // top
-            3, 2, 6,
-            6, 7, 3,
-            // back
-            7, 6, 5,
-            5, 4, 7,
-            // bottom
-            4, 5, 1,
-            1, 0, 4,
-            // left
-            4, 0, 3,
-            3, 7, 4,
-            // right
-            1, 5, 6,
-            6, 2, 1
-        };
+        /*mesh->numberOfIndices = 36;
+        mesh->indices = new GLuint[mesh->numberOfIndices];
+        GLuint* id = mesh->indices;
+        //bottom face
+        *id++ = 0; 	*id++ = 5; 	*id++ = 4;
+        *id++ = 5; 	*id++ = 0; 	*id++ = 1;
 
-        m->BufferData();
+        //top face
+        *id++ = 3; 	*id++ = 7; 	*id++ = 6;
+        *id++ = 3; 	*id++ = 6; 	*id++ = 2;
 
-        return m;
+        //front face
+        *id++ = 7; 	*id++ = 4; 	*id++ = 6;
+        *id++ = 6; 	*id++ = 4; 	*id++ = 5;
+
+        //back face
+        *id++ = 2; 	*id++ = 1; 	*id++ = 3;
+        *id++ = 3; 	*id++ = 1; 	*id++ = 0;
+
+        //left face 
+        *id++ = 3; 	*id++ = 0; 	*id++ = 7;
+        *id++ = 7; 	*id++ = 0; 	*id++ = 4;
+
+        //right face 
+        *id++ = 6; 	*id++ = 5; 	*id++ = 2;
+        *id++ = 2; 	*id++ = 5; 	*id++ = 1;*/
+
+        /*unsigned int txtr = 0;
+        mesh->textureCoordinates = new glm::vec2[24];
+        
+        mesh->textureCoordinates[0] = glm::vec2(0.f, 0.f);
+        mesh->textureCoordinates[1] = glm::vec2(1.f, 0.f);
+        mesh->textureCoordinates[2] = glm::vec2(0.f, 1.f);
+        mesh->textureCoordinates[3] = glm::vec2(1.f, 1.f);*/
+
+        mesh->GenerateNormals();
+        mesh->BufferData();
+
+        return mesh;
     }
 
     Mesh* Mesh::HeightMap(const char* heigtmapFileName, float sizeX, float sizeZ, float maxHeight)
@@ -299,6 +465,8 @@ namespace Symphony
             }
         }
         SOIL_free_image_data(ht_map);
+        hMap->GenerateNormals();
+
         hMap->BufferData();
 
         return hMap;

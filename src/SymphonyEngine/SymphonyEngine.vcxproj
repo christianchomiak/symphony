@@ -143,16 +143,20 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
-    <ClInclude Include="Engine\Camera\Camera.h" />
-    <ClInclude Include="Engine\Camera\Frustum.h" />
-    <ClInclude Include="Engine\Camera\OrthographicCamera.h" />
-    <ClInclude Include="Engine\Camera\PerspectiveCamera.h" />
-    <ClInclude Include="Engine\Camera\Plane.h" />
-    <ClInclude Include="Engine\Camera\ViewPort.h" />
-    <ClInclude Include="Engine\GameObject.h" />
-    <ClInclude Include="Engine\Scene.h" />
+    <ClInclude Include="Rendering\Material.h" />
+    <ClInclude Include="Scene\Camera\Camera.h" />
+    <ClInclude Include="Scene\Camera\Frustum.h" />
+    <ClInclude Include="Scene\Camera\OrthographicCamera.h" />
+    <ClInclude Include="Scene\Camera\PerspectiveCamera.h" />
+    <ClInclude Include="Scene\Camera\Plane.h" />
+    <ClInclude Include="Scene\Camera\ViewPort.h" />
+    <ClInclude Include="Scene\GameObject.h" />
+    <ClInclude Include="Scene\Light\DirectionalLight.h" />
+    <ClInclude Include="Scene\Light\Light.h" />
+    <ClInclude Include="Scene\Light\PointLight.h" />
+    <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Engine\SymphonyEngine.h" />
-    <ClInclude Include="Engine\Transform.h" />
+    <ClInclude Include="Scene\Transform.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Input\Keyboard.h" />
@@ -171,14 +175,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\Debugging.cpp" />
-    <ClCompile Include="Engine\Camera\Camera.cpp" />
-    <ClCompile Include="Engine\Camera\Frustum.cpp" />
-    <ClCompile Include="Engine\Camera\OrthographicCamera.cpp" />
-    <ClCompile Include="Engine\Camera\PerspectiveCamera.cpp" />
-    <ClCompile Include="Engine\GameObject.cpp" />
-    <ClCompile Include="Engine\Scene.cpp" />
+    <ClCompile Include="Scene\Camera\Camera.cpp" />
+    <ClCompile Include="Scene\Camera\Frustum.cpp" />
+    <ClCompile Include="Scene\Camera\OrthographicCamera.cpp" />
+    <ClCompile Include="Scene\Camera\PerspectiveCamera.cpp" />
+    <ClCompile Include="Scene\GameObject.cpp" />
+    <ClCompile Include="Scene\Light\DirectionalLight.cpp" />
+    <ClCompile Include="Scene\Light\Light.cpp" />
+    <ClCompile Include="Scene\Light\PointLight.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Engine\SymphonyEngine.cpp" />
-    <ClCompile Include="Engine\Transform.cpp" />
+    <ClCompile Include="Scene\Transform.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="Input\Mouse.cpp" />

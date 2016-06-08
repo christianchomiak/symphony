@@ -4,7 +4,7 @@
 
 #include "../Utilities/Singleton.h"
 #include "../Time/Time.h"
-#include "Scene.h"
+#include "../Scene/Scene.h"
 #include "../Window/Window.h"
 
 using namespace std;

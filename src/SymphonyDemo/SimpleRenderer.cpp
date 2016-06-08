@@ -16,7 +16,7 @@ SimpleRenderer::~SimpleRenderer()
 {
 }
 
-void SimpleRenderer::Render(const std::vector<Camera*>& cameras, const GameObject* sceneRoot)
+void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camera*>& cameras, const std::vector<Light*>& lights)
 {
     std::vector<const GameObject*> objs;
     
@@ -24,12 +24,14 @@ void SimpleRenderer::Render(const std::vector<Camera*>& cameras, const GameObjec
     {
         PrepareObjects(cam, sceneRoot, objs);
         //std::cout << "Rendering " << objs.size() << " object(s)" << std::endl;
-        RenderCamera(cam, objs);
+        
+        RenderCamera(cam, objs, lights);
+
         objs.clear();
     }
 }
 
-void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObject*>& objects)
+void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObject*>& objects, const std::vector<Light*>& lights)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -37,7 +39,7 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
 
     glm::mat4 P = cam->ProjectionMatrix(); //glm::mat4(1);
     glm::mat4 V = cam->ViewMatrix();
-    
+
     for (auto go : objects)
     {
         //std::cout << "Rendering object: " << go->name << std::endl;
@@ -45,14 +47,35 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
         auto rObject = go->GetRenderObject();
         Shader& ss = *(rObject->GetShader());
         ss.Use();
-        
+
+        /* Update the shader with light data if it uses lights */
+        /* Update the shader with light data only if object is within the light's reach (radius) */
+        /* Update the shader with light data only if light gameobject is enabled */
+        for (size_t i = 0; i < lights.size(); ++i)
+        {
+            if (!lights[i]->enabled) continue;
+            lights[i]->UpdateShader(rObject->GetShader());
+        }
+
         if (rObject->GetTexture().id > 0)
         {
             glActiveTexture(GL_TEXTURE0);
             ProcessTexture(rObject->GetTexture());
         }
 
-        glUniformMatrix4fv(ss("MVP"), 1, GL_FALSE, glm::value_ptr(P*V*go->transform.GetWorldTransformMatrix()));
+        glUniform3fv(glGetUniformLocation(ss.ID(), "cameraPosition"), 1, glm::value_ptr(cam->transform.GetPosition()));
+
+        // Set material properties
+        glUniform3fv(glGetUniformLocation(ss.ID(), "material.ambient"), 1, glm::value_ptr(rObject->material.ambient));
+        glUniform3fv(glGetUniformLocation(ss.ID(), "material.diffuse"), 1, glm::value_ptr(rObject->material.diffuse));
+        glUniform3fv(glGetUniformLocation(ss.ID(), "material.specular"), 1, glm::value_ptr(rObject->material.specular));
+        glUniform1f(glGetUniformLocation(ss.ID(), "material.shininess"), rObject->material.shininess);
+        
+        //glUniformMatrix4fv(ss("MVP"), 1, GL_FALSE, glm::value_ptr(P*V*go->transform.GetWorldTransformMatrix()));
+        glUniformMatrix4fv(ss("modelMatrix"), 1, GL_FALSE, glm::value_ptr(go->transform.GetWorldTransformMatrix()));
+        glUniformMatrix4fv(ss("viewMatrix"), 1, GL_FALSE, glm::value_ptr(V));
+        glUniformMatrix4fv(ss("projectionMatrix"), 1, GL_FALSE, glm::value_ptr(P));
+        
         rObject->GetMesh()->Render();
 
         ss.Release();

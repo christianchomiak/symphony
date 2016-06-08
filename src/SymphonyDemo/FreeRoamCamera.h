@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../SymphonyEngine/Engine/Camera/PerspectiveCamera.h"
+#include "../SymphonyEngine/Scene/Camera/PerspectiveCamera.h"
 
 using namespace Symphony;
 

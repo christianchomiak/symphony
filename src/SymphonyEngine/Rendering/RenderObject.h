@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Material.h"
 
 namespace Symphony
 {
@@ -13,6 +14,8 @@ namespace Symphony
     {
         friend class GameObject;
     public:
+        Material material;
+
         RenderObject();
         RenderObject(Mesh*, Texture, Shader*);
         RenderObject(Mesh*, Shader*);
@@ -37,7 +40,7 @@ namespace Symphony
         Texture texture;    //TO-DO: Textures should be part of a material, together with the shader reference
         Shader* shader;
 
-        //TO-DO: this value should be calculated using the proportions from the mesh
+        //TO-DO: this value should be calculated using the proportions from the mesh and the scale of the object
         float boundingRadius;
 
     protected:

@@ -3,6 +3,7 @@
 #include <vector>
 #include "GameObject.h"
 #include "Camera\Camera.h"
+#include "Light\Light.h"
 
 namespace Symphony
 {
@@ -20,9 +21,13 @@ namespace Symphony
 
         virtual void Update(float deltaTime);
         virtual void Render() = 0;
+
         void AddGameObject(GameObject*);
         void AddGameObject(Camera*);
+        void AddGameObject(Light*);
+
         void RegisterCamera(Camera*);
+        void RegisterLight(Light*);
 
         unsigned int GetID() const { return id; }
         std::string GetName() const { return name; }
@@ -34,6 +39,7 @@ namespace Symphony
         Renderer* renderer;
 
         std::vector<Camera*> cameras;
+        std::vector<Light*> lights;
 
         void SetID(unsigned int);
     };

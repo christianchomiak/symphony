@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../SymphonyEngine/Engine/Scene.h"
+#include "../SymphonyEngine/Scene/Scene.h"
 
 using namespace Symphony;
 
@@ -14,6 +14,4 @@ public:
     virtual void Clean() override;
     virtual void Update(float deltaTime) override;
     virtual void Render() override;
-
-    GameObject* cube;
 };

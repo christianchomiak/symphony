@@ -42,6 +42,7 @@ namespace Symphony
     protected:
         Mesh();
 
+        void GenerateNormals();
     public:
         static Mesh* Triangle();
         static Mesh* Quad();
