@@ -51,10 +51,10 @@ void TestScene::Initialise()
 
     Light* light;
 
-    int lightType = 1;
+    int lightType = 0;
     if (lightType < 0)
     {
-        light = new PointLight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), 
+        light = new PointLight(glm::vec3(0.0f, 0, 0.0f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), 
                                50.f, 1.0f, 0.014f, 0.0007f);
         light->name = "Point Light";
 
@@ -80,7 +80,7 @@ void TestScene::Initialise()
     else
     {
         light = new Spotlight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f),
-                             20.f, 25.f, 1.0f, 0.007, 0.0002f);
+                             12.5f, 15.f, 1.0f, 0.007, 0.0002f);
         light->name = "Spotlight";
 
         cam->AddChild(light);

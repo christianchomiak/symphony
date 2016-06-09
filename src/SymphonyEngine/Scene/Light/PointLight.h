@@ -12,7 +12,7 @@ namespace Symphony
         PointLight(float radius, float constant, float linear, float quadratic);
         PointLight(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float radius, float constant, float linear, float quadratic);
         virtual ~PointLight() {};
-        virtual void UpdateShader(const Shader* s) const override;
+        virtual void UpdateShader(const Shader* s, int lightNumber = -1) const override;
         
         void SetAttenuation(float radius, float constant, float linear, float quadratic);
     protected:

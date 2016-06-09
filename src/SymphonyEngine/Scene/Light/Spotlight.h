@@ -14,7 +14,7 @@ namespace Symphony
         Spotlight(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float cutoff, float outerCutOff,
                  float constant, float linear, float quadratic);
         virtual ~Spotlight() {};
-        virtual void UpdateShader(const Shader* s) const override;
+        virtual void UpdateShader(const Shader* s, int lightNumber = -1) const override;
 
         void SetCutoff(float inner, float outer);
         float GetCutoff() const;

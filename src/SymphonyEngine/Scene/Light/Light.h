@@ -13,10 +13,10 @@ namespace Symphony
         Light(const glm::vec3&, const glm::vec3&, const glm::vec3&);
         virtual ~Light() {};
 
-        virtual void UpdateShader(const Shader*) const = 0;
+        virtual void UpdateShader(const Shader*, int lightNumber = -1) const = 0;
     protected:
         glm::vec3 diffuse,
                   specular,
                   ambient;
     };
-}
+} 

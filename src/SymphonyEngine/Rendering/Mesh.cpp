@@ -419,6 +419,16 @@ namespace Symphony
         mesh->textureCoordinates[3] = glm::vec2(1.f, 1.f);*/
 
         mesh->GenerateNormals();
+
+        //This is a manual version of the cube's normals
+        /*mesh->normals = new glm::vec3[mesh->numberOfVertices];
+        for (size_t i = 0; i < 6; ++i) mesh->normals[i]      = glm::vec3(0.f, -1.f, 0.f);
+        for (size_t i = 0; i < 6; ++i) mesh->normals[6 + i]  = glm::vec3(0.f, 1.f, 0.f);;
+        for (size_t i = 0; i < 6; ++i) mesh->normals[12 + i] = glm::vec3(0.f, 0.f, 1.f);
+        for (size_t i = 0; i < 6; ++i) mesh->normals[18 + i] = glm::vec3(0.f, 0.f, -1.f);
+        for (size_t i = 0; i < 6; ++i) mesh->normals[24 + i] = glm::vec3(-1.f, 0.f, 0.f);
+        for (size_t i = 0; i < 6; ++i) mesh->normals[30 + i] = glm::vec3(1.f, 0.f, 0.f);*/
+
         mesh->BufferData();
 
         return mesh;

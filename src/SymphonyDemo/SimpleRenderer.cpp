@@ -51,15 +51,17 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
         /* Update the shader with light data if it uses lights */
         /* Update the shader with light data only if object is within the light's reach (radius) */
         /* Update the shader with light data only if light gameobject is enabled */
-        for (size_t i = 0; i < lights.size(); ++i)
+        int activeLights = 0;
+        for (; activeLights < lights.size(); ++activeLights)
         {
-            if (!lights[i]->enabled) continue;
-            lights[i]->UpdateShader(rObject->GetShader());
+            if (!lights[activeLights]->enabled) continue;
+            lights[activeLights]->UpdateShader(rObject->GetShader(), activeLights);
         }
+        glUniform1i(glGetUniformLocation(ss.ID(), "numberOfIncomingLights"), activeLights);
 
         if (rObject->GetTexture().id > 0)
         {
-            glActiveTexture(GL_TEXTURE0);
+            //glActiveTexture(GL_TEXTURE0);
             ProcessTexture(rObject->GetTexture());
         }
 
@@ -80,7 +82,7 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
 
         ss.Release();
     }
-    glActiveTexture(0);
+    //glActiveTexture(0);
 }
 
 void SimpleRenderer::PrepareObjects(const Camera* camera, const GameObject* obj, std::vector<const GameObject*>& objsOut)

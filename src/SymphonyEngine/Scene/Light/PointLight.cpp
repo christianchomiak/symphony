@@ -25,19 +25,49 @@ namespace Symphony
     {
     }
 
-    void PointLight::UpdateShader(const Shader* s) const
+    void PointLight::UpdateShader(const Shader* s, int lightNumber) const
     {
-        glUniform1i(glGetUniformLocation(s->ID(), "light.type"), -1);
+        GLuint typeLocation, positionLocation, ambientLocation, diffuseLocation, specularLocation;
+        GLuint constantParamLocation, linearParamLocation, quadParamLocation;
 
-        glUniform3fv(glGetUniformLocation(s->ID(), "light.position"), 1, glm::value_ptr(transform.GetPosition()));
+        if (lightNumber < 0)
+        {
+            typeLocation = glGetUniformLocation(s->ID(), "light.type");
+            positionLocation = glGetUniformLocation(s->ID(), "light.position");
 
-        glUniform3fv(glGetUniformLocation(s->ID(), "light.ambient"), 1, glm::value_ptr(ambient));
-        glUniform3fv(glGetUniformLocation(s->ID(), "light.diffuse"), 1, glm::value_ptr(diffuse));
-        glUniform3fv(glGetUniformLocation(s->ID(), "light.specular"), 1, glm::value_ptr(specular));
+            ambientLocation = glGetUniformLocation(s->ID(), "light.ambient");
+            diffuseLocation = glGetUniformLocation(s->ID(), "light.diffuse");
+            specularLocation = glGetUniformLocation(s->ID(), "light.specular");
 
-        glUniform1f(glGetUniformLocation(s->ID(), "light.constant"), constantTerm);
-        glUniform1f(glGetUniformLocation(s->ID(), "light.linear"), linearTerm);
-        glUniform1f(glGetUniformLocation(s->ID(), "light.quadratic"), quadraticTerm);
+            constantParamLocation = glGetUniformLocation(s->ID(), "light.constant");
+            linearParamLocation = glGetUniformLocation(s->ID(), "light.linear");
+            quadParamLocation = glGetUniformLocation(s->ID(), "light.quadratic");
+        }
+        else
+        {
+            std::string str = std::to_string(lightNumber);
+            typeLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].type").c_str());
+            positionLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].position").c_str());
+
+            ambientLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].ambient").c_str());
+            diffuseLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].diffuse").c_str());
+            specularLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].specular").c_str());
+
+            constantParamLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].constant").c_str());
+            linearParamLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].linear").c_str());
+            quadParamLocation = glGetUniformLocation(s->ID(), ("lights[" + str + "].quadratic").c_str());
+        }
+
+        glUniform1i(typeLocation, -1);
+        glUniform3fv(positionLocation, 1, glm::value_ptr(transform.GetPosition()));
+
+        glUniform3fv(ambientLocation, 1, glm::value_ptr(ambient));
+        glUniform3fv(diffuseLocation, 1, glm::value_ptr(diffuse));
+        glUniform3fv(specularLocation, 1, glm::value_ptr(specular));
+
+        glUniform1f(constantParamLocation, constantTerm);
+        glUniform1f(linearParamLocation, linearTerm);
+        glUniform1f(quadParamLocation, quadraticTerm);
     }
 
     //http://www.ogre3d.org/tikiwiki/tiki-index.php?page=-Point+Light+Attenuation
