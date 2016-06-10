@@ -36,6 +36,14 @@ void LoadShaders()
         "../../resources/Shaders/phong.frag.glsl");
     attributes.clear();
     uniforms.clear();
+
+    attributes = { "position" };
+    uniforms = { "modelMatrix", "viewMatrix", "projectionMatrix", "nearPlane", "farPlane"};
+    sEngine->LoadShader("DEPTH", attributes, uniforms,
+        "../../resources/Shaders/depthtest.vert.glsl",
+        "../../resources/Shaders/depthtest.frag.glsl");
+    attributes.clear();
+    uniforms.clear();
 }
 
 int main(int argc, char* args[])

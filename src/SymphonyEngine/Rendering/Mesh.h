@@ -24,6 +24,7 @@ namespace Symphony
         ~Mesh();
         void BufferData();
         void Render();
+        bool AllowFaceCulling() const;
     protected:
         unsigned int vaoID;
         unsigned int vboID[MAX_BUFFER];
@@ -39,6 +40,8 @@ namespace Symphony
         glm::vec2 *textureCoordinates;
         glm::vec4 *colours;
 
+        bool allowFaceCulling;
+
     protected:
         Mesh();
 
@@ -51,4 +54,9 @@ namespace Symphony
         static Mesh* Surface(size_t width, size_t height, float sizeX, float sizeZ);
         static Mesh* CoordinateSystem(float size = 1.f);
     };
+
+    inline bool Mesh::AllowFaceCulling() const
+    {
+        return allowFaceCulling;
+    }
 }

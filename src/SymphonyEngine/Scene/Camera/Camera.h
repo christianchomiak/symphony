@@ -17,13 +17,13 @@ namespace Symphony
         virtual ~Camera() {};
         
         virtual void Update() override;
-        const glm::mat4& Camera::ProjectionMatrix() const;
-
         virtual void SetViewPort(ViewPort& newViewPort);
-
+        const glm::mat4& Camera::ProjectionMatrix() const;
         const glm::mat4& ViewMatrix() const;
-                
         const Frustum& GetFrustum() const;
+
+        float GetNearPlane() const;
+        float GetFarPlane() const;
     protected:
         float nearPlane, farPlane;
         glm::mat4 projectionMatrix;
@@ -54,5 +54,15 @@ namespace Symphony
     inline const glm::mat4& Camera::ViewMatrix() const
     {
         return viewMatrix;
+    }
+
+    inline float Camera::GetNearPlane() const
+    {
+        return nearPlane;
+    }
+
+    inline float Camera::GetFarPlane() const
+    {
+        return farPlane;
     }
 }

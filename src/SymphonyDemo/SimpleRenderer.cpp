@@ -35,6 +35,9 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
+
+    //glDepthMask(GL_FALSE); //If false, the depth buffer is read-only
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 P = cam->ProjectionMatrix(); //glm::mat4(1);
@@ -47,6 +50,17 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
         auto rObject = go->GetRenderObject();
         Shader& ss = *(rObject->GetShader());
         ss.Use();
+
+        if (rObject->GetMesh()->AllowFaceCulling())
+        {
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+            glFrontFace(GL_CCW);
+        }
+        else
+        {
+            glDisable(GL_CULL_FACE);
+        }
 
         /* Update the shader with light data if it uses lights */
         /* Update the shader with light data only if object is within the light's reach (radius) */
@@ -78,6 +92,10 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
         glUniformMatrix4fv(ss("viewMatrix"), 1, GL_FALSE, glm::value_ptr(V));
         glUniformMatrix4fv(ss("projectionMatrix"), 1, GL_FALSE, glm::value_ptr(P));
         
+        //These two are only for the Depth Testing shader
+        glUniform1f(glGetUniformLocation(ss.ID(), "nearPlane"), cam->GetNearPlane());
+        glUniform1f(glGetUniformLocation(ss.ID(), "farPlane"), cam->GetFarPlane());
+
         rObject->GetMesh()->Render();
 
         ss.Release();

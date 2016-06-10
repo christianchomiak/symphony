@@ -11,6 +11,8 @@ namespace Symphony
 {
     Mesh::Mesh()
     {
+        allowFaceCulling = true;
+
         numberOfVertices    = 0;
         numberOfIndices     = 0;
 
@@ -257,6 +259,8 @@ namespace Symphony
     Mesh* Mesh::Cube()
     {
         Mesh* mesh = new Mesh();
+
+        mesh->allowFaceCulling = false;
 
         mesh->typeOfPrimitive = GL_TRIANGLES;
 

@@ -115,7 +115,7 @@ vec3 ProcessLight(Light light, vec3 normal)
 }
 
 void main()
-{
+{	
 	vec3 tempColor = vec3(0, 0, 0);
     vec3 normal = normalize(IN.normal);
 
