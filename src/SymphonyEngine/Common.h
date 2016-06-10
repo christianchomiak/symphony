@@ -2,7 +2,7 @@
 
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "GLFW/glfw3.lib")
-#pragma comment(lib, "GLEW/x86/glew32s.lib")
+#pragma comment(lib, "GLEW/glew32s.lib")
 
 #ifdef _DEBUG
 #pragma comment(lib, "SOIL2/soil2-debug.lib")
