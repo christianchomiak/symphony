@@ -3,9 +3,12 @@
 #define GLEW_STATIC
 #include <GLEW/GL/glew.h> //GLEW must be included before any other GL-related header files
 
+
+//Symphony::Camera* Symphony::Renderer::currentCamera = nullptr;
+
 void Symphony::Renderer::ProcessTexture(const Texture& texture) const
 {
-    glBindTexture(GL_TEXTURE_2D, texture.id);
+    glBindTexture(GL_TEXTURE_2D, texture.ID());
 
     GLuint action;
 

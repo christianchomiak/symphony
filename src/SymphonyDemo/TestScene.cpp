@@ -103,8 +103,8 @@ void TestScene::Initialise()
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
-            TextureManager::LoadTexture("../../resources/Textures/wood.jpg", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR),
-            Shader::GetShader("PHONG")));
+            TextureManager::LoadTexture("../../resources/Textures/window.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::SEMI),
+            Shader::GetShader("UNLIT_TEXTURE")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
     
     //GetPosition doesn't work at this stage because the scene tree hasn't been updated yet.
@@ -118,6 +118,30 @@ void TestScene::Initialise()
     glm::vec3(1.f, 1.f, 1.f),          //Specular
     0.1f);                             //Shininess
     */
+    
+    cube = new GameObject();
+    cube->name = "Cube2";
+    AddGameObject(cube);
+    cube->AddRenderObject(
+        new RenderObject(Mesh::Cube(),
+            TextureManager::LoadTexture("../../resources/Textures/window.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::SEMI),
+            Shader::GetShader("UNLIT_TEXTURE")));
+    cube->GetRenderObject()->SetBoundingRadius(1.5f);
+    cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
+    cube->transform.Translate(0, 0, 15);
+    cube->transform.Scale(5.f);
+
+    cube = new GameObject();
+    cube->name = "Cube3";
+    AddGameObject(cube);
+    cube->AddRenderObject(
+        new RenderObject(Mesh::Cube(),
+            TextureManager::LoadTexture("../../resources/Textures/grass.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::FULL),
+            Shader::GetShader("TRANSPARENT")));
+    cube->GetRenderObject()->SetBoundingRadius(1.5f);
+    cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
+    cube->transform.Translate(0, 0, 25);
+    cube->transform.Scale(5.f);
 
 
     /*PerspectiveCamera* cam = new PerspectiveCamera(45.f);

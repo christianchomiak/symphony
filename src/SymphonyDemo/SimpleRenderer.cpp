@@ -8,6 +8,11 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <algorithm>    // std::sort
+#include <vector>       // std::vector
+
+#include <functional>
+
 SimpleRenderer::SimpleRenderer()
 {
 }
@@ -18,36 +23,46 @@ SimpleRenderer::~SimpleRenderer()
 
 void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camera*>& cameras, const std::vector<Light*>& lights)
 {
-    std::vector<const GameObject*> objs;
+    std::vector<PossibleObject> objs;
+    std::vector<PossibleObject> transparentObjs;
     
-    for (Camera* cam : cameras)
-    {
-        PrepareObjects(cam, sceneRoot, objs);
-        //std::cout << "Rendering " << objs.size() << " object(s)" << std::endl;
-        
-        RenderCamera(cam, objs, lights);
-
-        objs.clear();
-    }
-}
-
-void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObject*>& objects, const std::vector<Light*>& lights)
-{
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
     //glDepthMask(GL_FALSE); //If false, the depth buffer is read-only
-
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    for (Camera* cam : cameras)
+    {
+        PrepareObjects(cam, sceneRoot, objs, transparentObjs);
+        std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
+        
+        glDisable(GL_BLEND);
+        RenderCamera(cam, objs, lights);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+        //glBlendFunc(GL_ONE, GL_ZERO);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        RenderCamera(cam, transparentObjs, lights);
+
+        objs.clear();
+        transparentObjs.clear(); 
+
+    }
+}
+
+void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<PossibleObject>& objects, const std::vector<Light*>& lights)
+{
     glm::mat4 P = cam->ProjectionMatrix(); //glm::mat4(1);
     glm::mat4 V = cam->ViewMatrix();
 
+    GLuint shaderID = 0;
     for (auto go : objects)
     {
-        //std::cout << "Rendering object: " << go->name << std::endl;
-
-        auto rObject = go->GetRenderObject();
+        auto rObject = go.obj->GetRenderObject();
         Shader& ss = *(rObject->GetShader());
         ss.Use();
 
@@ -72,8 +87,8 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
             lights[activeLights]->UpdateShader(rObject->GetShader(), activeLights);
         }
         glUniform1i(glGetUniformLocation(ss.ID(), "numberOfIncomingLights"), activeLights);
-
-        if (rObject->GetTexture().id > 0)
+        
+        if (rObject->GetTexture().ID() > 0)
         {
             //glActiveTexture(GL_TEXTURE0);
             ProcessTexture(rObject->GetTexture());
@@ -86,11 +101,11 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
         glUniform3fv(glGetUniformLocation(ss.ID(), "material.diffuse"), 1, glm::value_ptr(rObject->material.diffuse));
         glUniform3fv(glGetUniformLocation(ss.ID(), "material.specular"), 1, glm::value_ptr(rObject->material.specular));
         glUniform1f(glGetUniformLocation(ss.ID(), "material.shininess"), rObject->material.shininess);
-        
+            
         //glUniformMatrix4fv(ss("MVP"), 1, GL_FALSE, glm::value_ptr(P*V*go->transform.GetWorldTransformMatrix()));
-        glUniformMatrix4fv(ss("modelMatrix"), 1, GL_FALSE, glm::value_ptr(go->transform.GetWorldTransformMatrix()));
-        glUniformMatrix4fv(ss("viewMatrix"), 1, GL_FALSE, glm::value_ptr(V));
-        glUniformMatrix4fv(ss("projectionMatrix"), 1, GL_FALSE, glm::value_ptr(P));
+        glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(go.obj->transform.GetWorldTransformMatrix()));
+        glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "viewMatrix"), 1, GL_FALSE, glm::value_ptr(V));
+        glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(P));
         
         //These two are only for the Depth Testing shader
         glUniform1f(glGetUniformLocation(ss.ID(), "nearPlane"), cam->GetNearPlane());
@@ -103,12 +118,50 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<const GameObjec
     //glActiveTexture(0);
 }
 
-void SimpleRenderer::PrepareObjects(const Camera* camera, const GameObject* obj, std::vector<const GameObject*>& objsOut)
+void SimpleRenderer::PrepareObjects(const Camera* camera, const GameObject* obj,
+                                    std::vector<PossibleObject>& opaqueObjectsOut,
+                                    std::vector<PossibleObject>& transparentObjectsOut)
 {
     if (obj == nullptr || !obj->enabled) return;
 
-    if (obj->GetRenderObject() != nullptr && obj->GetRenderObject()->OkToRender() 
-        && camera->GetFrustum().InsideFrustrum(obj->transform.GetPosition(), obj->GetRenderObject()->GetBoundingRadius()))
+    auto rObj = obj->GetRenderObject();
+    if (rObj != nullptr && rObj->OkToRender()
+        && camera->GetFrustum().InsideFrustrum(obj->transform.GetPosition(), rObj->GetBoundingRadius()))
+    {
+        if (obj->GetRenderObject()->GetTexture().GetTransparencyType() != Texture::Transparency::SEMI)
+        {
+            //For now, We can disregard the distance between opaque objects and the camera.
+            //Maybe later it could be handy to have that info, though.
+            opaqueObjectsOut.push_back(PossibleObject(obj, 0.0f)); // glm::distance2(obj->transform.GetPosition(), camera->transform.GetPosition())));
+        }
+        else
+        {
+            transparentObjectsOut.push_back(PossibleObject(obj, glm::distance2(obj->transform.GetPosition(), camera->transform.GetPosition())));
+        }
+    }
+
+    for (GameObject* o : obj->GetChildren())
+    {
+        PrepareObjects(camera, o, opaqueObjectsOut, transparentObjectsOut);
+    }
+}
+
+/*void SimpleRenderer::PrepareObjects(const Camera * camera, const GameObject * obj,
+                                    std::vector<const GameObject*>& objsOut, bool filterOpaque)
+{
+    if (obj == nullptr || !obj->enabled) return;
+    
+    bool renderingCondition = obj->GetRenderObject() != nullptr
+                           && obj->GetRenderObject()->OkToRender()
+                           && (
+                                    (filterOpaque && !obj->GetRenderObject()->GetTexture().HasTransparency())
+                                || (!filterOpaque &&  obj->GetRenderObject()->GetTexture().HasTransparency())
+                            )
+                           && camera->GetFrustum().InsideFrustrum(obj->transform.GetPosition(),
+                                                                  obj->GetRenderObject()->GetBoundingRadius())
+                           ;
+    
+    if (renderingCondition)
     {
         objsOut.push_back(obj);
     }
@@ -117,4 +170,4 @@ void SimpleRenderer::PrepareObjects(const Camera* camera, const GameObject* obj,
     {
         PrepareObjects(camera, o, objsOut);
     }
-}
+}*/

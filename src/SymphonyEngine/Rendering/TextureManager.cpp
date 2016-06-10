@@ -8,9 +8,10 @@ namespace Symphony
 {
     std::map<const char*, unsigned int> TextureManager::texturePool;
 
-    Texture TextureManager::LoadTexture(const char* textureFilename, Texture::WrappingType typeOfWrapping, Texture::FilteringType filtering, bool flipY)
+    Texture TextureManager::LoadTexture(const char* textureFilename, Texture::WrappingType typeOfWrapping,
+                                        Texture::FilteringType filtering, bool flipY, Texture::Transparency transparency)
     {
-        Texture newTexture = Texture(0, typeOfWrapping, filtering);
+        Texture newTexture = Texture(0, (transparency != Texture::Transparency::NONE ? Texture::WrappingType::CLAMP_TO_EDGE : typeOfWrapping), filtering);
         auto id = texturePool[textureFilename];
 
         if (id == 0) //The texture doesn't exist
@@ -40,6 +41,7 @@ namespace Symphony
         }
 
         newTexture.id = id;
+        newTexture.transparency = transparency;
         
         return newTexture;
     }

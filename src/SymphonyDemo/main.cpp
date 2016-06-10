@@ -21,11 +21,16 @@ void LoadShaders()
     sEngine->LoadShader("UNLIT_COLOR", attributes, uniforms, 
                         "../../resources/Shaders/Unlit/colored.vert.glsl",
                         "../../resources/Shaders/Unlit/colored.frag.glsl");
-
+    
     attributes = { "position", "textureCoordinate" };
     sEngine->LoadShader("UNLIT_TEXTURE", attributes, uniforms, 
                         "../../resources/Shaders/Unlit/textured.vert.glsl",
                         "../../resources/Shaders/Unlit/textured.frag.glsl");
+    
+    attributes = { "position", "textureCoordinate" };
+    sEngine->LoadShader("TRANSPARENT", attributes, uniforms,
+                        "../../resources/Shaders/Unlit/transparent.vert.glsl",
+                        "../../resources/Shaders/Unlit/transparent.frag.glsl");
     attributes.clear();
     uniforms.clear();
 

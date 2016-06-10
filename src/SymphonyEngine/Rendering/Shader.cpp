@@ -207,7 +207,7 @@ namespace Symphony
         {
             newShader->AddUniform(uniforms[i]);
         }
-
+        
         newShader->Release();
 
         newShader->name = shaderName;

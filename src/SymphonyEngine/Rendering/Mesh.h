@@ -21,6 +21,8 @@ namespace Symphony
     class Mesh
     {
     public:
+        bool allowFaceCulling;
+
         ~Mesh();
         void BufferData();
         void Render();
@@ -39,8 +41,6 @@ namespace Symphony
                   *tangents;
         glm::vec2 *textureCoordinates;
         glm::vec4 *colours;
-
-        bool allowFaceCulling;
 
     protected:
         Mesh();

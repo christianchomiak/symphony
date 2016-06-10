@@ -52,11 +52,9 @@ namespace Symphony
         mesh = m;
     }
 
-    inline void RenderObject::SetTexture(const Texture & t)
+    inline void RenderObject::SetTexture(const Texture& t)
     {
-        texture.id = t.id;
-        texture.wrapping = t.wrapping;
-        texture.filter = t.filter;
+        texture.CopyValuesFromTexture(t);
     }
 
     inline void RenderObject::SetShader(Shader * s)
