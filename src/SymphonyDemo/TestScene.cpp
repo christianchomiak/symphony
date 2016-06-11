@@ -1,6 +1,7 @@
 #include "TestScene.h"
 
 #include "SimpleRenderer.h"
+#include "ComplexRenderer.h"
 #include "../SymphonyEngine/Debugging/Debugging.h"
 #include "../SymphonyEngine/Input/InputManager.h"
 
@@ -18,7 +19,6 @@
 TestScene::TestScene()
 {
     name = "TEST_SCENE1";
-    renderer = new SimpleRenderer();
 }
 
 TestScene::~TestScene()
@@ -27,7 +27,9 @@ TestScene::~TestScene()
 }
 
 void TestScene::Initialise()
-{ 
+{
+    renderer = new ComplexRenderer();
+
     GameObject* hMap = new GameObject();
     hMap->name = "Height Map";
     AddGameObject(hMap);

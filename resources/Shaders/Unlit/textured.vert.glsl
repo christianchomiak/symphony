@@ -13,7 +13,7 @@ out Vertex {
 } OUT;
 
 void main(void) {
-    gl_Position = projectionMatrix * viewMatrix *  modelMatrix * vec4(position, 1.0f);
+  gl_Position = projectionMatrix * viewMatrix *  modelMatrix * vec4(position, 1.0f);
 	//OUT.textureCoordinate = (textureMatrix * vec4(textureCoordinate, 0.0, 1.0)).xy;
 	OUT.textureCoordinate = textureCoordinate;
 }

@@ -213,12 +213,13 @@ namespace Symphony
         Mesh* mesh = new Mesh();
         mesh->typeOfPrimitive = GL_TRIANGLE_STRIP;
 
+        float v = 1.0f;
         mesh->numberOfVertices = 4;
         mesh->vertices = new glm::vec3[mesh->numberOfVertices];
-        mesh->vertices[0] = glm::vec3(-1.0f, -1.0f, 0.0f);
-        mesh->vertices[1] = glm::vec3(1.0f, -1.0f, 0.0f);
-        mesh->vertices[2] = glm::vec3(-1.0f, 1.0f, 0.0f);
-        mesh->vertices[3] = glm::vec3(1.0f, 1.0f, 0.0f);
+        mesh->vertices[0] = glm::vec3(-v, -v, 0.0f);
+        mesh->vertices[1] = glm::vec3(v, -v, 0.0f);
+        mesh->vertices[2] = glm::vec3(-v, v, 0.0f);
+        mesh->vertices[3] = glm::vec3(v, v, 0.0f);
         
         mesh->numberOfIndices = 4;
         mesh->indices = new GLuint[mesh->numberOfIndices];
@@ -264,8 +265,10 @@ namespace Symphony
 
         mesh->typeOfPrimitive = GL_TRIANGLES;
 
-        ///VERTEX DATA
+        //TO-DO: Check why 0.5f creates a half-length cube
         float v = 0.5f;
+
+        ///VERTEX DATA
         mesh->numberOfVertices = 36;
         mesh->vertices = new glm::vec3[mesh->numberOfVertices];
         

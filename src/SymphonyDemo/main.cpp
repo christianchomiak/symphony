@@ -49,13 +49,31 @@ void LoadShaders()
         "../../resources/Shaders/depthtest.frag.glsl");
     attributes.clear();
     uniforms.clear();
+    
+    attributes = { "position", "textureCoordinate" };
+    sEngine->LoadShader("SIMPLE", attributes, uniforms,
+        "../../resources/Shaders/Unlit/simple.vert.glsl",
+        "../../resources/Shaders/Unlit/simple.frag.glsl");
+    attributes.clear();
+    uniforms.clear();
 }
 
 int main(int argc, char* args[])
 {
     sEngine = SymphonyEngine::Instance();
     
-    if (!sEngine->Initialise())
+    Window::WindowProperties wProperties = Window::WindowProperties();
+    wProperties.cursorMode = Window::CursorMode::DISABLED;
+    wProperties.decorated = true;
+    wProperties.fullscreen = false;
+    wProperties.width = 1280;
+    wProperties.height = 720;
+    wProperties.maximised = false;
+    wProperties.resizeable = true;
+    wProperties.title = "Symphony Engine demo";
+    wProperties.switchableToOtherModes = false;
+
+    if (!sEngine->Initialise(wProperties))
     {
         std::cout << "Error trying to initialise Symphony Engine" << std::endl;
         system("pause");
