@@ -13,6 +13,7 @@ void main(void)
   
   //Invert color
   color = vec4(vec3(1.0 - texture(screenTexture, textureCoordinates)), 1.0);
+  //return;
   
   //Grayscale  
   color = texture(screenTexture, textureCoordinates);

@@ -61,9 +61,9 @@ ComplexRenderer::ComplexRenderer()
     }
         
     
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE || !bufferDepthTexture || !bufferColourTexture)
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) // || !bufferDepthTexture || !bufferColourTexture)
     {
-        std::cerr << "Problem in the ComplexRenderer" << std::endl;
+        std::cerr << "Problem in ComplexRenderer" << std::endl;
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -95,9 +95,10 @@ void ComplexRenderer::Render(const GameObject* sceneRoot, const std::vector<Came
     std::vector<PossibleObject> objs;
     std::vector<PossibleObject> transparentObjs;
 
-
     for (Camera* cam : cameras)
     {
+        cam->RenderSkybox();
+
         PrepareObjects(cam, sceneRoot, objs, transparentObjs);
         std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
 

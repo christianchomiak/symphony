@@ -30,19 +30,6 @@ void TestScene::Initialise()
 {
     renderer = new ComplexRenderer();
 
-    GameObject* hMap = new GameObject();
-    hMap->name = "Height Map";
-    AddGameObject(hMap);
-    hMap->AddRenderObject(
-        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm2.png", 16.f, 16.f, 1000.f),
-            TextureManager::LoadTexture("../../resources/Textures/hmTexture.jpg", Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
-            Shader::GetShader("PHONG")));
-    hMap->transform.SetLocalPosition(0, 0, -100);
-    hMap->transform.Scale(0.1f);
-    /*hMap->GetRenderObject()->material = Material(glm::vec3(0.2125f, 0.1275f, 0.054f),
-                                                 glm::vec3(0.714f, 0.4284f, 0.18144f),
-                                                 glm::vec3(0.393548f, 0.271906f, 0.166721f), 0.2f);*/
-    
     FreeRoamCamera* cam = new FreeRoamCamera();
     cam->name = "Camera";
     //RegisterCamera(cam);
@@ -50,21 +37,24 @@ void TestScene::Initialise()
     cam->transform.Translate(0, 150, -30);
     //cam->transform.Rotate(0, 90, 0);
     AddGameObject(cam);
+    cam->SetSkybox(TextureManager::LoadSkybox("SKY",
+        "../../resources/Textures/Skybox/right.jpg",
+        "../../resources/Textures/Skybox/left.jpg",
+        "../../resources/Textures/Skybox/top.jpg",
+        "../../resources/Textures/Skybox/bottom.jpg",
+        "../../resources/Textures/Skybox/back.jpg",
+        "../../resources/Textures/Skybox/front.jpg"),
+        Shader::GetShader("SKYBOX"));
 
     Light* light;
 
     int lightType = 0;
     if (lightType < 0)
     {
-        light = new PointLight(glm::vec3(0.0f, 0, 0.0f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f), 
-                               50.f, 1.0f, 0.014f, 0.0007f);
+        light = new PointLight(glm::vec3(0.0f, 0, 0.0f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f),
+            50.f, 1.0f, 0.014f, 0.0007f);
         light->name = "Point Light";
 
-        /*PointLight* pLight = new PointLight(Color::White(), 50.f, 1.f, 0.09f, 0.032f);
-        pLight->name = "Point Light";
-        AddGameObject(pLight);
-        pLight->transform.SetLocalPosition(0, 150, -10.f);*/
-        
         cam->AddChild(light);
         RegisterLight(light);
     }
@@ -82,7 +72,7 @@ void TestScene::Initialise()
     else
     {
         light = new Spotlight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f),
-                             12.5f, 15.f, 1.0f, 0.007, 0.0002f);
+            12.5f, 15.f, 1.0f, 0.007, 0.0002f);
         light->name = "Spotlight";
 
         cam->AddChild(light);
@@ -108,7 +98,7 @@ void TestScene::Initialise()
             TextureManager::LoadTexture("../../resources/Textures/window.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::SEMI),
             Shader::GetShader("UNLIT_TEXTURE")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
-    
+
     //GetPosition doesn't work at this stage because the scene tree hasn't been updated yet.
     //TO-DO: find a workaround to this issue.
     cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
@@ -120,7 +110,7 @@ void TestScene::Initialise()
     glm::vec3(1.f, 1.f, 1.f),          //Specular
     0.1f);                             //Shininess
     */
-    
+
     cube = new GameObject();
     cube->name = "Cube2";
     AddGameObject(cube);
@@ -144,6 +134,18 @@ void TestScene::Initialise()
     cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
     cube->transform.Translate(0, 0, 25);
     cube->transform.Scale(5.f);
+
+
+
+    GameObject* hMap = new GameObject();
+    hMap->name = "Height Map";
+    AddGameObject(hMap);
+    hMap->AddRenderObject(
+        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm2.png", 16.f, 16.f, 1000.f),
+            TextureManager::LoadTexture("../../resources/Textures/hmTexture.jpg", Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
+            Shader::GetShader("PHONG")));
+    hMap->transform.SetLocalPosition(0, 0, -100);
+    hMap->transform.Scale(0.1f);
 
 
     /*PerspectiveCamera* cam = new PerspectiveCamera(45.f);

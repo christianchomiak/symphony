@@ -3,6 +3,7 @@
 #include <glm/mat4x4.hpp>
 #include "../GameObject.h"
 #include "ViewPort.h"
+#include "../../Rendering/Skybox.h"
 
 #include "Frustum.h"
 
@@ -24,12 +25,17 @@ namespace Symphony
 
         float GetNearPlane() const;
         float GetFarPlane() const;
+
+        void SetSkybox(const Skybox& sBox);
+        void SetSkybox(unsigned int newSkybox, Shader* skyboxShader);
+        void RenderSkybox() const;
     protected:
         float nearPlane, farPlane;
         glm::mat4 projectionMatrix;
         glm::mat4 viewMatrix;
         ViewPort viewport;
         Frustum frustum;
+        Skybox skybox;
 
     protected:
         Camera();

@@ -144,6 +144,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
     <ClInclude Include="Rendering\Material.h" />
+    <ClInclude Include="Rendering\Skybox.h" />
     <ClInclude Include="Scene\Camera\Camera.h" />
     <ClInclude Include="Scene\Camera\Frustum.h" />
     <ClInclude Include="Scene\Camera\OrthographicCamera.h" />
@@ -176,6 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\Debugging.cpp" />
+    <ClCompile Include="Rendering\Skybox.cpp" />
     <ClCompile Include="Scene\Camera\Camera.cpp" />
     <ClCompile Include="Scene\Camera\Frustum.cpp" />
     <ClCompile Include="Scene\Camera\OrthographicCamera.cpp" />

@@ -56,6 +56,12 @@ void LoadShaders()
         "../../resources/Shaders/Unlit/simple.frag.glsl");
     attributes.clear();
     uniforms.clear();
+    
+    sEngine->LoadShader("SKYBOX", attributes, uniforms,
+        "../../resources/Shaders/Unlit/skybox.vert.glsl",
+        "../../resources/Shaders/Unlit/skybox.frag.glsl");
+    attributes.clear();
+    uniforms.clear();
 }
 
 int main(int argc, char* args[])

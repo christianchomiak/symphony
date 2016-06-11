@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Texture.h"
 #include <map>
+#include "Texture.h"
+#include "Skybox.h"
 
 namespace Symphony
 {
@@ -15,6 +16,11 @@ namespace Symphony
                                    Texture::WrappingType typeOfWrapping = Texture::WrappingType::REPEAT,
                                    Texture::FilteringType filtering = Texture::FilteringType::NEAREST, bool flipY = true, Texture::Transparency transparency = Texture::Transparency::NONE);
         
+        static unsigned int LoadSkybox(const char* skyboxName,
+                                 const char* skyboxPositiveX, const char* skyboxNegativeX,
+                                 const char* skyboxPositiveY, const char* skyboxNegativeY,
+                                 const char* skyboxPositiveZ, const char* skyboxNegativeZ);
+
         //TO-DO: Figure out a better way to handle textures as they might
         //       be freed in OPENGL but other texture structs could still be
         //       pointing to the same, now-non-existent, position. 

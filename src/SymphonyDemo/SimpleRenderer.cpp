@@ -35,6 +35,8 @@ void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camer
 
     for (Camera* cam : cameras)
     {
+        cam->RenderSkybox();
+
         PrepareObjects(cam, sceneRoot, objs, transparentObjs);
         std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
         
@@ -50,7 +52,6 @@ void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camer
 
         objs.clear();
         transparentObjs.clear(); 
-
     }
 }
 

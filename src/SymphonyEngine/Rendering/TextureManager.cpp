@@ -46,6 +46,45 @@ namespace Symphony
         return newTexture;
     }
 
+    GLuint TextureManager::LoadSkybox(const char* skyboxName,
+                                      const char* skyboxPositiveX, const char* skyboxNegativeX,
+                                      const char* skyboxPositiveY, const char* skyboxNegativeY,
+                                      const char* skyboxPositiveZ, const char* skyboxNegativeZ)
+    {
+
+        GLuint newSkybox;
+
+        if (texturePool.find(skyboxName) == texturePool.end())
+        {
+            newSkybox = SOIL_load_OGL_cubemap
+            (
+                skyboxPositiveX,
+                skyboxNegativeX,
+                skyboxPositiveY,
+                skyboxNegativeY,
+                skyboxPositiveZ,
+                skyboxNegativeZ,
+                SOIL_LOAD_RGB,
+                SOIL_CREATE_NEW_ID,
+                SOIL_FLAG_MIPMAPS
+            );
+            
+            if (newSkybox == 0)
+            {
+                std::cerr << "SOIL loading error: " << SOIL_last_result() << std::endl;
+                std::cerr << "Couldn't load skybox: " << skyboxName << std::endl;
+            }
+
+            return newSkybox;
+        }
+        else
+        {
+            newSkybox = texturePool[skyboxName];
+        }
+        
+        return newSkybox;
+    }
+
     void TextureManager::FreeTexture(Texture& t)
     {
         glDeleteTextures(1, &t.id);
