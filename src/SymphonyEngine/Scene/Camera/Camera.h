@@ -29,6 +29,7 @@ namespace Symphony
         void SetSkybox(const Skybox& sBox);
         void SetSkybox(unsigned int newSkybox, Shader* skyboxShader);
         void RenderSkybox() const;
+        void UpdateShaderWithSkybox(Shader* shader) const;
     protected:
         float nearPlane, farPlane;
         glm::mat4 projectionMatrix;

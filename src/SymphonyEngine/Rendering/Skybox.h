@@ -11,12 +11,13 @@ namespace Symphony
     {
         friend class Camera;
         friend class TextureManager;
+
     public:
         Skybox();
         Skybox(GLuint id, Mesh* mesh, Shader* shader);
         ~Skybox();
         bool IsValidSkybox() const;
-        void Generate();
+
     protected:
         unsigned int skyboxID;
         Mesh* mesh;

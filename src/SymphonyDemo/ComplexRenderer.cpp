@@ -97,14 +97,14 @@ void ComplexRenderer::Render(const GameObject* sceneRoot, const std::vector<Came
 
     for (Camera* cam : cameras)
     {
-        cam->RenderSkybox();
-
         PrepareObjects(cam, sceneRoot, objs, transparentObjs);
         std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
 
         glDisable(GL_BLEND);
         RenderCamera(cam, objs, lights);
-        
+
+        cam->RenderSkybox();
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
@@ -153,6 +153,9 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<PossibleObject
             glDisable(GL_CULL_FACE);
         }
 
+        cam->UpdateShaderWithSkybox(rObject->GetShader());
+        glUniform3fv(glGetUniformLocation(ss.ID(), "cameraPosition"), 1, glm::value_ptr(cam->transform.GetPosition()));
+
         /* Update the shader with light data if it uses lights */
         /* Update the shader with light data only if object is within the light's reach (radius) */
         /* Update the shader with light data only if light gameobject is enabled */
@@ -169,9 +172,7 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<PossibleObject
             //glActiveTexture(GL_TEXTURE0);
             ProcessTexture(rObject->GetTexture());
         }
-
-        glUniform3fv(glGetUniformLocation(ss.ID(), "cameraPosition"), 1, glm::value_ptr(cam->transform.GetPosition()));
-
+        
         // Set material properties
         glUniform3fv(glGetUniformLocation(ss.ID(), "material.ambient"), 1, glm::value_ptr(rObject->material.ambient));
         glUniform3fv(glGetUniformLocation(ss.ID(), "material.diffuse"), 1, glm::value_ptr(rObject->material.diffuse));
@@ -182,7 +183,7 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<PossibleObject
         glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(go.obj->transform.GetWorldTransformMatrix()));
         glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "viewMatrix"), 1, GL_FALSE, glm::value_ptr(V));
         glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(P));
-
+        
         //These two are only for the Depth Testing shader
         glUniform1f(glGetUniformLocation(ss.ID(), "nearPlane"), cam->GetNearPlane());
         glUniform1f(glGetUniformLocation(ss.ID(), "farPlane"), cam->GetFarPlane());

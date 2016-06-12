@@ -116,8 +116,8 @@ void TestScene::Initialise()
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
-            TextureManager::LoadTexture("../../resources/Textures/window.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::SEMI),
-            Shader::GetShader("UNLIT_TEXTURE")));
+            Texture(), //TextureManager::LoadTexture("../../resources/Textures/window.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::SEMI),
+            Shader::GetShader("REFLECTIVE")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
     cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
     cube->transform.Translate(0, 0, 15);

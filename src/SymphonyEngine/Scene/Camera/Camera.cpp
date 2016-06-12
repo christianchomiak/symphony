@@ -106,4 +106,21 @@ namespace Symphony
         glDepthMask(GL_TRUE);
         glDepthFunc(GL_LESS); // Set depth function back to default
     }
+
+    void Camera::UpdateShaderWithSkybox(Shader* shader) const
+    {
+        if (shader && skybox.IsValidSkybox())
+        {
+            auto location = glGetUniformLocation(shader->ID(), "environmentTexture");
+            
+            if (location >= 0)
+            {
+                //TO-DO: Standardise the locations of textures that will be used in a shader
+                //       For example, all environment textures could be on location #2
+                glUniform1i(location, 2);
+                glActiveTexture(GL_TEXTURE2);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.skyboxID);
+            }
+        }
+    }
 }

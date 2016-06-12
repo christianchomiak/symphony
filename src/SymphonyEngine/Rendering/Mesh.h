@@ -17,7 +17,8 @@ namespace Symphony
         INDEX_BUFFER,       //layout(location = 5)
         MAX_BUFFER
     };
-
+    
+    //TO-DO: Provide means to have pooled meshes and individual meshes (whose lifetimes are determined by the programmer)
     class Mesh
     {
     public:

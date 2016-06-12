@@ -35,13 +35,13 @@ void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camer
 
     for (Camera* cam : cameras)
     {
-        cam->RenderSkybox();
-
         PrepareObjects(cam, sceneRoot, objs, transparentObjs);
         std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
         
         glDisable(GL_BLEND);
         RenderCamera(cam, objs, lights);
+
+        cam->RenderSkybox();
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

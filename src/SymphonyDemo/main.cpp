@@ -52,14 +52,20 @@ void LoadShaders()
     
     attributes = { "position", "textureCoordinate" };
     sEngine->LoadShader("SIMPLE", attributes, uniforms,
-        "../../resources/Shaders/Unlit/simple.vert.glsl",
-        "../../resources/Shaders/Unlit/simple.frag.glsl");
+        "../../resources/Shaders/PostProcess/simple.vert.glsl",
+        "../../resources/Shaders/PostProcess/simple.frag.glsl");
     attributes.clear();
     uniforms.clear();
     
     sEngine->LoadShader("SKYBOX", attributes, uniforms,
         "../../resources/Shaders/Unlit/skybox.vert.glsl",
         "../../resources/Shaders/Unlit/skybox.frag.glsl");
+    attributes.clear();
+    uniforms.clear();
+    
+    sEngine->LoadShader("REFLECTIVE", attributes, uniforms,
+        "../../resources/Shaders/reflection.vert.glsl",
+        "../../resources/Shaders/reflection.frag.glsl");
     attributes.clear();
     uniforms.clear();
 }
