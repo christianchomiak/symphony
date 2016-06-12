@@ -2,8 +2,9 @@
 
 #include <vector>
 #include "GameObject.h"
-#include "Camera\Camera.h"
-#include "Light\Light.h"
+#include "Camera/Camera.h"
+#include "Light/Light.h"
+#include "Text/Text.h"
 
 namespace Symphony
 {
@@ -25,6 +26,7 @@ namespace Symphony
         void AddGameObject(GameObject*);
         void AddGameObject(Camera*);
         void AddGameObject(Light*);
+        void AddText(Text*);
 
         void RegisterCamera(Camera*);
         void RegisterLight(Light*);
@@ -37,7 +39,8 @@ namespace Symphony
         unsigned int id;
         std::string name;
         Renderer* renderer;
-
+        
+        std::vector<Text*> uiText;
         std::vector<Camera*> cameras;
         std::vector<Light*> lights;
 

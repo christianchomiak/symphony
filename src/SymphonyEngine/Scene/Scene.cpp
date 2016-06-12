@@ -42,6 +42,13 @@ void Symphony::Scene::AddGameObject(Light* light)
     root->AddChild(light);
 }
 
+void Symphony::Scene::AddText(Text* text)
+{
+    if (text == nullptr) return;
+
+    uiText.push_back(text);
+}
+
 //TO-DO: Make absolutely sure that cameras that are are registered
 //       also belong to the scene tree
 void Symphony::Scene::RegisterCamera(Camera* cam)

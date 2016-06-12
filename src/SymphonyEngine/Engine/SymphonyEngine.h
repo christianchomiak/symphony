@@ -55,6 +55,7 @@ namespace Symphony
 
         void LoadNextScene();
         void Unload();
+        void LoadFonts();
 
     private:
         static SymphonyEngine* instance;

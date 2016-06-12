@@ -9,8 +9,6 @@
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
 
-#include <functional>
-
 ComplexRenderer::ComplexRenderer()
 {
     bool useRBO = true;

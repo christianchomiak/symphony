@@ -28,13 +28,22 @@ namespace Symphony
         void BufferData();
         void Render();
         bool AllowFaceCulling() const;
+
+        unsigned int GetVBO()
+        {
+            return vboID[VERTEX_BUFFER];
+        }
+        unsigned int GetVAO()
+        {
+            return vaoID;
+        }
     protected:
         unsigned int vaoID;
         unsigned int vboID[MAX_BUFFER];
         unsigned int typeOfPrimitive;
 
         unsigned int numberOfVertices,
-               numberOfIndices;
+                     numberOfIndices;
 
         unsigned int* indices;
         glm::vec3 *vertices,
@@ -54,6 +63,7 @@ namespace Symphony
         static Mesh* HeightMap(const char* heigtmapFileName, float sizeX, float sizeZ, float maxHeight = 1.f);
         static Mesh* Surface(size_t width, size_t height, float sizeX, float sizeZ);
         static Mesh* CoordinateSystem(float size = 1.f);
+        static Mesh* TextMesh();
     };
 
     inline bool Mesh::AllowFaceCulling() const

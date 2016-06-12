@@ -16,14 +16,37 @@
 
 #include "../SymphonyEngine/Rendering/TextureManager.h"
 
+#include "../SymphonyEngine/Scene/Text/TextCharacter.h"
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
+
 TestScene::TestScene()
 {
     name = "TEST_SCENE1";
+    textMesh = Mesh::TextMesh();
+    textShader = Shader::GetShader("TEXT");
+
+    // Configure VAO/VBO for texture quads
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
 }
 
 TestScene::~TestScene()
 {
     delete renderer;
+    delete textMesh;
+    
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 }
 
 void TestScene::Initialise()
@@ -128,7 +151,7 @@ void TestScene::Initialise()
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
-            TextureManager::LoadTexture("../../resources/Textures/grass.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::FULL),
+            TextureManager::LoadTexture("../../resources/Textures/grass.png", Texture::WrappingType::CLAMP, Texture::FilteringType::NEAREST, true, Texture::Transparency::FULL),
             Shader::GetShader("TRANSPARENT")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
     cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
@@ -152,69 +175,26 @@ void TestScene::Initialise()
     //OrthographicCamera* cam = new OrthographicCamera(-1, 1, 1, -1);
     cam->name = "Camera";
     AddGameObject(cam);*/
+
+    txt = new Text("Symphony Engine", glm::vec3(25, 25, 1.0f), glm::vec3(1.f, 1.f, 1.f), 1.f);
+    AddText(txt);
+    //AddText(new Text("Christian Chomiak", glm::vec3(540.f, 570.f, 0.5f), glm::vec3(0.3, 0.7f, 0.9f), 0.1f));
 }
 
 void TestScene::Clean()
 {
     delete root;
+
+    for (auto t : uiText)
+    {
+        delete t;
+    }
 }
 
 void TestScene::Update(float deltaTime)
 {
     Scene::Update(deltaTime);
-
-    /*const Keyboard* keyboard = InputManager::GetKeyboard();
-    
-    const Mouse* mouse = InputManager::GetMouse();
-    if (mouse->ButtonDown(Mouse::BUTTON_LEFT)) Debug::Log("LEFT BUTTON");
-    if (mouse->ButtonDown(Mouse::BUTTON_RIGHT)) Debug::Log("RIGHT BUTTON");
-    if (mouse->ButtonDown(Mouse::BUTTON_MIDDLE)) Debug::Log("MIDDLE BUTTON");
-    if (mouse->ButtonDown(Mouse::BUTTON_4)) Debug::Log("BUTTON 4");
-    if (mouse->ButtonDown(Mouse::BUTTON_5)) Debug::Log("BUTTON 5");
-    if (mouse->ButtonDown(Mouse::BUTTON_6)) Debug::Log("BUTTON 6");
-    if (mouse->ButtonDown(Mouse::BUTTON_7)) Debug::Log("BUTTON 7");
-    if (mouse->ButtonDown(Mouse::BUTTON_8)) Debug::Log("BUTTON 8");
-    
-    float speed = 20.f;
-    if (keyboard->KeyPressed(Keyboard::KEY_ARROW_UP)) go->transform.Rotate(-speed * deltaTime, 0, 0);
-    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_DOWN)) go->transform.Rotate(speed * deltaTime, 0, 0);
-    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_LEFT)) go->transform.Rotate(0, -speed * deltaTime, 0);
-    else if (keyboard->KeyPressed(Keyboard::KEY_ARROW_RIGHT)) go->transform.Rotate(0, speed * deltaTime, 0);
-
-    if (keyboard->KeyPressed(Keyboard::KEY_W))
-    {
-        
-    }
-    
-    glm::vec3 dir;
-    if (keyboard->KeyPressed(Keyboard::KEY_U))
-    {
-        dir = go->transform.Up();
-    }
-    else if (keyboard->KeyPressed(Keyboard::KEY_D))
-    {
-        dir = -go->transform.Up();
-    }
-    else if (keyboard->KeyPressed(Keyboard::KEY_F))
-    {
-        dir = go->transform.Forward();
-    }
-    else if (keyboard->KeyPressed(Keyboard::KEY_B))
-    {
-        dir = -go->transform.Forward();
-    }
-    else if (keyboard->KeyPressed(Keyboard::KEY_L))
-    {
-        dir = -go->transform.Right();
-    }
-    else if (keyboard->KeyPressed(Keyboard::KEY_R))
-    {
-        dir = go->transform.Right();
-    }
-
-    go->transform.Translate(dir.x * deltaTime, dir.y * deltaTime, dir.z * deltaTime);
-
-    if (mouse->ButtonDown(Mouse::BUTTON_LEFT)) go->enabled = !go->enabled;*/
+    //txt->content = std::to_string(deltaTime).c_str();
 }
 
 void TestScene::Render()
@@ -223,4 +203,100 @@ void TestScene::Render()
     {
         renderer->Render(root, cameras, lights);
     }
+    
+    if (uiText.size() == 0) return;
+
+    //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    
+    //glEnable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
+    //glBlendFunc(GL_ONE, GL_ZERO);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+    float x;
+    textShader->Use();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindVertexArray(VAO);
+
+    glm::mat4 proj = glm::ortho(0.0f, (float)Screen::Width(), 0.0f, (float)Screen::Height());
+    glUniformMatrix4fv(glGetUniformLocation(textShader->ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(proj));
+
+    for (auto t : uiText)
+    {
+        glUniform3f(glGetUniformLocation(textShader->ID(), "textColor"), t->color.x, t->color.y, t->color.z);
+        x = t->position.x;
+        // Iterate through all characters
+        std::string::const_iterator c;
+        for (c = t->content.begin(); c != t->content.end(); c++)
+        {
+            TextCharacter ch = TextCharacter::characters[*c];
+
+            GLfloat xpos = x + ch.Bearing.x * t->scale;
+            GLfloat ypos = t->position.y + (ch.Bearing.y) * t->scale;
+
+            GLfloat w = ch.Size.x * t->scale;
+            GLfloat h = ch.Size.y * t->scale;
+                        
+
+            // Update VBO for each character
+            GLfloat vertices[4][4] = {
+                { xpos    , ypos    ,   0.0f, 0.0f },
+                { xpos + w, ypos    ,   1.0f, 0.0f },
+                { xpos    , ypos - h,   0.0f, 1.0f  },
+                { xpos + w, ypos - h,   1.0f, 1.0f }
+            };
+
+            // Render glyph texture over quad
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+            // Update content of VBO memory
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            // Render quad
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+
+            // Update content of VBO memory
+            /*glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            // Render quad
+            glDrawArrays(GL_TRIANGLES, 0, 6);*/
+
+            // Update VBO for each character
+            /*glm::vec3 vertices[6];
+            vertices[0] = glm::vec3(xpos, ypos + h, 0.0f);
+            vertices[1] = glm::vec3(xpos, ypos, 0.0f);
+            vertices[2] = glm::vec3(xpos + w, ypos, 0.0f);
+            vertices[3] = glm::vec3(xpos, ypos + h, 0.0f);
+            vertices[4] = glm::vec3(xpos + w, ypos, 0.0f);
+            vertices[5] = glm::vec3(xpos + w, ypos + h, 0.0f);
+
+            // Render glyph texture over quad
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+
+            glBindBuffer(GL_ARRAY_BUFFER, textMesh->GetVBO());
+            glBufferSubData(GL_ARRAY_BUFFER, 0, 6 * sizeof(glm::vec3), vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            textMesh->Render();*/
+
+            // Update content of VBO memory
+            /*glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            // Render quad
+            glDrawArrays(GL_TRIANGLES, 0, 6);*/
+
+            // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+            x += (ch.Advance >> 6) * t->scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+        }
+    }
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

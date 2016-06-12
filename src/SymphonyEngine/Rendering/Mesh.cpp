@@ -587,5 +587,48 @@ namespace Symphony
         
         return mesh;
     }
+
+    Mesh* Mesh::TextMesh()
+    {
+        Mesh* m = new Mesh();
+        
+        m->typeOfPrimitive = GL_TRIANGLES;
+
+        float v = 1.0f;
+        m->numberOfVertices = 6;
+        m->vertices = new glm::vec3[m->numberOfVertices];
+                
+        m->textureCoordinates = new glm::vec2[m->numberOfVertices];
+        m->textureCoordinates[0] = glm::vec2(0.0f, 0.0f);
+        m->textureCoordinates[1] = glm::vec2(0.0f, 1.0f);
+        m->textureCoordinates[2] = glm::vec2(1.0f, 1.0f);
+        m->textureCoordinates[3] = glm::vec2(0.0f, 0.0f);
+        m->textureCoordinates[4] = glm::vec2(1.0f, 1.0f);
+        m->textureCoordinates[5] = glm::vec2(1.0f, 0.0f);
+        
+        glGenVertexArrays(1, &m->vaoID);
+        glBindVertexArray(m->vaoID);
+
+        glGenBuffers(1, &m->vboID[VERTEX_BUFFER]);
+        glBindBuffer(GL_ARRAY_BUFFER, m->vboID[VERTEX_BUFFER]);
+        glBufferData(GL_ARRAY_BUFFER, m->numberOfVertices * sizeof(glm::vec3), NULL, GL_DYNAMIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(VERTEX_BUFFER, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(VERTEX_BUFFER);
+
+        if (m->textureCoordinates)
+        {
+            glGenBuffers(1, &m->vboID[TEXTURE_BUFFER]);
+            glBindBuffer(GL_ARRAY_BUFFER, m->vboID[TEXTURE_BUFFER]);
+            glBufferData(GL_ARRAY_BUFFER, m->numberOfVertices * sizeof(glm::vec2), m->textureCoordinates, GL_STATIC_DRAW);
+
+            glEnableVertexAttribArray(TEXTURE_BUFFER);
+            glVertexAttribPointer(TEXTURE_BUFFER, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        }
+
+        glBindVertexArray(0);
+
+        return m;
+    }
 }
 

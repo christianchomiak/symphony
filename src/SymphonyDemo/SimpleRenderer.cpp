@@ -27,11 +27,7 @@ void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camer
     std::vector<PossibleObject> transparentObjs;
     
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
-
-    //glDepthMask(GL_FALSE); //If false, the depth buffer is read-only
-    
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);;
 
     for (Camera* cam : cameras)
     {

@@ -68,6 +68,12 @@ void LoadShaders()
         "../../resources/Shaders/reflection.frag.glsl");
     attributes.clear();
     uniforms.clear();
+
+    sEngine->LoadShader("TEXT", attributes, uniforms,
+        "../../resources/Shaders/text.vert.glsl",
+        "../../resources/Shaders/text.frag.glsl");
+    attributes.clear();
+    uniforms.clear();
 }
 
 int main(int argc, char* args[])
@@ -99,7 +105,7 @@ int main(int argc, char* args[])
     sEngine->Run();
     sEngine->Shutdown();
     
-    //system("pause");
+    system("pause");
     
     return 0;
 }
