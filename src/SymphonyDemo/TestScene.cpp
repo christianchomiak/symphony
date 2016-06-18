@@ -176,9 +176,27 @@ void TestScene::Initialise()
     cam->name = "Camera";
     AddGameObject(cam);*/
 
-    txt = new Text("Symphony Engine", glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f + 100.f, 0.5f), glm::vec3(1.f, 1.f, 1.f), 1.f, Text::HorizontalAlignment::HCENTER);
-    AddText(txt);
-    AddText(new Text("O", glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f), glm::vec3(0.3, 0.7f, 0.9f), 1.f, Text::HorizontalAlignment::HCENTER));
+    /*txt = new Text("String", glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f),
+                   glm::vec3(1.f, 1.f, 1.f), 1.f, Text::HorizontalCentering::HCENTER);
+    AddText(txt);*/
+    
+    glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f);
+    float scale = 1.f;
+    /*AddText(new Text("String", pos, glm::vec3(1, 1, 1), 1.f,
+                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::VCENTER));*/
+    /*AddText(new Text("String", pos, glm::vec3(1, 0, 0), 1.f,
+                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::TOP));
+    AddText(new Text("String", pos, glm::vec3(0, 1, 0), 1.f,
+                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::VCENTER));
+    AddText(new Text("String", pos, glm::vec3(0, 0, 1), 1.f,
+                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::BOTTOM));*/
+    
+    AddText(new Text("String", pos, glm::vec4(1, 0, 0, 1), scale,
+                     Text::HorizontalCentering::LEFT, Text::VerticalCentering::VCENTER));
+    AddText(new Text("String", pos, glm::vec4(0, 1, 0, 1), scale,
+                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::VCENTER));
+    AddText(new Text("String", pos, glm::vec4(0, 0, 1, 1), scale,
+                     Text::HorizontalCentering::RIGHT, Text::VerticalCentering::VCENTER));
 }
 
 void TestScene::Clean()
@@ -224,20 +242,24 @@ void TestScene::Render()
 
     glm::mat4 proj = glm::ortho(0.0f, (float)Screen::Width(), 0.0f, (float)Screen::Height());
     glUniformMatrix4fv(glGetUniformLocation(textShader->ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(proj));
-
+    
+    float currentX, currentY;
     for (auto t : uiText)
     {
-        glUniform3f(glGetUniformLocation(textShader->ID(), "textColor"), t->color.x, t->color.y, t->color.z);
-        glm::vec3 position = t->GetPosition();
-        x = position.x;
+        glUniform4f(glGetUniformLocation(textShader->ID(), "textColor"), t->color.r, t->color.g, t->color.b, t->color.a);
+        
+        glm::vec3 startingPosition = t->GetPosition();
+        currentX = startingPosition.x;
+        currentY = startingPosition.y;
+
         // Iterate through all characters
         std::string::const_iterator c;
-        for (c = t->content.begin(); c != t->content.end(); c++)
+        for (c = t->GetContent().begin(); c != t->GetContent().end(); c++)
         {
             TextCharacter ch = TextCharacter::characters[*c];
-
-            GLfloat xpos = x + ch.Bearing.x * t->scale;
-            GLfloat ypos = position.y + (ch.Bearing.y) * t->scale;
+            
+            GLfloat xpos = currentX + ch.Bearing.x * t->scale;
+            GLfloat ypos = currentY + ch.Bearing.y * t->scale;
 
             GLfloat w = ch.Size.x * t->scale;
             GLfloat h = ch.Size.y * t->scale;
@@ -246,7 +268,7 @@ void TestScene::Render()
             GLfloat vertices[4][4] = {
                 { xpos    , ypos    ,   0.0f, 0.0f },
                 { xpos + w, ypos    ,   1.0f, 0.0f },
-                { xpos    , ypos - h,   0.0f, 1.0f  },
+                { xpos    , ypos - h,   0.0f, 1.0f },
                 { xpos + w, ypos - h,   1.0f, 1.0f }
             };
 
@@ -294,7 +316,7 @@ void TestScene::Render()
             glDrawArrays(GL_TRIANGLES, 0, 6);*/
 
             // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-            x += (ch.Advance >> 6) * t->scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+            currentX += (ch.Advance >> 6) * t->scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
         }
     }
     glBindVertexArray(0);
