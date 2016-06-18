@@ -176,9 +176,9 @@ void TestScene::Initialise()
     cam->name = "Camera";
     AddGameObject(cam);*/
 
-    txt = new Text("Symphony Engine", glm::vec3(25, 25, 1.0f), glm::vec3(1.f, 1.f, 1.f), 1.f);
+    txt = new Text("Symphony Engine", glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f + 100.f, 0.5f), glm::vec3(1.f, 1.f, 1.f), 1.f, Text::HorizontalAlignment::HCENTER);
     AddText(txt);
-    //AddText(new Text("Christian Chomiak", glm::vec3(540.f, 570.f, 0.5f), glm::vec3(0.3, 0.7f, 0.9f), 0.1f));
+    AddText(new Text("O", glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f), glm::vec3(0.3, 0.7f, 0.9f), 1.f, Text::HorizontalAlignment::HCENTER));
 }
 
 void TestScene::Clean()
@@ -228,7 +228,8 @@ void TestScene::Render()
     for (auto t : uiText)
     {
         glUniform3f(glGetUniformLocation(textShader->ID(), "textColor"), t->color.x, t->color.y, t->color.z);
-        x = t->position.x;
+        glm::vec3 position = t->GetPosition();
+        x = position.x;
         // Iterate through all characters
         std::string::const_iterator c;
         for (c = t->content.begin(); c != t->content.end(); c++)
@@ -236,11 +237,10 @@ void TestScene::Render()
             TextCharacter ch = TextCharacter::characters[*c];
 
             GLfloat xpos = x + ch.Bearing.x * t->scale;
-            GLfloat ypos = t->position.y + (ch.Bearing.y) * t->scale;
+            GLfloat ypos = position.y + (ch.Bearing.y) * t->scale;
 
             GLfloat w = ch.Size.x * t->scale;
             GLfloat h = ch.Size.y * t->scale;
-                        
 
             // Update VBO for each character
             GLfloat vertices[4][4] = {
