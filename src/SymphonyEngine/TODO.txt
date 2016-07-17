@@ -6,3 +6,4 @@
     MyClass(const MyClass&) = delete;
     // no assign
     MyClass& operator=(const MyClass&) = delete;
+* Fix: When changing the size of the screen during runtime, controls start to work incorrectly

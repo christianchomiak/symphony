@@ -170,7 +170,7 @@ void TestScene::Initialise()
     Text2D* txtObject;
     glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f);
     float scale = 1.f;
-
+    
     Text text("String", glm::vec4(1, 0, 0, 1), scale, Text::Alignment::CENTER_LEFT);
     txtObject = new Text2D(text);
     txtObject->transform.SetPosition(pos);

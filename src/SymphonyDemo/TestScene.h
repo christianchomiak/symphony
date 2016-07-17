@@ -17,6 +17,5 @@ public:
     virtual void Render() override;
 
 protected:
-    Text* txt;
     UIRenderer* uiRenderer;
 };

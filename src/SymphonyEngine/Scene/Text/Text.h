@@ -17,6 +17,7 @@ namespace Symphony
         };
 
         glm::vec4 color;
+        glm::vec2 offset;
         
         Text()
             : scale(1.f), color(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)),
@@ -38,11 +39,10 @@ namespace Symphony
             SetContent(content);
         }
 
-
         glm::vec2 GetPosition() const
         {
             //return glm::vec3(HorizontalPosition(), VerticalPosition(), position.z);
-            return position;
+            return position + offset;
         }
 
         void SetContent(const std::string& newContent)

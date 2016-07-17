@@ -10,7 +10,7 @@ namespace Symphony
     public:
         Text2D();
         Text2D(const Text&);
-        Text2D(const std::string&);
+        explicit Text2D(const std::string&);
         virtual ~Text2D();
         Text text;
     };
