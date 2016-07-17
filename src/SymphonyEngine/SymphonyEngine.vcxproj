@@ -139,12 +139,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Rendering\Skybox.h" />
+    <ClInclude Include="Rendering\UI\UIRenderer.h" />
+    <ClInclude Include="Scene\SceneRoot.h" />
+    <ClInclude Include="Scene\Text\Text2D.h" />
     <ClInclude Include="Scene\Text\TextCharacter.h" />
     <ClInclude Include="Scene\Text\Text.h" />
     <ClInclude Include="Scene\Camera\Camera.h" />
@@ -180,6 +184,7 @@
   <ItemGroup>
     <ClCompile Include="Debugging\Debugging.cpp" />
     <ClCompile Include="Rendering\Skybox.cpp" />
+    <ClCompile Include="Rendering\UI\UIRenderer.cpp" />
     <ClCompile Include="Scene\Camera\Camera.cpp" />
     <ClCompile Include="Scene\Camera\Frustum.cpp" />
     <ClCompile Include="Scene\Camera\OrthographicCamera.cpp" />
@@ -191,6 +196,7 @@
     <ClCompile Include="Scene\Light\Spotlight.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Engine\SymphonyEngine.cpp" />
+    <ClCompile Include="Scene\Text\Text2D.cpp" />
     <ClCompile Include="Scene\Text\TextCharacter.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />

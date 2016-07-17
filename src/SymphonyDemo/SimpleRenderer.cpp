@@ -21,21 +21,23 @@ SimpleRenderer::~SimpleRenderer()
 {
 }
 
-void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camera*>& cameras, const std::vector<Light*>& lights)
+void SimpleRenderer::Render(const Scene* scene)
 {
     std::vector<PossibleObject> objs;
     std::vector<PossibleObject> transparentObjs;
     
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glEnable(GL_DEPTH_TEST);;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
 
-    for (Camera* cam : cameras)
+    glEnable(GL_DEPTH_TEST);
+
+    for (Camera* cam : scene->Cameras())
     {
-        PrepareObjects(cam, sceneRoot, objs, transparentObjs);
+        PrepareObjects(cam, scene->GetSceneRoot(), objs, transparentObjs);
         std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
         
         glDisable(GL_BLEND);
-        RenderCamera(cam, objs, lights);
+        RenderCamera(cam, objs, scene->Lights());
 
         cam->RenderSkybox();
 
@@ -44,11 +46,13 @@ void SimpleRenderer::Render(const GameObject* sceneRoot, const std::vector<Camer
         //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
         //glBlendFunc(GL_ONE, GL_ZERO);
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        RenderCamera(cam, transparentObjs, lights);
-
+        RenderCamera(cam, transparentObjs, scene->Lights());
+        
         objs.clear();
         transparentObjs.clear(); 
     }
+
+    glDisable(GL_DEPTH_TEST);
 }
 
 void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<PossibleObject>& objects, const std::vector<Light*>& lights)

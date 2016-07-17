@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../SymphonyEngine/Scene/Scene.h"
+#include "../SymphonyEngine/Rendering/UI/UIRenderer.h"
 
 using namespace Symphony;
 
@@ -16,9 +17,6 @@ public:
     virtual void Render() override;
 
 protected:
-    Mesh* textMesh;
-    Shader* textShader;
-    GLuint VAO, VBO;
-
     Text* txt;
+    UIRenderer* uiRenderer;
 };

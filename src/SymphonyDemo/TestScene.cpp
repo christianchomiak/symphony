@@ -24,34 +24,18 @@
 TestScene::TestScene()
 {
     name = "TEST_SCENE1";
-    textMesh = Mesh::TextMesh();
-    textShader = Shader::GetShader("TEXT");
-
-    // Configure VAO/VBO for texture quads
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * 4, NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
 }
 
 TestScene::~TestScene()
 {
     delete renderer;
-    delete textMesh;
-    
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    delete uiRenderer;
 }
 
 void TestScene::Initialise()
 {
     renderer = new ComplexRenderer();
+    uiRenderer = new UIRenderer();
 
     FreeRoamCamera* cam = new FreeRoamCamera();
     cam->name = "Camera";
@@ -180,33 +164,45 @@ void TestScene::Initialise()
                    glm::vec3(1.f, 1.f, 1.f), 1.f, Text::HorizontalCentering::HCENTER);
     AddText(txt);*/
     
+    
+
+    //TEXT
+    Text2D* txtObject;
     glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f);
     float scale = 1.f;
-    /*AddText(new Text("String", pos, glm::vec3(1, 1, 1), 1.f,
-                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::VCENTER));*/
-    /*AddText(new Text("String", pos, glm::vec3(1, 0, 0), 1.f,
-                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::TOP));
-    AddText(new Text("String", pos, glm::vec3(0, 1, 0), 1.f,
-                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::VCENTER));
-    AddText(new Text("String", pos, glm::vec3(0, 0, 1), 1.f,
-                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::BOTTOM));*/
+
+    Text text("String", glm::vec4(1, 0, 0, 1), scale, Text::Alignment::CENTER_LEFT);
+    txtObject = new Text2D(text);
+    txtObject->transform.SetPosition(pos);
+    AddGameObject(txtObject);
+
+    text.color = glm::vec4(0, 1, 0, 1);
+    text.SetAlignment(Text::Alignment::CENTER);
+    txtObject = new Text2D(text);
+    txtObject->transform.SetPosition(pos);
+    AddGameObject(txtObject);
     
-    AddText(new Text("String", pos, glm::vec4(1, 0, 0, 1), scale,
-                     Text::HorizontalCentering::LEFT, Text::VerticalCentering::VCENTER));
-    AddText(new Text("String", pos, glm::vec4(0, 1, 0, 1), scale,
-                     Text::HorizontalCentering::HCENTER, Text::VerticalCentering::VCENTER));
+    text.color = glm::vec4(0, 0, 1, 1);
+    text.SetAlignment(Text::Alignment::CENTER_RIGHT);
+    txtObject = new Text2D(text);
+    txtObject->transform.SetPosition(pos);
+    AddGameObject(txtObject);
+    
+
+    /*AddText(new Text("String", pos, glm::vec4(0, 1, 0, 1), scale,
+                     Text::Alignment::CENTER));
     AddText(new Text("String", pos, glm::vec4(0, 0, 1, 1), scale,
-                     Text::HorizontalCentering::RIGHT, Text::VerticalCentering::VCENTER));
+                     Text::Alignment::CENTER_RIGHT));*/
 }
 
 void TestScene::Clean()
 {
-    delete root;
+    Scene::Clean();
 
-    for (auto t : uiText)
+    /*for (auto t : uiRoot)
     {
         delete t;
-    }
+    }*/
 }
 
 void TestScene::Update(float deltaTime)
@@ -219,106 +215,11 @@ void TestScene::Render()
 {
     if (renderer)
     {
-        renderer->Render(root, cameras, lights);
+        renderer->Render(this); // root, cameras, lights);
     }
     
-    if (uiText.size() == 0) return;
-
-    //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    //glClear(GL_COLOR_BUFFER_BIT);
-    
-    //glEnable(GL_CULL_FACE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
-    //glBlendFunc(GL_ONE, GL_ZERO);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-    float x;
-    textShader->Use();
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindVertexArray(VAO);
-
-    glm::mat4 proj = glm::ortho(0.0f, (float)Screen::Width(), 0.0f, (float)Screen::Height());
-    glUniformMatrix4fv(glGetUniformLocation(textShader->ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(proj));
-    
-    float currentX, currentY;
-    for (auto t : uiText)
+    if (uiRenderer)
     {
-        glUniform4f(glGetUniformLocation(textShader->ID(), "textColor"), t->color.r, t->color.g, t->color.b, t->color.a);
-        
-        glm::vec3 startingPosition = t->GetPosition();
-        currentX = startingPosition.x;
-        currentY = startingPosition.y;
-
-        // Iterate through all characters
-        std::string::const_iterator c;
-        for (c = t->GetContent().begin(); c != t->GetContent().end(); c++)
-        {
-            TextCharacter ch = TextCharacter::characters[*c];
-            
-            GLfloat xpos = currentX + ch.Bearing.x * t->scale;
-            GLfloat ypos = currentY + ch.Bearing.y * t->scale;
-
-            GLfloat w = ch.Size.x * t->scale;
-            GLfloat h = ch.Size.y * t->scale;
-
-            // Update VBO for each character
-            GLfloat vertices[4][4] = {
-                { xpos    , ypos    ,   0.0f, 0.0f },
-                { xpos + w, ypos    ,   1.0f, 0.0f },
-                { xpos    , ypos - h,   0.0f, 1.0f },
-                { xpos + w, ypos - h,   1.0f, 1.0f }
-            };
-
-            // Render glyph texture over quad
-            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-            // Update content of VBO memory
-            glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            // Render quad
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-
-            // Update content of VBO memory
-            /*glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-            // Render quad
-            glDrawArrays(GL_TRIANGLES, 0, 6);*/
-
-            // Update VBO for each character
-            /*glm::vec3 vertices[6];
-            vertices[0] = glm::vec3(xpos, ypos + h, 0.0f);
-            vertices[1] = glm::vec3(xpos, ypos, 0.0f);
-            vertices[2] = glm::vec3(xpos + w, ypos, 0.0f);
-            vertices[3] = glm::vec3(xpos, ypos + h, 0.0f);
-            vertices[4] = glm::vec3(xpos + w, ypos, 0.0f);
-            vertices[5] = glm::vec3(xpos + w, ypos + h, 0.0f);
-
-            // Render glyph texture over quad
-            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-
-            glBindBuffer(GL_ARRAY_BUFFER, textMesh->GetVBO());
-            glBufferSubData(GL_ARRAY_BUFFER, 0, 6 * sizeof(glm::vec3), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-            textMesh->Render();*/
-
-            // Update content of VBO memory
-            /*glBindBuffer(GL_ARRAY_BUFFER, VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            // Render quad
-            glDrawArrays(GL_TRIANGLES, 0, 6);*/
-
-            // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-            currentX += (ch.Advance >> 6) * t->scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
-        }
+        uiRenderer->Render(this);
     }
-    glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
 }

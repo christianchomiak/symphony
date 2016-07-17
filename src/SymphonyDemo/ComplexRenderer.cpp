@@ -82,7 +82,7 @@ ComplexRenderer::~ComplexRenderer()
     glDeleteRenderbuffers(1, &rbo);
 }
 
-void ComplexRenderer::Render(const GameObject* sceneRoot, const std::vector<Camera*>& cameras, const std::vector<Light*>& lights)
+void ComplexRenderer::Render(const Scene* scene)
 {
     // First pass
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
@@ -93,13 +93,13 @@ void ComplexRenderer::Render(const GameObject* sceneRoot, const std::vector<Came
     std::vector<PossibleObject> objs;
     std::vector<PossibleObject> transparentObjs;
 
-    for (Camera* cam : cameras)
+    for (Camera* cam : scene->Cameras())
     {
-        PrepareObjects(cam, sceneRoot, objs, transparentObjs);
+        PrepareObjects(cam, scene->GetSceneRoot(), objs, transparentObjs);
         std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
 
         glDisable(GL_BLEND);
-        RenderCamera(cam, objs, lights);
+        RenderCamera(cam, objs, scene->Lights());
 
         cam->RenderSkybox();
 
@@ -108,7 +108,7 @@ void ComplexRenderer::Render(const GameObject* sceneRoot, const std::vector<Came
         //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
         //glBlendFunc(GL_ONE, GL_ZERO);
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        RenderCamera(cam, transparentObjs, lights);
+        RenderCamera(cam, transparentObjs, scene->Lights());
 
         objs.clear();
         transparentObjs.clear();
@@ -118,13 +118,11 @@ void ComplexRenderer::Render(const GameObject* sceneRoot, const std::vector<Came
     glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
+    
     screenShader->Use();
-    glDisable(GL_DEPTH_TEST);
-    glBindTexture(GL_TEXTURE_2D, bufferColourTexture);
-
-    screenQuad->Render();
-
+        glDisable(GL_DEPTH_TEST);
+        glBindTexture(GL_TEXTURE_2D, bufferColourTexture);
+        screenQuad->Render();
     glUseProgram(0);
 }
 

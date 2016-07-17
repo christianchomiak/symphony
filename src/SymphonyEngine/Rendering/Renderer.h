@@ -29,7 +29,7 @@ namespace Symphony
 
     public:
         virtual ~Renderer() {};
-        virtual void Render(const GameObject* sceneRoot, const std::vector<Camera*>& cameras, const std::vector<Light*>& lights) = 0;
+        virtual void Render(const Scene* scene) = 0; //, const std::vector<Light*>& lights
         void ProcessTexture(const Texture& t) const;
 
     protected:

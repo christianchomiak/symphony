@@ -4,7 +4,8 @@
 
 Symphony::Scene::Scene()
 {
-    root = new GameObject();
+    root = new SceneRoot();
+    uiRoot = new SceneRoot();
     renderer = nullptr;
 	id = 0;
 }
@@ -12,11 +13,22 @@ Symphony::Scene::Scene()
 Symphony::Scene::~Scene()
 {
     delete root;
+    delete uiRoot;
+}
+
+void Symphony::Scene::Clean()
+{
+    delete root;
+    delete uiRoot;
+    
+    root = new SceneRoot();
+    uiRoot = new SceneRoot();
 }
 
 void Symphony::Scene::Update(float deltaTime)
 {
     root->Update();
+    uiRoot->Update();
 }
 
 void Symphony::Scene::AddGameObject(GameObject* go)
@@ -42,11 +54,14 @@ void Symphony::Scene::AddGameObject(Light* light)
     root->AddChild(light);
 }
 
-void Symphony::Scene::AddText(Text* text)
+void Symphony::Scene::AddGameObject(Text2D* text)
 {
     if (text == nullptr) return;
-
-    uiText.push_back(text);
+    
+    uiRoot->AddChild(text);
+    
+    int x = 1;
+    x++;
 }
 
 //TO-DO: Make absolutely sure that cameras that are are registered

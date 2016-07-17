@@ -1,0 +1,8 @@
+//TO-DO
+
+* Delete copy constructor and assignment operator in the necessary files of the project
+  e.g.:
+    // no copy
+    MyClass(const MyClass&) = delete;
+    // no assign
+    MyClass& operator=(const MyClass&) = delete;
