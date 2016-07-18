@@ -90,13 +90,17 @@ void ComplexRenderer::Render(const Scene* scene)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
     glEnable(GL_DEPTH_TEST);
 
-    std::vector<PossibleObject> objs;
-    std::vector<PossibleObject> transparentObjs;
+    std::vector<OrderableObject> objs;
+    std::vector<OrderableObject> transparentObjs;
 
     for (Camera* cam : scene->Cameras())
     {
         PrepareObjects(cam, scene->GetSceneRoot(), objs, transparentObjs);
-        std::sort(transparentObjs.begin(), transparentObjs.end(), PossibleObject::ClosestObjectToCamera);
+
+        //We want to draw first the farthest objects, so we order the list from
+        //farthest to closest and trasverse it normally instead of doing it the
+        //other way around and trasversing it in reverse order.
+        std::sort(transparentObjs.begin(), transparentObjs.end(), OrderableObject::FarthestObjectFromCamera);
 
         glDisable(GL_BLEND);
         RenderCamera(cam, objs, scene->Lights());
@@ -126,7 +130,7 @@ void ComplexRenderer::Render(const Scene* scene)
     glUseProgram(0);
 }
 
-void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<PossibleObject>& objects, const std::vector<Light*>& lights)
+void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObject>& objects, const std::vector<Light*>& lights)
 {
     glm::mat4 P = cam->ProjectionMatrix(); //glm::mat4(1);
     glm::mat4 V = cam->ViewMatrix();
@@ -192,8 +196,8 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<PossibleObject
 }
 
 void ComplexRenderer::PrepareObjects(const Camera* camera, const GameObject* obj,
-    std::vector<PossibleObject>& opaqueObjectsOut,
-    std::vector<PossibleObject>& transparentObjectsOut)
+    std::vector<OrderableObject>& opaqueObjectsOut,
+    std::vector<OrderableObject>& transparentObjectsOut)
 {
     if (obj == nullptr || !obj->enabled) return;
 
@@ -205,11 +209,11 @@ void ComplexRenderer::PrepareObjects(const Camera* camera, const GameObject* obj
         {
             //For now, We can disregard the distance between opaque objects and the camera.
             //Maybe later it could be handy to have that info, though.
-            opaqueObjectsOut.push_back(PossibleObject(obj, 0.0f)); // glm::distance2(obj->transform.GetPosition(), camera->transform.GetPosition())));
+            opaqueObjectsOut.push_back(OrderableObject(obj, 0.0f)); // glm::distance2(obj->transform.GetPosition(), camera->transform.GetPosition())));
         }
         else
         {
-            transparentObjectsOut.push_back(PossibleObject(obj, glm::distance2(obj->transform.GetPosition(), camera->transform.GetPosition())));
+            transparentObjectsOut.push_back(OrderableObject(obj, glm::distance2(obj->transform.GetPosition(), camera->transform.GetPosition())));
         }
     }
 

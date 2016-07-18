@@ -13,8 +13,8 @@ namespace Symphony
         virtual ~UIRenderer();
         virtual void Render(const Scene* scene) override;
     protected:
-        void RenderUI(const std::vector<PossibleObject>& objects);
-        void PrepareObjects(const GameObject* obj, std::vector<PossibleObject>& opaqueObjectsOut, bool dontIgnoreCurrentObject);
+        void RenderUI(const std::vector<OrderableObject>& objects);
+        void PrepareObjects(const GameObject* obj, std::vector<OrderableObject>& opaqueObjectsOut, bool dontIgnoreCurrentObject);
     
     protected:
         Mesh* textMesh;

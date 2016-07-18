@@ -8,22 +8,29 @@ namespace Symphony
     class Renderer
     {
     protected:
-        struct PossibleObject
+        struct OrderableObject
         {
             const GameObject* obj;
             float distanceToCamera;
 
-            PossibleObject(const GameObject* obj, float distanceToCamera) : obj(obj), distanceToCamera(distanceToCamera) {};
-            PossibleObject(const PossibleObject& original) : obj(original.obj), distanceToCamera(original.distanceToCamera) {};
-            PossibleObject& operator=(PossibleObject& other) // move assignment
+            OrderableObject(const GameObject* obj, float distanceToCamera) : obj(obj), distanceToCamera(distanceToCamera) {};
+            OrderableObject(const OrderableObject& original) : obj(original.obj), distanceToCamera(original.distanceToCamera) {};
+            OrderableObject& operator=(OrderableObject& other) // move assignment
             {
                 this->obj = other.obj;
                 this->distanceToCamera = other.distanceToCamera;
                 return *this;
             }
-            static bool ClosestObjectToCamera(PossibleObject& a, PossibleObject& b)
+            static bool FarthestObjectFromCamera(OrderableObject& a, OrderableObject& b)
             {
                 return a.distanceToCamera > b.distanceToCamera;
+            }
+            static bool FarthestObjectFromCamera2D(OrderableObject& a, OrderableObject& b)
+            {
+                //In 2D, bigger numbers (closer to +Z) are near the camera.
+                //This means that the approach used in `FarthestObjectFromCamera` would
+                //result in the opposite of what we actually want now.
+                return a.distanceToCamera < b.distanceToCamera;
             }
         };
 

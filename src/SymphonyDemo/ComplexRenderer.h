@@ -17,8 +17,8 @@ public:
     virtual ~ComplexRenderer();
     virtual void Render(const Scene* scene) override;
 protected:
-    void RenderCamera(Camera* cam, const std::vector<PossibleObject>& objects, const std::vector<Light*>& lights);
-    void PrepareObjects(const Camera* camera, const GameObject* obj, std::vector<PossibleObject>& opaqueObjectsOut, std::vector<PossibleObject>& transparentObjectsOut);
+    void RenderCamera(Camera* cam, const std::vector<OrderableObject>& objects, const std::vector<Light*>& lights);
+    void PrepareObjects(const Camera* camera, const GameObject* obj, std::vector<OrderableObject>& opaqueObjectsOut, std::vector<OrderableObject>& transparentObjectsOut);
 
 protected:
     GLuint frameBuffer;

@@ -2,6 +2,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
+#include <algorithm>    // std::sort
 
 namespace Symphony
 {
@@ -34,14 +35,15 @@ namespace Symphony
 
     void UIRenderer::Render(const Scene* scene)
     {
-        std::vector<PossibleObject> objs;
+        std::vector<OrderableObject> objs;
 
         PrepareObjects(scene->GetSceneUIRoot(), objs, false);
+        std::sort(objs.begin(), objs.end(), OrderableObject::FarthestObjectFromCamera2D);
 
         RenderUI(objs);
     }
 
-    void UIRenderer::RenderUI(const std::vector<PossibleObject>& objects)
+    void UIRenderer::RenderUI(const std::vector<OrderableObject>& objects)
     {
         //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         //glClear(GL_COLOR_BUFFER_BIT);
@@ -145,13 +147,13 @@ namespace Symphony
         glBindTexture(GL_TEXTURE_2D, 0);
     }
     
-    void UIRenderer::PrepareObjects(const GameObject* obj, std::vector<PossibleObject>& toRender, bool dontIgnoreCurrentObject)
+    void UIRenderer::PrepareObjects(const GameObject* obj, std::vector<OrderableObject>& toRender, bool dontIgnoreCurrentObject)
     {
         if (obj == nullptr || !obj->enabled) return;
 
         if (dontIgnoreCurrentObject)
         {
-            toRender.push_back(PossibleObject(obj, 0.0f));
+            toRender.push_back(OrderableObject(obj, obj->transform.GetPosition().z));
         }
         
         for (GameObject* o : obj->GetChildren())

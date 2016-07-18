@@ -117,7 +117,7 @@ void TestScene::Initialise()
     glm::vec3(1.f, 1.f, 1.f),          //Specular
     0.1f);                             //Shininess
     */
-
+    
     cube = new GameObject();
     cube->name = "Cube2";
     AddGameObject(cube);
@@ -168,7 +168,7 @@ void TestScene::Initialise()
 
     //TEXT
     Text2D* txtObject;
-    glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f);
+    glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.f);
     float scale = 1.f;
     
     Text text("String", glm::vec4(1, 0, 0, 1), scale, Text::Alignment::CENTER_LEFT);
