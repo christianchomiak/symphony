@@ -23,10 +23,11 @@ namespace Symphony
         void SetMesh(Mesh*);
         void SetTexture(const Texture& t);
         void SetShader(Shader* s);
-
+        
+        //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
         Mesh* GetMesh() const;
-        const Texture& GetTexture() const;
         Shader* GetShader() const;
+        const Texture& GetTexture() const;
 
         bool OkToRender() const;
         

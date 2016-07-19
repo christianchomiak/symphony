@@ -21,7 +21,7 @@ namespace Symphony
         //TO-DO: Should the update of the GameObject's logic be independent
         //       from the update of its transformation matrix?
         virtual void Update();
-
+        
         void SetParent(GameObject* parent);
         void AddChild(GameObject* child);
         void RemoveChild(GameObject* child);

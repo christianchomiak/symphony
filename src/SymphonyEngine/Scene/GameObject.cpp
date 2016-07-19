@@ -42,7 +42,7 @@ namespace Symphony
             }
         }
     }
-
+    
     void GameObject::AddChild(GameObject* child)
     {
         if (child == nullptr) return;

@@ -17,9 +17,11 @@ namespace Symphony
         void PrepareObjects(const GameObject* obj, std::vector<OrderableObject>& opaqueObjectsOut, bool dontIgnoreCurrentObject);
     
     protected:
-        Mesh* textMesh;
+        //TO-DO: Determine where the mesh and the shader, used for text rendering, should be.
+        //       It makes sense to have them only once here to speed-up the rendering process
+        //       (as it makes no sense to reload the uniforms if every single text object will
+        //        be rendered using the same shader)
         Shader* textShader;
-        GLuint VAO, VBO;
 
         glm::mat4 uiProjectionMatrix;
     };

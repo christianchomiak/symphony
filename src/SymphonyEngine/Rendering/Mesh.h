@@ -37,10 +37,13 @@ namespace Symphony
         {
             return vaoID;
         }
+
+        bool UpdateVertices(glm::vec3* newVertexData, int numberOfNewVertexData);
     protected:
         unsigned int vaoID;
         unsigned int vboID[MAX_BUFFER];
         unsigned int typeOfPrimitive;
+        unsigned int typeOfDraw;
 
         unsigned int numberOfVertices,
                      numberOfIndices;

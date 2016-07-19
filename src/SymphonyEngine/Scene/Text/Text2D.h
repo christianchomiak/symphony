@@ -12,6 +12,9 @@ namespace Symphony
         Text2D(const Text&);
         explicit Text2D(const std::string&);
         virtual ~Text2D();
+
+        void Render() const;
+
         Text text;
     };
 }
