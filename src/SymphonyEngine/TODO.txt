@@ -7,3 +7,5 @@
     // no assign
     MyClass& operator=(const MyClass&) = delete;
 * Fix: When changing the size of the screen during runtime, controls start to work incorrectly
+* List all third-party modules (in the command line) while starting the engine
+* Add flag to Release mode to treat warnings as errors (and unused variables as warnings)

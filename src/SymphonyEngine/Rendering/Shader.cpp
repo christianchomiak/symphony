@@ -62,16 +62,17 @@ namespace Symphony
         if (status == GL_FALSE)
         {
             GLint infoLogLength;
-
+            
             glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
             GLchar *infoLog = new GLchar[infoLogLength];
             glGetProgramInfoLog(programID, infoLogLength, NULL, infoLog);
-            std::cerr << "Link log: " << infoLog << std::endl;
+            std::cout << "Linking: ERROR" << std::endl;
+            std::cerr << "Link log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
             return false;
         }
 
-        std::cout << std::endl << "> Linking of the shaders was successful" << std::endl;
+        std::cout << "Linking: OK" << std::endl;
         
         glDeleteShader(shaders[VERTEX_SHADER]);
         glDeleteShader(shaders[FRAGMENT_SHADER]);
@@ -95,8 +96,6 @@ namespace Symphony
         GLuint shader = glCreateShader(whichShader);
 
         glShaderSource(shader, 1, &source, NULL);
-        //const char * ptmp = source.c_str();
-        //glShaderSource(shader, 1, &ptmp, NULL);
 
         //check whether the shader loads fine
         GLint status;
@@ -108,18 +107,13 @@ namespace Symphony
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
             GLchar *infoLog = new GLchar[infoLogLength];
             glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog);
-            std::cerr << "Compile log: " << infoLog << std::endl;
+            std::cerr << "\tCompilation: ERROR" << std::endl;
+            std::cerr << "Compile log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
             return false;
         }
-
-        char* shaderName;
-        if (typeOfShader == ShaderType::VERTEX_SHADER)        shaderName = "vertex";
-        else if (typeOfShader == ShaderType::GEOMETRY_SHADER) shaderName = "geometry";
-        else                                                  shaderName = "fragment"; //if (whichShader == GL_FRAGMENT_SHADER)
-
-        
-        cout << "> " << shaderName << " shader compiled" << endl;
+                
+        cout << "\tCompilation: OK" << endl;
         
         shaders[typeOfShader] = shader;
 
@@ -130,11 +124,11 @@ namespace Symphony
     {
         char* shaderName;
         
-        if (typeOfShader == ShaderType::VERTEX_SHADER)        shaderName = "vertex";
-        else if (typeOfShader == ShaderType::GEOMETRY_SHADER) shaderName = "geometry";
-        else                                                  shaderName = "fragment"; //if (whichShader == GL_FRAGMENT_SHADER)
-        
-        cout << endl << "> Loading " << shaderName << " shader (" << filename << ")" << endl;
+        if (typeOfShader == ShaderType::VERTEX_SHADER)        shaderName = "Vertex";
+        else if (typeOfShader == ShaderType::GEOMETRY_SHADER) shaderName = "Geometry";
+        else                                                  shaderName = "Fragment"; //if (whichShader == GL_FRAGMENT_SHADER)
+
+        cout << "> " << shaderName << " shader (" << filename << ")" << endl;
         
         ifstream fp;
         fp.open(filename, ios_base::in);
@@ -147,11 +141,12 @@ namespace Symphony
                 buffer.append(line);
                 buffer.append("\r\n");
             }
+            cout << "\tLoading: OK" << endl;
             //copy to source
             return LoadFromString(typeOfShader, buffer.c_str());
         }
 
-        cerr << "Error loading " << shaderName << " shader: " << filename << endl;
+        cout << "\tLoading: ERROR" << endl << endl;
 
         return false;
     }
@@ -171,11 +166,15 @@ namespace Symphony
                                     const char* vertexShaderFilename, const char* fragmentShaderFilename,
                                     const char* geometryShaderFilename)
     {
+
         //There's no point in creating the same shader over and over again
         if (ShaderExists(shaderName))
         {
+            std::cout << "Using previously loaded shader: \"" << shaderName << "\"" << std::endl;
             return shaderPool[shaderName];
         }
+
+        std::cout << std::endl << "Creating new shader: \"" << shaderName << "\"" << std::endl;
 
         Shader* newShader = new Shader();
 
