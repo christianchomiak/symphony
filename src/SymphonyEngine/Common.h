@@ -11,3 +11,9 @@
 #pragma comment(lib, "SOIL2/soil2.lib")
 #pragma comment(lib, "FreeType/freetype.lib")
 #endif
+
+/*#ifdef _WIN64
+...
+#else
+...
+#endif*/
