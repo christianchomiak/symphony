@@ -470,9 +470,9 @@ namespace Symphony
         //TO-DO: We just spent time building the surface, there's no need
         //       to spend even more time visiting every vertex to modify it...
         size_t offset = 0;
-        for (size_t x = 0; x < width; ++x)
+        for (size_t x = 0; x < (unsigned)width; ++x)
         {
-            for (size_t z = 0; z < height; ++z)
+            for (size_t z = 0; z < (unsigned)height; ++z)
             {
                 offset = (x * width) + z;
                 hMap->vertices[offset] = glm::vec3(hMap->vertices[offset].x, maxHeight * ht_map[offset], hMap->vertices[offset].z);

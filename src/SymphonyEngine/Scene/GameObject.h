@@ -14,6 +14,11 @@ namespace Symphony
         std::string name;
         bool enabled;
 
+    protected:
+        //TO-DO: consider using smartpointers
+        std::vector<GameObject*> children;
+        RenderObject* renderObject;
+
     public:
         GameObject();
         virtual ~GameObject();
@@ -30,11 +35,6 @@ namespace Symphony
 
         void AddRenderObject(RenderObject* rObject);
         RenderObject* GetRenderObject() const;
-
-    protected:
-        //TO-DO: consider using smartpointers
-        std::vector<GameObject*> children;
-        RenderObject* renderObject;
     };
 
     inline const std::vector<GameObject*>& GameObject::GetChildren() const

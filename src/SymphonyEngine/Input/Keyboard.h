@@ -8,7 +8,7 @@ namespace Symphony
     class Keyboard
     {
         friend class InputManager;
-    public:        
+    public:
         Keyboard();
         ~Keyboard();
 
@@ -37,6 +37,7 @@ namespace Symphony
     public:
 
     };
+
     namespace Key
     {
         const int KEY_UNKOWN = GLFW_KEY_UNKNOWN;

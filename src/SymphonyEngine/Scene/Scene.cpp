@@ -56,12 +56,8 @@ void Symphony::Scene::AddGameObject(Light* light)
 
 void Symphony::Scene::AddGameObject(Text2D* text)
 {
-    if (text == nullptr) return;
-    
+    if (text == nullptr) return;    
     uiRoot->AddChild(text);
-    
-    int x = 1;
-    x++;
 }
 
 //TO-DO: Make absolutely sure that cameras that are are registered

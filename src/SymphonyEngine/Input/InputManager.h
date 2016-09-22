@@ -28,8 +28,9 @@ namespace Symphony
             mouse->UpdatePosition((float)xpos, (float)ypos);
         }
 
-        static Keyboard* GetKeyboard() { return Instance()->keyboard; }
-        static Mouse* GetMouse() { return Instance()->mouse; }
+        static Mouse*    GetMouse()     { return Instance()->mouse;     }
+        static Keyboard* GetKeyboard()  { return Instance()->keyboard;  }
+        
         static void Update() { Instance()->UpdateInput(); }
 
         void UpdateInput()

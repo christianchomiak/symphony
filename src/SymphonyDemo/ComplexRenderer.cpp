@@ -159,7 +159,7 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObjec
         /* Update the shader with light data if it uses lights */
         /* Update the shader with light data only if object is within the light's reach (radius) */
         /* Update the shader with light data only if light gameobject is enabled */
-        int activeLights = 0;
+        size_t activeLights = 0;
         for (; activeLights < lights.size(); ++activeLights)
         {
             if (!lights[activeLights]->enabled) continue;

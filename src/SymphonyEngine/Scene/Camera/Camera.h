@@ -44,7 +44,7 @@ namespace Symphony
         Camera(float nearPlane, float farPlane, ViewPort& vp);
         Camera(ViewPort& vp);
 
-        const glm::mat4& BuildViewMatrix() const;
+        const glm::mat4 BuildViewMatrix() const;
         virtual void RecomputeProjectionMatrix() = 0;
     };
 

@@ -35,7 +35,7 @@ namespace Symphony
         viewport = newViewPort;
     }
 
-    const glm::mat4& Camera::BuildViewMatrix() const
+    const glm::mat4 Camera::BuildViewMatrix() const
     {
         //TO-DO: create a way for the camera to keep track of an object
 

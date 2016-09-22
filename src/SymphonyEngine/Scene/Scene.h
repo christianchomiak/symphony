@@ -25,6 +25,7 @@ namespace Symphony
         virtual void Update(float deltaTime);
         virtual void Render() = 0;
 
+        //TO-DO: What if these functions receive an optional parameter representing the parent of the object?
         void AddGameObject(GameObject*);
         void AddGameObject(Camera*);
         void AddGameObject(Light*);

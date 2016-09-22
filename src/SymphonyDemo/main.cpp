@@ -11,6 +11,11 @@ using namespace std;
 
 SymphonyEngine* sEngine = nullptr;
 
+void Test(int x)
+{
+
+}
+
 void LoadShaders()
 {
     vector<const char*> attributes;

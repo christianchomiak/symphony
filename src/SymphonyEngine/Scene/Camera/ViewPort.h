@@ -12,8 +12,8 @@ namespace Symphony
         int width;
         int height;
         float aspectRatio;
-    public:
 
+    public:
         ViewPort() : ViewPort(ViewPort::FullScreen())
         {
         }
@@ -24,7 +24,8 @@ namespace Symphony
             aspectRatio = (float)width / (float)height;
         }
 
-        ViewPort(const ViewPort& vp) : ViewPort(vp.startXPosition, vp.startYPosition, vp.width, vp.height)
+        ViewPort(const ViewPort& vp)
+            : ViewPort(vp.startXPosition, vp.startYPosition, vp.width, vp.height)
         {
         }
 
@@ -34,7 +35,8 @@ namespace Symphony
         static ViewPort FullScreen();
     };
 
-    inline float ViewPort::AspectRatio() const {
+    inline float ViewPort::AspectRatio() const
+    {
         return aspectRatio;
     }
 

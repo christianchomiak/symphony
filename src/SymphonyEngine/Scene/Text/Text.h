@@ -11,8 +11,8 @@ namespace Symphony
     public:
         enum class Alignment : char 
         { 
-            TOP_LEFT, TOP_CENTER, TOP_RIGHT,
-            CENTER_LEFT, CENTER, CENTER_RIGHT,
+            TOP_LEFT,    TOP_CENTER,    TOP_RIGHT,
+            CENTER_LEFT, CENTER,        CENTER_RIGHT,
             BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
         };
 
@@ -96,7 +96,7 @@ namespace Symphony
         float HorizontalPosition()
         {
             //float offset = 0.f;
-            size_t halfLength, oddity;
+            //size_t halfLength , oddity;
             TextCharacter ch;
 
             switch (alignment)
@@ -165,7 +165,7 @@ namespace Symphony
                 for (size_t j = 0; j < content.size(); ++j)
                 {
                     ch = TextCharacter::characters[content[j]];
-                    if (ch.Bearing.y > dummyY) dummyY = ch.Bearing.y;
+                    if (ch.Bearing.y > dummyY) dummyY = (float)ch.Bearing.y;
                 }
                 return -dummyY * scale; //position.y -
                 break;
@@ -177,7 +177,7 @@ namespace Symphony
                 for (size_t j = 0; j < content.size(); ++j)
                 {
                     ch = TextCharacter::characters[content[j]];
-                    if (ch.Bearing.y < dummyY) dummyY = ch.Bearing.y;
+                    if (ch.Bearing.y < dummyY) dummyY = (float)ch.Bearing.y;
                 }
                 return -dummyY * 0.5f * scale; // position.y -
 

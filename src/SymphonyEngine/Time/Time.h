@@ -1,25 +1,26 @@
 #pragma once
- 
-#include "../Utilities/Singleton.h"
+
 #include <iostream>
+#include "../Utilities/Singleton.h"
+#include "../Macros/ClassMacros.h"
 
 namespace Symphony
 {
     class Time
     {
         friend class SymphonyEngine;
+
     public:
+        DELETE_ALL_CONSTRUCTORS(Time)
+
         static inline float DeltaTime() { return (float) deltaTime; }
+
     protected:
+
         static double currentTime;
         static double deltaTime;
 
         static void Update();
-
-    private:
-        Time() = delete;
-        Time(Time const&) = delete;
-        void operator=(Time const&) = delete;
     };
 
     /*class Time : public Singleton<Time>
