@@ -147,6 +147,7 @@
     <ClInclude Include="Debugging\Debugging.h" />
     <ClInclude Include="IO\DataReader.h" />
     <ClInclude Include="Macros\ClassMacros.h" />
+    <ClInclude Include="Macros\PlatformMacros.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Rendering\Skybox.h" />
     <ClInclude Include="Rendering\UI\UIRenderer.h" />

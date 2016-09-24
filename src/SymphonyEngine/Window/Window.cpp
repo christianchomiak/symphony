@@ -142,7 +142,7 @@ namespace Symphony
     void Window::SetTitle(const char* newName)
     {
         properties.title = newName;
-        glfwSetWindowTitle(window, properties.title.c_str());
+        glfwSetWindowTitle(window, newName);
     }
     
     //TO-DO: Camera viewports should be updated whenever the window changes size
@@ -160,7 +160,7 @@ namespace Symphony
         Screen::width = properties.width;
         Screen::height = properties.height;
     }
-
+    
     void Window::OutputRenderingInfo() const
     {
         std::cout << "Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
@@ -171,7 +171,7 @@ namespace Symphony
 
         int major, minor, revision;
         glfwGetVersion(&major, &minor, &revision);
-        printf("Running against GLFW %i.%i.%i\n", major, minor, revision);
+        Debug::LogF("Running against GLFW %i.%i.%i\n", major, minor, revision);
     }
 
     void Window::ChangeCursorMode(CursorMode newMode)
@@ -237,6 +237,12 @@ namespace Symphony
     Window::WindowProperties Window::WindowProperties::LoadFromFile(const char * filename)
     {
         WindowProperties wProperties;
+        
+        if (filename == nullptr)
+        {
+            Debug::LogError("No filename was specified, default window properties will be used");
+            return wProperties;
+        }
 
         tinyxml2::XMLDocument doc;
 
@@ -250,21 +256,21 @@ namespace Symphony
 
         if (!windowData)
         {
-            Debug::LogError("Could not find WindowData properties in the window properties file, default window properties will be used");
+            Debug::LogErrorF("Could not find WindowData properties in \"%s\", default window properties will be used", filename);
             return wProperties;
         }
 
         const char* windowTitle = GetTextFromXmlElement(windowData, "Title");
         if (windowTitle == nullptr)
         {
-            Debug::LogError("Could not find windowTitle property in the window properties file");
+            Debug::LogErrorF("Could not find windowTitle property in  \"%s\"", filename);
         }
         else
         {
             wProperties.title = windowTitle;
         }
 
-        ReadFromXmlElement(windowData, "Borderless", wProperties.borderless);
+        ReadFromXmlElement(windowData, "Borderless2", wProperties.borderless);
         ReadFromXmlElement(windowData, "Fullscreen", wProperties.fullscreen);
         ReadFromXmlElement(windowData, "Maximised", wProperties.maximised);
         ReadFromXmlElement(windowData, "Resizeable", wProperties.resizeable);

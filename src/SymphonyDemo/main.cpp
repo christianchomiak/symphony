@@ -6,6 +6,8 @@
 #include "../SymphonyEngine/Engine/SymphonyEngine.h"
 #include "TestScene.h"
 
+#include "../SymphonyEngine/Debugging/Debugging.h"
+
 using namespace Symphony;
 using namespace std;
 
@@ -93,8 +95,8 @@ int main(int argc, char* args[])
     sEngine->AddScene(new TestScene());
     sEngine->Run();
     sEngine->Shutdown();
-    
+
     system("pause");
-    
+
     return 0;
 }

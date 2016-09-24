@@ -139,6 +139,9 @@
     <ClInclude Include="IO\DataReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Macros\PlatformMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\SymphonyEngine.cpp">

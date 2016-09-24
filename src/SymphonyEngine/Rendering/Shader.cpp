@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 
+#include "../Debugging/Debugging.h"
+
 using namespace std;
 
 namespace Symphony
@@ -14,7 +16,7 @@ namespace Symphony
     map<const char*, Shader*> Shader::shaderPool;
     
     void Shader::Use()       const { glUseProgram(programID); };
-    void Shader::Release()   const { glUseProgram(0); };
+    void Shader::Release()   const { glUseProgram(0);         };
 
     Shader* Shader::GetShader(const char* shaderName)
     {
@@ -58,7 +60,7 @@ namespace Symphony
         GLint status;
         glLinkProgram(programID);
         glGetProgramiv(programID, GL_LINK_STATUS, &status);
-
+        
         if (status == GL_FALSE)
         {
             GLint infoLogLength;
@@ -66,13 +68,13 @@ namespace Symphony
             glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
             GLchar *infoLog = new GLchar[infoLogLength];
             glGetProgramInfoLog(programID, infoLogLength, NULL, infoLog);
-            std::cout << "Linking: ERROR" << std::endl;
+            Debug::LogError("Linking: ERROR\n\n");
             std::cerr << "Link log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
             return false;
         }
 
-        std::cout << "Linking: OK" << std::endl;
+        Debug::Log("Linking: OK\n\n");
         
         glDeleteShader(shaders[VERTEX_SHADER]);
         glDeleteShader(shaders[FRAGMENT_SHADER]);
@@ -107,13 +109,13 @@ namespace Symphony
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
             GLchar *infoLog = new GLchar[infoLogLength];
             glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog);
-            std::cerr << "\tCompilation: ERROR" << std::endl;
+            Debug::LogError("\tCompilation: ERROR");
             std::cerr << "Compile log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
             return false;
         }
                 
-        cout << "\tCompilation: OK" << endl;
+        Debug::Log("\tCompilation: OK");
         
         shaders[typeOfShader] = shader;
 
@@ -128,7 +130,7 @@ namespace Symphony
         else if (typeOfShader == ShaderType::GEOMETRY_SHADER) shaderName = "Geometry";
         else                                                  shaderName = "Fragment"; //if (whichShader == GL_FRAGMENT_SHADER)
 
-        cout << "> " << shaderName << " shader (" << filename << ")" << endl;
+        Debug::LogF("> %s shader (%s)", shaderName, filename);
         
         ifstream fp;
         fp.open(filename, ios_base::in);
@@ -141,12 +143,12 @@ namespace Symphony
                 buffer.append(line);
                 buffer.append("\r\n");
             }
-            cout << "\tLoading: OK" << endl;
+            Debug::Log("\tLoading: OK");
             //copy to source
             return LoadFromString(typeOfShader, buffer.c_str());
         }
 
-        cout << "\tLoading: ERROR" << endl << endl;
+        Debug::Log("\tLoading: ERROR\n\n");
 
         return false;
     }
@@ -170,11 +172,11 @@ namespace Symphony
         //There's no point in creating the same shader over and over again
         if (ShaderExists(shaderName))
         {
-            std::cout << "Using previously loaded shader: \"" << shaderName << "\"" << std::endl;
+            Debug::LogF("Using previously loaded shader: %s", shaderName);
             return shaderPool[shaderName];
         }
 
-        std::cout << std::endl << "Creating new shader: \"" << shaderName << "\"" << std::endl;
+        Debug::LogF("Creating new shader: \"%s\"", shaderName);
 
         Shader* newShader = new Shader();
 

@@ -164,7 +164,7 @@ namespace Symphony
 
         Unload();
 
-        Debug::Log("Symphony Engine has now finished execution");
+        Debug::LogF("Symphony Engine has now finished execution");
     }
 
     void SymphonyEngine::AddScene(Scene* newScene)
@@ -176,7 +176,7 @@ namespace Symphony
             return;
         }
 
-        Debug::LogWarning("Trying to add a null scene to the engine");
+        Debug::LogWarningF("Trying to add a null scene to the engine");
     }
     
     void SymphonyEngine::NextScene()
@@ -197,7 +197,7 @@ namespace Symphony
         
         if (!newScene)
         {
-            Debug::LogError("Scene \"" + sceneName + "\" doesn't exist");
+            Debug::LogErrorF("Scene %s doesn't exist", sceneName);
             return;
         }
         
@@ -213,8 +213,7 @@ namespace Symphony
         }
         else if (newSceneID >= scenes.size())
         {
-            Debug::LogError("Error trying to load scene #" + std::to_string(newSceneID) +
-                            ", only " + std::to_string(scenes.size()) + " scene(s) exist");
+            Debug::LogErrorF("Error trying to load scene #%d, only %d scene(s) exist", newSceneID, scenes.size());
             return;
         }
         nextSceneID = newSceneID;
@@ -249,17 +248,21 @@ namespace Symphony
         Shader::DeleteAllShaders();
         TextureManager::ClearTextureCache();
     }
-
+    
     void SymphonyEngine::LoadFonts()
     {
         FT_Library ft;
         if (FT_Init_FreeType(&ft))
-            std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
-
+        {
+            Debug::LogError("ERROR::FREETYPE: Could not init FreeType Library");
+        }
+        
         FT_Face face;
         if (FT_New_Face(ft, "../../resources/Fonts/arial.ttf", 0, &face))
-            std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-        
+        {
+            Debug::LogError("ERROR::FREETYPE: Failed to load font");
+        }
+
         FT_Set_Pixel_Sizes(face, 0, 48);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
@@ -268,7 +271,7 @@ namespace Symphony
             // Load character glyph 
             if (FT_Load_Char(face, c, FT_LOAD_RENDER))
             {
-                std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+                Debug::LogError("ERROR::FREETYTPE: Failed to load Glyph");
                 continue;
             }
 
