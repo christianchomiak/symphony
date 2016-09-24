@@ -4,6 +4,7 @@
 #include FT_FREETYPE_H
 
 #include <sstream>
+
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 #include "../Rendering/Shader.h"
@@ -41,7 +42,7 @@ namespace Symphony
     {
         Window::WindowProperties wProperties = Window::WindowProperties();
         wProperties.cursorMode = Window::CursorMode::DISABLED;
-        wProperties.decorated = true;
+        wProperties.borderless = false;
         wProperties.fullscreen = false;
         wProperties.width = 1280;
         wProperties.height = 720;
@@ -52,7 +53,12 @@ namespace Symphony
         
         return Initialise(wProperties);
     }
-
+    
+    bool SymphonyEngine::Initialise(const char* filename)
+    {
+        return Initialise(Window::WindowProperties::LoadFromFile(filename));
+    }
+    
     bool SymphonyEngine::Initialise(Window::WindowProperties& windowProperties)
     {
         std::cout.setf(std::ios::boolalpha);
@@ -75,7 +81,7 @@ namespace Symphony
         LoadFonts();
 
         return initialised;
-    }
+    }    
 
     void SymphonyEngine::Run()
     {
@@ -116,7 +122,7 @@ namespace Symphony
             
             Time::Update();
             deltaTime = Time::DeltaTime(); //gameTimer->GetDeltaTime();
-            window->SetTitle(std::to_string(deltaTime).c_str());
+            //window->SetTitle(std::to_string(deltaTime).c_str());
             
             //frameStartTime = gameTimer->GetMS();
                         
@@ -172,7 +178,7 @@ namespace Symphony
 
         Debug::LogWarning("Trying to add a null scene to the engine");
     }
-
+    
     void SymphonyEngine::NextScene()
     {
         ChangeScene(currentScene->GetID() + 1);

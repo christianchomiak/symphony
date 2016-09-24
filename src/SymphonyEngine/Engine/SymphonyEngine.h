@@ -26,6 +26,7 @@ namespace Symphony
         */
         bool Initialise();
 
+        //TO-DO: Should this receive a const& instead of &?
         /*
         SUMMARY:
             \\ Setups the engine with custom window values
@@ -35,6 +36,16 @@ namespace Symphony
             \\ Whether the engine initialised correctly
         */
         bool Initialise(Window::WindowProperties& windowProperties);
+
+        /*
+        SUMMARY:
+        \\ Setups the engine with custom window values defined in a file
+        PARAMS:
+        \\ filename: name of the file containing the properties
+        RETURNS:
+        \\ Whether the engine initialised correctly
+        */
+        bool Initialise(const char* filename);
         
         void NextScene();
         void AddScene(Scene* newScene);

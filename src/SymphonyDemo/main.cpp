@@ -11,11 +11,6 @@ using namespace std;
 
 SymphonyEngine* sEngine = nullptr;
 
-void Test(int x)
-{
-
-}
-
 void LoadShaders()
 {
     vector<const char*> attributes;
@@ -84,19 +79,8 @@ void LoadShaders()
 int main(int argc, char* args[])
 {
     sEngine = SymphonyEngine::Instance();
-    
-    Window::WindowProperties wProperties = Window::WindowProperties();
-    wProperties.cursorMode = Window::CursorMode::DISABLED;
-    wProperties.decorated = true;
-    wProperties.fullscreen = false;
-    wProperties.width = 1280;
-    wProperties.height = 720;
-    wProperties.maximised = false;
-    wProperties.resizeable = true;
-    wProperties.title = "Symphony Engine demo";
-    wProperties.switchableToOtherModes = false;
 
-    if (!sEngine->Initialise(wProperties))
+    if (!sEngine->Initialise("../../resources/SymphonyConfig.xml"))
     {
         std::cout << "Error trying to initialise Symphony Engine" << std::endl;
         system("pause");

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SymphonyConfigData>
+    <WindowData>
+      <Title>Symphony Engine - v0.1.0 (Bittersweet)</Title>
+      <Fullscreen>false</Fullscreen>
+      <Maximised>false</Maximised>
+      <Borderless>false</Borderless>
+      <Resizeable>true</Resizeable>
+      <Switchable>true</Switchable>
+      <ResolutionWidth>1366</ResolutionWidth>
+      <ResolutionHeight>768</ResolutionHeight>
+      <CursorMode>0</CursorMode>
+    </WindowData>
+</SymphonyConfigData>

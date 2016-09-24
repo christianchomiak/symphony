@@ -2,6 +2,7 @@
 
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
+#include "../IO/DataReader.h"
 
 #include "Screen.h"
 
@@ -13,14 +14,14 @@ void WindowResizeCallback(GLFWwindow* window, int width, int height)
 
 namespace Symphony
 {
-    Window::Window(const char* title, int width, int height, bool resizeable, bool decorated, bool maximised, bool switchableToFullscreen)
-        : properties(title, width, height, false, resizeable, decorated, maximised, switchableToFullscreen, CursorMode::NORMAL)
+    Window::Window(const char* title, int width, int height, bool resizeable, bool borderless, bool maximised, bool switchableToFullscreen)
+        : properties(title, width, height, false, resizeable, borderless, maximised, switchableToFullscreen, CursorMode::VISIBLE)
     {
         window = nullptr;
     }
     
     Window::Window(const char* title, int width, int height, bool switchableToWindowed)
-        : properties(title, width, height, true, false, false, false, false, CursorMode::NORMAL)
+        : properties(title, width, height, true, false, false, false, false, CursorMode::VISIBLE)
     {
         window = nullptr;
     }
@@ -61,15 +62,15 @@ namespace Symphony
 
         if (properties.fullscreen)
         {
-            window = glfwCreateWindow(properties.width, properties.height, properties.title, glfwGetPrimaryMonitor(), NULL);
+            window = glfwCreateWindow(properties.width, properties.height, properties.title.c_str(), glfwGetPrimaryMonitor(), NULL);
         }
         else
         {
             glfwWindowHint(GLFW_RESIZABLE, properties.resizeable ? GL_TRUE : GL_FALSE);
-            glfwWindowHint(GLFW_DECORATED, properties.decorated ? GL_TRUE : GL_FALSE);
-            glfwWindowHint(GLFW_MAXIMIZED, properties.maximised ? GL_TRUE : GL_FALSE);
+            glfwWindowHint(GLFW_DECORATED, properties.borderless ? GL_FALSE : GL_TRUE);
+            glfwWindowHint(GLFW_MAXIMIZED, properties.maximised  ? GL_TRUE : GL_FALSE);
             
-            window = glfwCreateWindow(properties.width, properties.height, properties.title, NULL, NULL);
+            window = glfwCreateWindow(properties.width, properties.height, properties.title.c_str(), NULL, NULL);
         }
 
         if (!window)
@@ -96,12 +97,13 @@ namespace Symphony
         HandleResize();
         //glViewport(0, 0, width, height);
         OutputRenderingInfo();
-
+        
         ChangeCursorMode(properties.cursorMode);
         
-        if (!properties.fullscreen)
+        const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        if (!properties.fullscreen && !properties.maximised)
         {
-            glfwSetWindowPos(window, properties.width / 4, properties.height / 4);
+            glfwSetWindowPos(window, (mode->width - properties.width) / 2, (mode->height - properties.height) / 2);
         }
 
         //TO-DO: Set the window's icon
@@ -139,9 +141,8 @@ namespace Symphony
 
     void Window::SetTitle(const char* newName)
     {
-        //TO-DO: check if this might cause a memory leak
         properties.title = newName;
-        glfwSetWindowTitle(window, properties.title);
+        glfwSetWindowTitle(window, properties.title.c_str());
     }
     
     //TO-DO: Camera viewports should be updated whenever the window changes size
@@ -149,8 +150,12 @@ namespace Symphony
     {
         //glfwGetWindowSize(window, &width, &height);
 
-        glfwGetFramebufferSize(window, &properties.width, &properties.height);
-        glViewport(0, 0, properties.width, properties.height);
+        int w, h;
+        glfwGetFramebufferSize(window, &w, &h);
+        glViewport(0, 0, w, h);
+
+        properties.width = w;
+        properties.height = h;
 
         Screen::width = properties.width;
         Screen::height = properties.height;
@@ -178,7 +183,7 @@ namespace Symphony
         case CursorMode::DISABLED:
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             break;
-        case CursorMode::NORMAL:
+        case CursorMode::VISIBLE:
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             break;
         case CursorMode::HIDDEN:
@@ -213,6 +218,80 @@ namespace Symphony
     void Window::glfwErrorCallback(int error, const char* description)
     {
         fprintf(stderr, "Error: %s\n", description);
+    }
+
+    bool Window::GetMonitorResolution(int & w, int & h)
+    {
+        const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        
+        if (mode)
+        {
+            w = mode->width;
+            h = mode->height;
+            return true;
+        }
+        Debug::LogError("Could not access video mode of primary monitor");
+        return false;
+    }
+
+    Window::WindowProperties Window::WindowProperties::LoadFromFile(const char * filename)
+    {
+        WindowProperties wProperties;
+
+        tinyxml2::XMLDocument doc;
+
+        if (!ValidateXmlLoading(filename, doc.LoadFile(filename)))
+        {
+            Debug::LogError("Default window properties will be used");
+            return wProperties;
+        }
+
+        tinyxml2::XMLElement* windowData = doc.FirstChildElement("SymphonyConfigData")->FirstChildElement("WindowData");
+
+        if (!windowData)
+        {
+            Debug::LogError("Could not find WindowData properties in the window properties file, default window properties will be used");
+            return wProperties;
+        }
+
+        const char* windowTitle = GetTextFromXmlElement(windowData, "Title");
+        if (windowTitle == nullptr)
+        {
+            Debug::LogError("Could not find windowTitle property in the window properties file");
+        }
+        else
+        {
+            wProperties.title = windowTitle;
+        }
+
+        ReadFromXmlElement(windowData, "Borderless", wProperties.borderless);
+        ReadFromXmlElement(windowData, "Fullscreen", wProperties.fullscreen);
+        ReadFromXmlElement(windowData, "Maximised", wProperties.maximised);
+        ReadFromXmlElement(windowData, "Resizeable", wProperties.resizeable);
+        ReadFromXmlElement(windowData, "Switchable", wProperties.switchableToOtherModes);
+
+        ReadFromXmlElement(windowData, "ResolutionWidth", wProperties.width);
+        ReadFromXmlElement(windowData, "ResolutionHeight", wProperties.height);
+        
+        int cursorMode(-1);
+        ReadFromXmlElement(windowData, "CursorMode", cursorMode);
+        switch (cursorMode)
+        {
+        case 0:
+            wProperties.cursorMode = CursorMode::DISABLED;
+            break;
+        case 1:
+            wProperties.cursorMode = CursorMode::VISIBLE;
+            break;
+        case 2:
+            wProperties.cursorMode = CursorMode::HIDDEN;
+            break;
+        default:
+            Debug::LogError("Could not find a correct CursorMode property in the window properties file");
+            break;
+        }
+        
+        return wProperties;
     }
 
 }

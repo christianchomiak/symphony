@@ -2,6 +2,7 @@
 
 namespace Symphony
 {
+    //This represents the canvas of the Window class and not the actual monitor screen
     struct Screen
     {
         friend class Window;

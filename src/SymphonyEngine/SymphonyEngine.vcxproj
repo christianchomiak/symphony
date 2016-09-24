@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
+    <ClInclude Include="IO\DataReader.h" />
     <ClInclude Include="Macros\ClassMacros.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Rendering\Skybox.h" />
@@ -185,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Debugging\Debugging.cpp" />
+    <ClCompile Include="IO\DataReader.cpp" />
     <ClCompile Include="Rendering\Skybox.cpp" />
     <ClCompile Include="Rendering\UI\UIRenderer.cpp" />
     <ClCompile Include="Scene\Camera\Camera.cpp" />
