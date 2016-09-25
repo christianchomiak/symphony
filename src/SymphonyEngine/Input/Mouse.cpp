@@ -3,127 +3,129 @@
 #include <cstring>
 #include <iostream>
 
-Symphony::Mouse::Mouse()
+namespace Symphony
 {
-    anyButtonPressed = false;
-    numberOfButtons = GLFW_MOUSE_BUTTON_LAST + 1;
-    buttons = new InputState[numberOfButtons];
-    sensitivity = 0.05f;
-    Reset();
-}
-
-Symphony::Mouse::~Mouse()
-{
-    delete[] buttons;
-}
-
-void Symphony::Mouse::Reset()
-{
-    std::memset(buttons, InputState::IDLE, numberOfButtons);
-}
-
-void Symphony::Mouse::Update()
-{
-    anyButtonPressed = false;
-    
-    for (size_t i = 0; i < (size_t)numberOfButtons; ++i)
+    Mouse::Mouse()
+        : anyButtonPressed(false), sensitivity(0.05f),
+          numberOfButtons(GLFW_MOUSE_BUTTON_LAST + 1)
     {
-        if (buttons[i] == InputState::DOWN)
+        buttons = new InputState[numberOfButtons];
+        Reset();
+    }
+
+    Mouse::~Mouse()
+    {
+        delete[] buttons;
+    }
+
+    void Mouse::Reset()
+    {
+        std::memset(buttons, InputState::IDLE, numberOfButtons);
+    }
+
+    void Mouse::Update()
+    {
+        anyButtonPressed = false;
+
+        for (size_t i = 0; i < (size_t)numberOfButtons; ++i)
         {
-            buttons[i] = InputState::HOLD;
-            anyButtonPressed = true;
+            if (buttons[i] == InputState::DOWN)
+            {
+                buttons[i] = InputState::HOLD;
+                anyButtonPressed = true;
+            }
+            else if (buttons[i] == InputState::HOLD)
+            {
+                anyButtonPressed = true;
+            }
+            else if (buttons[i] == InputState::UP)
+            {
+                buttons[i] = InputState::IDLE;
+            }
+
+            deltaPosition.x = 0;
+            deltaPosition.y = 0;
         }
-        else if (buttons[i] == InputState::HOLD)
+    }
+
+    void Mouse::UpdateButton(int id, int state)
+    {
+        if (!CheckButtonID(id))
         {
-            anyButtonPressed = true;
+            std::cerr << "Trying to update unknow button" << std::endl;
+            return;
         }
-        else if (buttons[i] == InputState::UP)
+
+        if (state == GLFW_PRESS)
         {
-            buttons[i] = InputState::IDLE;
+            buttons[id] = InputState::DOWN;
         }
+        else if (state == GLFW_RELEASE)
+        {
+            buttons[id] = InputState::UP;
+        }
+    }
 
-        deltaPosition.x = 0;
-        deltaPosition.y = 0;
+    void Mouse::UpdatePosition(float newX, float newY)
+    {
+        glm::vec2 newPosition = glm::vec2(newX, newY);
+        deltaPosition.x = newPosition.x - position.x;
+        deltaPosition.y = position.y - newPosition.y;
+        position.x = newX;
+        position.y = newY;
+        deltaPosition *= sensitivity;
     }
-}
 
-void Symphony::Mouse::UpdateButton(int id, int state)
-{
-    if (!CheckButtonID(id))
+    bool Mouse::ButtonPressed(int button) const
     {
-        std::cerr << "Trying to update unknow button" << std::endl;
-        return;
+        if (!CheckButtonID(button))
+        {
+            std::cerr << "Trying to query unknow button" << std::endl;
+            return false;
+        }
+        return buttons[button] == InputState::HOLD || buttons[button] == InputState::DOWN;
     }
-    
-    if (state == GLFW_PRESS)
-    {
-        buttons[id] = InputState::DOWN;
-    }
-    else if (state == GLFW_RELEASE)
-    {
-        buttons[id] = InputState::UP;
-    }
-}
 
-void Symphony::Mouse::UpdatePosition(float newX, float newY)
-{
-    glm::vec2 newPosition = glm::vec2(newX, newY);
-    deltaPosition.x = newPosition.x - position.x;
-    deltaPosition.y = position.y - newPosition.y;
-    position.x = newX;
-    position.y = newY;
-    deltaPosition *= sensitivity;
-}
-
-bool Symphony::Mouse::ButtonPressed(int button) const
-{
-    if (!CheckButtonID(button))
+    bool Mouse::ButtonUp(int button) const
     {
-        std::cerr << "Trying to query unknow button" << std::endl;
-        return false;
+        if (!CheckButtonID(button))
+        {
+            std::cerr << "Trying to query unknow button" << std::endl;
+            return false;
+        }
+        return buttons[button] == InputState::UP;
     }
-    return buttons[button] == InputState::HOLD || buttons[button] == InputState::DOWN;
-}
 
-bool Symphony::Mouse::ButtonUp(int button) const
-{
-    if (!CheckButtonID(button))
+    bool Mouse::ButtonDown(int button) const
     {
-        std::cerr << "Trying to query unknow button" << std::endl;
-        return false;
+        if (!CheckButtonID(button))
+        {
+            std::cerr << "Trying to query unknow button" << std::endl;
+            return false;
+        }
+        return buttons[button] == InputState::DOWN;
     }
-    return buttons[button] == InputState::UP;
-}
 
-bool Symphony::Mouse::ButtonDown(int button) const
-{
-    if (!CheckButtonID(button))
+    bool Mouse::ButtonHold(int button) const
     {
-        std::cerr << "Trying to query unknow button" << std::endl;
-        return false;
+        if (!CheckButtonID(button))
+        {
+            std::cerr << "Trying to query unknow button" << std::endl;
+            return false;
+        }
+        return buttons[button] == InputState::HOLD;
     }
-    return buttons[button] == InputState::DOWN;
-}
-
-bool Symphony::Mouse::ButtonHold(int button) const
-{
-    if (!CheckButtonID(button))
-    {
-        std::cerr << "Trying to query unknow button" << std::endl;
-        return false;
-    }
-    return buttons[button] == InputState::HOLD;
-}
 
 
-void Symphony::Mouse::SetSensitivity(float newSensitivity)
-{
-    if (newSensitivity >= 0.f)
+    void Mouse::SetSensitivity(float newSensitivity)
     {
-        sensitivity = newSensitivity;
-    }
-    else
-    {
-        std::cout << "Trying to set a negative sensitivity to the mouse. Current value not overwritten." << std::endl;
+        if (newSensitivity >= 0.f)
+        {
+            sensitivity = newSensitivity;
+        }
+        else
+        {
+            std::cout << "Trying to set a negative sensitivity to the mouse. Current value not overwritten." << std::endl;
+        }
     }
 }

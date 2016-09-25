@@ -24,7 +24,7 @@ void FreeRoamCamera::Update()
     transform.SetLocalRotation(pitch, yaw, 0.f);
 
     //transform.Rotate(-mouseOffset.y, mouseOffset.x, 0);
-
+    
     Keyboard* keyboard = InputManager::GetKeyboard();
 
     float speed = 50.f;

@@ -86,6 +86,7 @@ namespace Symphony
         glfwSetKeyCallback(window, InputManager::KeyboardKeyCallback);
         glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
         glfwSetCursorPosCallback(window, InputManager::MousePositionCallback);
+        glfwSetJoystickCallback(InputManager::GamePadStatusCallback);
 
         glewExperimental = GL_TRUE;
         if (glewInit() != GLEW_OK)
@@ -270,7 +271,7 @@ namespace Symphony
             wProperties.title = windowTitle;
         }
 
-        ReadFromXmlElement(windowData, "Borderless2", wProperties.borderless);
+        ReadFromXmlElement(windowData, "Borderless", wProperties.borderless);
         ReadFromXmlElement(windowData, "Fullscreen", wProperties.fullscreen);
         ReadFromXmlElement(windowData, "Maximised", wProperties.maximised);
         ReadFromXmlElement(windowData, "Resizeable", wProperties.resizeable);
