@@ -1,12 +1,7 @@
 #pragma comment(lib, "SymphonyEngine.lib")
 
-#include <string>
-#include <iostream>
-
 #include "../SymphonyEngine/Engine/SymphonyEngine.h"
 #include "TestScene.h"
-
-#include "../SymphonyEngine/Debugging/Debugging.h"
 
 using namespace Symphony;
 using namespace std;
