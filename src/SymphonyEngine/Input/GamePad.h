@@ -5,6 +5,40 @@
 
 namespace Symphony
 {
+    enum PadButton
+    {
+        GAMEPAD_A = 0,
+        GAMEPAD_B = 1,
+        GAMEPAD_X = 2,
+        GAMEPAD_Y = 3,
+
+        GAMEPAD_LEFT_SHOULDER = 4,
+        GAMEPAD_RIGHT_SHOULDER = 5,
+
+        GAMEPAD_BACK = 6,
+        GAMEPAD_START = 7,
+
+        GAMEPAD_LEFT_STICK = 8,
+        GAMEPAD_RIGHT_STICK = 9,
+
+        GAMEPAD_DPAD_UP = 10,
+        GAMEPAD_DPAD_RIGHT = 11,
+        GAMEPAD_DPAD_DOWN = 12,
+        GAMEPAD_DPAD_LEFT = 13
+    };
+
+    enum PadAxis
+    {
+        GAMEPAD_LEFT_X = 0,
+        GAMEPAD_LEFT_Y = 1,
+
+        GAMEPAD_RIGHT_X = 2,
+        GAMEPAD_RIGHT_Y = 3,
+
+        GAMEPAD_LEFT_TRIGGER = 4,
+        GAMEPAD_RIGHT_TRIGGER = 5
+    };
+
     class GamePad
     {
         friend class InputManager;
@@ -14,12 +48,12 @@ namespace Symphony
 
         //TO-DO: Should these be inlined?
         
-        bool      ButtonUp(int button)  const;
-        bool    ButtonDown(int button)  const;
-        bool    ButtonHold(int button)  const;
-        bool ButtonPressed(int button)  const;
+        bool      ButtonUp(PadButton button)  const;
+        bool    ButtonDown(PadButton button)  const;
+        bool    ButtonHold(PadButton button)  const;
+        bool ButtonPressed(PadButton button)  const;
         
-        float GetAxisValue(int axisNumber) const;
+        float GetAxisValue(PadAxis axisNumber) const;
 
         const char* Name() const;
 
@@ -56,39 +90,5 @@ namespace Symphony
     inline const char* GamePad::Name() const
     {
         return connected ? glfwGetJoystickName(gamepadID) : "";
-    }
-    
-    namespace GButton
-    {
-        const int GAMEPAD_A = 0;
-        const int GAMEPAD_B = 1;
-        const int GAMEPAD_X = 2;
-        const int GAMEPAD_Y = 3;
-
-        const int GAMEPAD_LEFT_SHOULDER = 4;
-        const int GAMEPAD_RIGHT_SHOULDER = 5;
-
-        const int GAMEPAD_BACK = 6;
-        const int GAMEPAD_START = 7;
-
-        const int GAMEPAD_LEFT_STICK = 8;
-        const int GAMEPAD_RIGHT_STICK = 9;
-
-        const int GAMEPAD_DPAD_UP = 10;
-        const int GAMEPAD_DPAD_RIGHT = 11;
-        const int GAMEPAD_DPAD_DOWN = 12;
-        const int GAMEPAD_DPAD_LEFT = 13;
-    }
-
-    namespace Axis
-    {
-        const int GAMEPAD_LEFT_X        = 0;
-        const int GAMEPAD_LEFT_Y        = 1;
-
-        const int GAMEPAD_RIGHT_X       = 2;
-        const int GAMEPAD_RIGHT_Y       = 3;
-
-        const int GAMEPAD_LEFT_TRIGGER  = 4;
-        const int GAMEPAD_RIGHT_TRIGGER = 5;
     }
 }

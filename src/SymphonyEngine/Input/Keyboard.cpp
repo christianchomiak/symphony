@@ -3,6 +3,8 @@
 #include <cstring>
 #include <iostream>
 
+#include "../Debugging/Debugging.h"
+
 namespace Symphony
 {
     Keyboard::Keyboard()
@@ -16,48 +18,48 @@ namespace Symphony
     {
         delete[] keys;
     }
-
-    bool Keyboard::KeyPressed(int key) const
+    
+    bool Keyboard::KeyPressed(Key key) const
     {
         if (!CheckKeyID(key))
         {
-            std::cerr << "Trying to query unknow key" << std::endl;
+            Debug::LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::HOLD || keys[key] == InputState::DOWN;
     }
 
-    bool Keyboard::KeyUp(int key) const
+    bool Keyboard::KeyUp(Key key) const
     {
         if (!CheckKeyID(key))
         {
-            std::cerr << "Trying to query unknow key" << std::endl;
+            Debug::LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::UP;
     }
 
-    bool Keyboard::KeyDown(int key) const
+    bool Keyboard::KeyDown(Key key) const
     {
         if (!CheckKeyID(key))
         {
-            std::cerr << "Trying to query unknow key" << std::endl;
+            Debug::LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::DOWN;
     }
 
-    bool Keyboard::KeyHold(int key) const
+    bool Keyboard::KeyHold(Key key) const
     {
         if (!CheckKeyID(key))
         {
-            std::cerr << "Trying to query unknow key" << std::endl;
+            Debug::LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::HOLD;
     }
 
-    int Keyboard::KeyStatus(int key) const
+    /*int Keyboard::KeyStatus(Key key) const
     {
         if (!CheckKeyID(key))
         {
@@ -66,7 +68,7 @@ namespace Symphony
         }
 
         return keys[key];
-    }
+    }*/
 
     void Keyboard::Update()
     {
@@ -91,9 +93,9 @@ namespace Symphony
 
     void Keyboard::UpdateKey(int id, int state)
     {
-        if (!CheckKeyID(id))
+        if ((id < 0 || id >= numberOfKeys))
         {
-            std::cerr << "Trying to update unknow key" << std::endl;
+            Debug::LogWarning("Trying to query unknow key");
             return;
         }
 

@@ -61,7 +61,7 @@ namespace Symphony
             static WindowProperties LoadFromFile(const char* filename);
         };
         
-        DELETE_ALL_CONSTRUCTORS(Window)
+        NO_DEFAULT_CONSTRUCTORS(Window)
         Window(WindowProperties& properties);
         ~Window();
         

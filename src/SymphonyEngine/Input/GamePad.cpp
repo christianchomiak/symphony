@@ -22,35 +22,35 @@ namespace Symphony
         delete[] buttons;
     }
     
-    bool GamePad::ButtonUp(int button) const
+    bool GamePad::ButtonUp(PadButton button) const
     {
         return connected
             && (button > -1 && button < numberOfButtons)
             && buttons[button] == InputState::UP;
     }
 
-    bool GamePad::ButtonDown(int button) const
+    bool GamePad::ButtonDown(PadButton button) const
     {
         return connected
             && (button > -1 && button < numberOfButtons)
             && buttons[button] == InputState::DOWN;
     }
 
-    bool GamePad::ButtonHold(int button) const
+    bool GamePad::ButtonHold(PadButton button) const
     {
         return connected
             && (button > -1 && button < numberOfButtons)
             && buttons[button] == InputState::HOLD;
     }
 
-    bool GamePad::ButtonPressed(int button) const
+    bool GamePad::ButtonPressed(PadButton button) const
     {
         return connected 
             && (button > -1 && button < numberOfButtons)
             && (buttons[button] == InputState::HOLD || buttons[button] == InputState::DOWN);
     }
     
-    float GamePad::GetAxisValue(int axisNumber) const
+    float GamePad::GetAxisValue(PadAxis axisNumber) const
     {
         return connected && (axisNumber > -1 && axisNumber < numberOfAxes) && axes
                ?

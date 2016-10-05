@@ -30,29 +30,29 @@ void FreeRoamCamera::Update()
     float speed = 50.f;
 
     glm::vec3 dir;
-    if (keyboard->KeyPressed(Key::KEY_Q))
+    if (keyboard->KeyPressed(Key::Q))
     {
         dir += glm::vec3(0, 1, 0); // transform.Up();
     }
-    else if (keyboard->KeyPressed(Key::KEY_E))
+    else if (keyboard->KeyPressed(Key::E))
     {
         dir -= glm::vec3(0, 1, 0); // transform.Up();
     }
 
-    if (keyboard->KeyPressed(Key::KEY_W))
+    if (keyboard->KeyPressed(Key::W))
     {
         dir -= transform.Forward();
     }
-    else if (keyboard->KeyPressed(Key::KEY_S))
+    else if (keyboard->KeyPressed(Key::S))
     {
         dir += transform.Forward();
     }
 
-    if (keyboard->KeyPressed(Key::KEY_A))
+    if (keyboard->KeyPressed(Key::A))
     {
         dir-= transform.Right();
     }
-    else if (keyboard->KeyPressed(Key::KEY_D))
+    else if (keyboard->KeyPressed(Key::D))
     {
         dir += transform.Right();
     }

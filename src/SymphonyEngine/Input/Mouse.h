@@ -11,6 +11,7 @@ namespace Symphony
         friend class InputManager;
     public:
         float filter;
+
     public:
         bool AnyButtonPressed() const;
 
@@ -78,20 +79,20 @@ namespace Symphony
     {
         return (id >= 0 && id < numberOfButtons);
     }
-
-    namespace Button
+    
+    enum MButton
     {
-        const int LEFT   = GLFW_MOUSE_BUTTON_1;
-        const int RIGHT  = GLFW_MOUSE_BUTTON_2;
-        const int MIDDLE = GLFW_MOUSE_BUTTON_3;
+        BTN_LEFT = GLFW_MOUSE_BUTTON_1,
+        BTN_RIGHT = GLFW_MOUSE_BUTTON_2,
+        BTN_MIDDLE = GLFW_MOUSE_BUTTON_3,
 
-        const int BTN_1 = GLFW_MOUSE_BUTTON_1;
-        const int BTN_2 = GLFW_MOUSE_BUTTON_2;
-        const int BTN_3 = GLFW_MOUSE_BUTTON_3;
-        const int BTN_4 = GLFW_MOUSE_BUTTON_4;
-        const int BTN_5 = GLFW_MOUSE_BUTTON_5;
-        const int BTN_6 = GLFW_MOUSE_BUTTON_6;
-        const int BTN_7 = GLFW_MOUSE_BUTTON_7;
-        const int BTN_8 = GLFW_MOUSE_BUTTON_8;
-    }
+        BTN_1 = GLFW_MOUSE_BUTTON_1,
+        BTN_2 = GLFW_MOUSE_BUTTON_2,
+        BTN_3 = GLFW_MOUSE_BUTTON_3,
+        BTN_4 = GLFW_MOUSE_BUTTON_4,
+        BTN_5 = GLFW_MOUSE_BUTTON_5,
+        BTN_6 = GLFW_MOUSE_BUTTON_6,
+        BTN_7 = GLFW_MOUSE_BUTTON_7,
+        BTN_8 = GLFW_MOUSE_BUTTON_8
+    };
 }

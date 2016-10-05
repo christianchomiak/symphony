@@ -145,6 +145,9 @@
     <ClInclude Include="Input\GamePad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Macros\QAMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\SymphonyEngine.cpp">

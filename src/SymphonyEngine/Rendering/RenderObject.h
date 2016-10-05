@@ -5,6 +5,8 @@
 #include "Shader.h"
 #include "Material.h"
 
+#include "../Macros/QAMacros.h"
+
 namespace Symphony
 {
     //Subsystem of GameObject, in charge of controlling everything related
@@ -50,6 +52,7 @@ namespace Symphony
     
     inline void RenderObject::SetMesh(Mesh *m)
     {
+        NULL_POINTER_WARNING(m, return);
         mesh = m;
     }
 
@@ -58,8 +61,9 @@ namespace Symphony
         texture.CopyValuesFromTexture(t);
     }
 
-    inline void RenderObject::SetShader(Shader * s)
+    inline void RenderObject::SetShader(Shader* s)
     {
+        NULL_POINTER_WARNING(s, return);
         shader = s;
     }
 

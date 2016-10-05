@@ -11,9 +11,9 @@ namespace Symphony
         friend class SymphonyEngine;
 
     public:
-        DELETE_ALL_CONSTRUCTORS(Time)
+        NO_DEFAULT_CONSTRUCTORS(Time)
 
-        static inline float DeltaTime() { return (float) deltaTime; }
+        static inline float DeltaTime();
 
     protected:
 
@@ -22,6 +22,13 @@ namespace Symphony
 
         static void Update();
     };
+
+    inline float Time::DeltaTime() 
+    { 
+        return (float)deltaTime;
+    }
+
+
 
     /*class Time : public Singleton<Time>
     {

@@ -209,6 +209,11 @@ void TestScene::Update(float deltaTime)
 {
     Scene::Update(deltaTime);
     //txt->content = std::to_string(deltaTime).c_str();
+
+    if (InputManager::GetMouse()->ButtonPressed(MButton::BTN_LEFT))
+    {
+        Debug::Log("Mouse");
+    }
 }
 
 void TestScene::Render()
