@@ -204,6 +204,7 @@
     <ClCompile Include="Scene\Light\Spotlight.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Engine\SymphonyEngine.cpp" />
+    <ClCompile Include="Scene\Text\Text.cpp" />
     <ClCompile Include="Scene\Text\Text2D.cpp" />
     <ClCompile Include="Scene\Text\TextCharacter.cpp" />
     <ClCompile Include="Scene\Transform.cpp" />

@@ -2,6 +2,8 @@
 
 namespace Symphony
 {
+    SINGLETON_INSTANCE_INIT(InputManager)
+
     InputManager::InputManager()
     {
         keyboard = new Keyboard();
@@ -51,7 +53,7 @@ namespace Symphony
             Debug::LogF("Disconnected gamepad #%d", gamepadID);
         }
 
-        Instance()->gamepad[gamepadID]->connected = event == GLFW_CONNECTED;
+        Instance()->gamepad[gamepadID]->connected = (event == GLFW_CONNECTED);
     }
 }
 

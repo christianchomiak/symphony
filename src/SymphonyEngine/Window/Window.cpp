@@ -26,7 +26,7 @@ namespace Symphony
         window = nullptr;
     }
 
-    Window::Window(WindowProperties& initialProperties)
+    Window::Window(const WindowProperties& initialProperties)
         : properties(initialProperties)
     {
         window = nullptr;

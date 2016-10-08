@@ -2,7 +2,8 @@
 
 #include <GLEW/GL/glew.h>
 #include <SOIL2/SOIL2.h>
-#include <iostream>
+
+#include "../Debugging/Debugging.h"
 
 namespace Symphony
 {
@@ -30,8 +31,8 @@ namespace Symphony
 
             if (id == 0)
             {
-                std::cerr << "SOIL loading error: " << SOIL_last_result() << std::endl;
-                std::cerr << "Couldn't load texture: " << textureFilename << std::endl;
+                Debug::LogErrorF("SOIL loading error: %s", SOIL_last_result());
+                Debug::LogErrorF("Couldn't load texture: %s", textureFilename);
                 return newTexture;
             }
             else
@@ -71,8 +72,8 @@ namespace Symphony
             
             if (newSkybox == 0)
             {
-                std::cerr << "SOIL loading error: " << SOIL_last_result() << std::endl;
-                std::cerr << "Couldn't load skybox: " << skyboxName << std::endl;
+                Debug::LogErrorF("SOIL loading error: %s", SOIL_last_result());
+                Debug::LogErrorF("Couldn't load skybox: %s", skyboxName);
             }
 
             return newSkybox;
@@ -102,13 +103,13 @@ namespace Symphony
             texturePool.erase(textureFilename);
         }
     }
-
+    
     void TextureManager::ClearTextureCache()
     {
-        std::cout << "[Deleting textures]" << std::endl;
+        Debug::Log("[Deleting textures]");
         for (const auto& kv : texturePool)
         {
-            std::cout << "\tDeleting texture: " << kv.first << std::endl;
+            Debug::LogF("\tDeleting texture: %s", kv.first);
             glDeleteTextures(1, &kv.second);
         }
         texturePool.clear();

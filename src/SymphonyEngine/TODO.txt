@@ -8,4 +8,3 @@
     MyClass& operator=(const MyClass&) = delete;
 * Fix: When changing the size of the screen during runtime, controls start to work incorrectly
 * List all third-party modules (in the command line) while starting the engine
-* Debug should work similarily to sprintf(string, params)

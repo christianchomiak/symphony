@@ -98,7 +98,7 @@ namespace Symphony
         delete[] textureCoordinates;
     }
 
-    //TO-DO: Could it be benefitial to cache the result of operations such as `numberOfVertices * sizeof(glm::vec3)`?
+    //TO-DO: Could it be benefitial to cache the result of operations such as `numberOfVertices * sizeof(glm::vecX)`?
     void Mesh::BufferData()
     {
         glGenVertexArrays(1, &vaoID);
@@ -189,9 +189,9 @@ namespace Symphony
         mesh->vertices[2] = glm::vec3(0, 1, 0);
 
         mesh->colours = new glm::vec4[mesh->numberOfVertices];
-        mesh->colours[0] = Color::Red();    //Color::White();
-        mesh->colours[1] = Color::Green();  //Color::White();
-        mesh->colours[2] = Color::Blue();   //Color::White();
+        mesh->colours[0] = Color::RED;    //Color::White();
+        mesh->colours[1] = Color::GREEN;  //Color::White();
+        mesh->colours[2] = Color::BLUE;   //Color::White();
 
         mesh->numberOfIndices = 3;
         mesh->indices = new GLuint[mesh->numberOfIndices];
@@ -230,10 +230,10 @@ namespace Symphony
         mesh->indices[3] = 3;
 
         mesh->colours = new glm::vec4[mesh->numberOfVertices];
-        mesh->colours[0] = Color::Red();
-        mesh->colours[1] = Color::Green();
-        mesh->colours[2] = Color::Blue();
-        mesh->colours[3] = Color::Yellow();
+        mesh->colours[0] = Color::RED;
+        mesh->colours[1] = Color::GREEN;
+        mesh->colours[2] = Color::BLUE;
+        mesh->colours[3] = Color::YELLOW;
         
         mesh->normals = new glm::vec3[mesh->numberOfVertices];
         mesh->normals[0] = glm::vec3(0, 0, 1);
@@ -266,7 +266,6 @@ namespace Symphony
 
         mesh->typeOfPrimitive = GL_TRIANGLES;
 
-        //TO-DO: Check why 0.5f creates a half-length cube
         float v = 0.5f;
 
         ///VERTEX DATA
@@ -380,7 +379,7 @@ namespace Symphony
         mesh->colours = new glm::vec4[mesh->numberOfVertices];
         for (size_t i = 0; i < mesh->numberOfVertices; ++i)
         {
-            mesh->colours[i] = Color::White();
+            mesh->colours[i] = Color::WHITE;
         }
        /* m->colours[0] = Color::Black();
         m->colours[1] = Color::Red();
@@ -454,8 +453,8 @@ namespace Symphony
         
         if (ht_map == nullptr)
         {
-            std::cerr << "SOIL loading error: " << SOIL_last_result() << std::endl;
-            std::cerr << "Couldn't load heightmap: " << heigtmapFileName << std::endl;
+            Debug::LogErrorF("SOIL loading error: %s", SOIL_last_result());
+            Debug::LogErrorF("Couldn't load heightmap: %s", heigtmapFileName);
             return nullptr;
         }
 
@@ -514,7 +513,7 @@ namespace Symphony
             {
                 offset = (x * width) + z;
                 m->vertices[offset] = glm::vec3(x * sizeX, 0.f, z * sizeZ) + originOffset;
-                m->colours[offset] = Color::White();
+                m->colours[offset] = Color::WHITE;
                 m->textureCoordinates[offset] = glm::vec2(x * textureX, z * textureZ);
             }
         }
@@ -567,22 +566,22 @@ namespace Symphony
         mesh->vertices[0] = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->vertices[1] = glm::vec3(size, 0.0f, 0.0f);
 
-        mesh->colours[0] = Color::Red();
-        mesh->colours[1] = Color::Red();
+        mesh->colours[0] = Color::RED;
+        mesh->colours[1] = Color::RED;
 
         //y axis
         mesh->vertices[2] = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->vertices[3] = glm::vec3(0.0f, size, 0.0f);
 
-        mesh->colours[2] = Color::Green();
-        mesh->colours[3] = Color::Green();
+        mesh->colours[2] = Color::GREEN;
+        mesh->colours[3] = Color::GREEN;
 
         //z axis
         mesh->vertices[4] = glm::vec3(0.0f, 0.0f, 0.0f);
         mesh->vertices[5] = glm::vec3(0.0f, 0.0f, size);
 
-        mesh->colours[4] = Color::Blue();
-        mesh->colours[5] = Color::Blue();
+        mesh->colours[4] = Color::BLUE;
+        mesh->colours[5] = Color::BLUE;
 
         mesh->BufferData();
         

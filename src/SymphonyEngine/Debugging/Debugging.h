@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Utilities/Singleton.h"
+//#include "../Utilities/Singleton.h"
 
 #include <iostream>
 
@@ -11,12 +11,15 @@
 #endif
 
 #include "../Macros/PlatformMacros.h"
+#include "../Macros/ClassMacros.h"
 
 namespace Symphony
 {
-    class Debug : public Singleton<Debug>
+    class Debug //: public Singleton<Debug>
     {
-        friend class Singleton<Debug>;
+        SINGLETON(Debug)
+
+        //friend class Singleton<Debug>;
     public:
         static void LogF(const char* format, ...);
         static void LogWarningF(const char* format, ...);

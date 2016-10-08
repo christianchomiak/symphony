@@ -2,7 +2,6 @@
 
 #include "../Common.h"
 
-#include "../Utilities/Singleton.h"
 #include "../Time/Time.h"
 #include "../Scene/Scene.h"
 #include "../Window/Window.h"
@@ -26,7 +25,6 @@ namespace Symphony
         */
         bool Initialise();
 
-        //TO-DO: Should this receive a const& instead of &?
         /*
         SUMMARY:
             \\ Setups the engine with custom window values
@@ -35,7 +33,7 @@ namespace Symphony
         RETURNS:
             \\ Whether the engine initialised correctly
         */
-        bool Initialise(Window::WindowProperties& windowProperties);
+        bool Initialise(const Window::WindowProperties& windowProperties);
 
         /*
         SUMMARY:

@@ -43,7 +43,7 @@ namespace Symphony
             {
             }
 
-            WindowProperties(WindowProperties& other)
+            WindowProperties(const WindowProperties& other)
                 : WindowProperties(other.title, other.width, other.height, other.fullscreen, other.resizeable, 
                                    other.borderless, other.maximised, other.switchableToOtherModes, other.cursorMode)
             {
@@ -62,7 +62,7 @@ namespace Symphony
         };
         
         NO_DEFAULT_CONSTRUCTORS(Window)
-        Window(WindowProperties& properties);
+        Window(const WindowProperties& properties);
         ~Window();
         
         bool Initialise();

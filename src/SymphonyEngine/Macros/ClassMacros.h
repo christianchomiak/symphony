@@ -9,3 +9,22 @@
         NO_EMPTY_CONSTRUCTOR(Class)\
         NO_COPY_CONSTRUCTOR(Class)\
         NO_ASSIGNMENT_OPERATOR(Class)
+
+//This should be accompanied by the initialisation of `instance` in the .cpp
+#define SINGLETON(T) \
+        protected:\
+            static T* instance;\
+            static void Release() { delete instance; instance = nullptr; }\
+        private:\
+            T();\
+            ~T();\
+        public:\
+            NO_COPY_CONSTRUCTOR(T)\
+            NO_ASSIGNMENT_OPERATOR(T)\
+            static T* Instance()\
+            {\
+                if (!instance) instance = new T();\
+                return instance;\
+            }
+
+#define SINGLETON_INSTANCE_INIT(T) T* T::instance = nullptr;

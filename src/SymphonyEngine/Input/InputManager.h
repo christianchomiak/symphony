@@ -1,23 +1,23 @@
 #pragma once
 
-#include "../Utilities/Singleton.h"
+//#include "../Utilities/Singleton.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "GamePad.h"
 
 #include "../Debugging/Debugging.h"
-
 #include "../Macros/PlatformMacros.h"
+#include "../Macros/ClassMacros.h"
 
 namespace Symphony
 {
-    class InputManager : public Singleton<InputManager>
+    class InputManager
     {
-        friend class Singleton<InputManager>;
+        SINGLETON(InputManager)
     public:
         //TO-DO: Figure out why there's a linking error when these static functions are defined outside of the class
         //       but within the header file
-
+        
         static void KeyboardKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
         {
             Instance()->keyboard->UpdateKey(key, action);
@@ -53,7 +53,7 @@ namespace Symphony
         Keyboard* keyboard;
         Mouse* mouse;
         
-        //TO-DO: Would it be better if all the gamepad objects are instantiated by default
+        //TO-DO: Would it be better if all the gamepad objects were instantiated by default
         GamePad* gamepad[GLFW_JOYSTICK_LAST + 1];
         
         void UpdateInput()
@@ -70,8 +70,6 @@ namespace Symphony
             }
         }
 
-    private:
-        InputManager();
-        virtual ~InputManager();
+    public: 
     };
 }

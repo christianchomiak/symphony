@@ -59,7 +59,7 @@ namespace Symphony
         return Initialise(Window::WindowProperties::LoadFromFile(filename));
     }
     
-    bool SymphonyEngine::Initialise(Window::WindowProperties& windowProperties)
+    bool SymphonyEngine::Initialise(const Window::WindowProperties& windowProperties)
     {
         std::cout.setf(std::ios::boolalpha);
         
