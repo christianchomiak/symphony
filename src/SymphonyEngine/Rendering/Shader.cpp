@@ -13,11 +13,11 @@ using namespace std;
 
 namespace Symphony
 {
-    map<const char*, Shader*> Shader::shaderPool;
+    map<const char*, Shader*, Shader::CharArrayCmp> Shader::shaderPool;
     
     void Shader::Use()       const { glUseProgram(programID); };
     void Shader::Release()   const { glUseProgram(0);         };
-
+    
     Shader* Shader::GetShader(const char* shaderName)
     {
         if (ShaderExists(shaderName))
@@ -213,7 +213,7 @@ namespace Symphony
 
         newShader->name = shaderName;
 
-        shaderPool[shaderName] = newShader;
+        shaderPool[newShader->name.c_str()] = newShader;
 
         return newShader;
     }

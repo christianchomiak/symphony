@@ -4,7 +4,9 @@
 #include FT_FREETYPE_H
 
 #include <sstream>
+#include <fstream>
 
+#include "../IO/DataReader.h"
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 #include "../Rendering/Shader.h"
@@ -14,13 +16,14 @@
 namespace Symphony
 {
     SymphonyEngine* SymphonyEngine::instance = nullptr;
-    
+    const char* SymphonyEngine::version = "Symphony Engine - v0.1.0 \"Bittersweet\"";
+
     SymphonyEngine::SymphonyEngine()
     {
-        currentScene = nullptr;
-        window = nullptr;
-        running = true;
-        initialised = false;
+        currentScene    = nullptr;
+        window          = nullptr;
+        running         = true;
+        initialised     = false;
         changeSceneFlag = true;
     }
 
@@ -32,38 +35,32 @@ namespace Symphony
         }
         delete window;
     }
-    
-    const char* SymphonyEngine::Version() const
-    {
-        return "Symphony Engine - v0.1.0 \"Bittersweet\"";
-    }
-
-    bool SymphonyEngine::Initialise()
+        
+    bool SymphonyEngine::Initialise(const char* commandLineFilename)
     {
         Window::WindowProperties wProperties = Window::WindowProperties();
-        wProperties.cursorMode = Window::CursorMode::DISABLED;
-        wProperties.borderless = false;
-        wProperties.fullscreen = false;
-        wProperties.width = 1280;
-        wProperties.height = 720;
-        wProperties.maximised = false;
-        wProperties.resizeable = true;
+        wProperties.cursorMode  = Window::CursorMode::DISABLED;
+        wProperties.borderless  = false;
+        wProperties.fullscreen  = false;
+        wProperties.width       = 1280;
+        wProperties.height      = 720;
+        wProperties.maximised   = false;
+        wProperties.resizeable  = true;
         wProperties.title = "Symphony Engine demo";
         wProperties.switchableToOtherModes = false;
         
-        return Initialise(wProperties);
+        return Initialise(wProperties, commandLineFilename);
     }
     
-    bool SymphonyEngine::Initialise(const char* filename)
+    bool SymphonyEngine::Initialise(const char* configFilename, const char* commandLineFilename)
     {
-        return Initialise(Window::WindowProperties::LoadFromFile(filename));
+        return Initialise(Window::WindowProperties::CreateFromFile(configFilename), commandLineFilename);
     }
     
-    bool SymphonyEngine::Initialise(const Window::WindowProperties& windowProperties)
+    bool SymphonyEngine::Initialise(const Window::WindowProperties& windowProperties, const char* commandLineFilename)
     {
         std::cout.setf(std::ios::boolalpha);
-        
-        std::cout << std::endl << Version() << std::endl << std::endl;
+        std::cout << std::endl << SymphonyEngine::version << std::endl << std::endl;
         
         //window = new Window(Version(), 800, 600, true, true, true, false);
         //window = Window::CreateFullScreenWindow(Version(), 1920, 1080, false);
@@ -78,6 +75,7 @@ namespace Symphony
             return false;
         }
 
+        LoadCommandLineArguments(commandLineFilename);
         LoadFonts();
 
         return initialised;
@@ -108,8 +106,8 @@ namespace Symphony
             running = false;
         }
         
-        Keyboard* keyboard = InputManager::GetKeyboard();
-        Mouse* mouse = InputManager::GetMouse();
+        Mouse* mouse        = InputManager::GetMouse();
+        Keyboard* keyboard  = InputManager::GetKeyboard();
         while (running)
         {
             InputManager::Update();
@@ -311,5 +309,149 @@ namespace Symphony
         
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
+    }
+
+    void SymphonyEngine::LoadShaders(const char* filename)
+    {
+        if (filename == nullptr)
+        {
+            Debug::LogError("No filename was specified, cannot load any shaders");
+            return;
+        }
+        
+        tinyxml2::XMLDocument shadersFile;
+
+        if (!ValidateXmlLoading(filename, shadersFile.LoadFile(filename)))
+        {
+            Debug::LogError("Cannot load any shaders");
+            return;
+        }
+
+        //tinyxml2::XMLElement* shadersData = doc.FirstChildElement("SymphonyShaders")->FirstChildElement("WindowData");
+        
+        tinyxml2::XMLElement* root = shadersFile.FirstChildElement("SymphonyShaders");
+
+        if (!root)
+        {
+            Debug::LogErrorF("Could not find the root SymphonyShaders property in \"%s\". Aborting.", filename);
+            return;
+        }
+
+        //Check if a global path to the shaders was specified
+        const char* globalPath = GetTextFromXmlElement(root, "DefaultPath");
+        
+        tinyxml2::XMLElement* shadersData = root->FirstChildElement("Shaders");
+
+        if (!shadersData)
+        {
+            Debug::LogErrorF("Could not find any shader data in \"%s\". Aborting.", filename);
+            return;
+        }
+
+        const char* fileExtension = GetTextFromXmlElement(root, "FileExtension");
+
+        if (!fileExtension)
+        {
+            Debug::LogErrorF("Could not find any file extension specified in \"%s\". Aborting.", filename);
+            return;
+        }
+
+        tinyxml2::XMLElement* shaderCategoryData = shadersData->FirstChildElement("Category");
+
+        vector<const char*> attributes;
+        vector<const char*> uniforms;
+
+        std::stringbuf buffer;      // empty stringbuf
+        std::ostream os(&buffer);  // associate stream buffer to stream
+
+        while (shaderCategoryData)
+        {
+            const char* subFolder = shaderCategoryData->Attribute("name");
+
+            tinyxml2::XMLElement* shaderData = shaderCategoryData->FirstChildElement("Shader");
+
+            while (shaderData)
+            {
+                const char* shaderName   = shaderData->Attribute("name");
+                const char* vertexFile   = shaderData->Attribute("vertex");
+                const char* fragmentFile = shaderData->Attribute("fragment");
+                const char* geometryFile = shaderData->Attribute("geometry");
+                
+                if (vertexFile && fragmentFile)
+                {
+                    buffer.str(std::string()); //Clear the buffer
+
+                    os << globalPath << subFolder << vertexFile << ".vert" << fileExtension;
+                    std::string fullVertexPath = buffer.str();
+
+                    buffer.str(std::string()); //Clear the buffer
+                    
+                    os << globalPath << subFolder << fragmentFile << ".frag" << fileExtension;
+                    std::string fullFragmentPath = buffer.str();
+                    
+                    //Try to find the geometry shader
+                    std::string fullGeometryPath = "";
+                    if (geometryFile)
+                    {
+                        buffer.str(std::string()); //Clear the buffer
+
+                        os << globalPath << subFolder << geometryFile << ".geo" << fileExtension;
+                        fullGeometryPath = buffer.str();
+                    }
+
+                    /*std::cout << shaderName << " ---\"" << fullVertexPath << '"' << std::endl;
+                    std::cout << shaderName << " ---\"" << fullFragmentPath << '"' << std::endl;*/
+                    
+                    LoadShader(shaderName, attributes, uniforms, fullVertexPath.c_str(), fullFragmentPath.c_str(), fullGeometryPath.c_str());
+                }
+
+                shaderData = shaderData->NextSiblingElement();
+            }
+            shaderCategoryData = shaderCategoryData->NextSiblingElement();
+        }
+
+        return;
+    }
+    
+    void SymphonyEngine::LoadCommandLineArguments(const char* commandLineFilename)
+    {
+        if (commandLineFilename == nullptr)
+        {
+            return;
+        }
+
+        std::ifstream in_stream;
+        in_stream.open(commandLineFilename);
+        string rawLine;
+
+        const char ignoreLineChar = '#';
+        while (std::getline(in_stream, rawLine, '\n'))
+        {
+            //Ignore anything that starts as a comment
+            if (rawLine[0] != ignoreLineChar)
+            {
+                rsize_t lineSize = rawLine.length() + 1;
+                char* line = new char[lineSize];
+                strcpy_s(line, lineSize, rawLine.c_str());
+
+                //Extract all the possible arguments out of the rawLine
+                {
+                    char* token;
+                    char* next_token = nullptr;
+                    const char* separators = "- ";
+                    token = strtok_s(line, separators, &next_token);
+                    while (token != nullptr)
+                    {
+                        //TO-DO: Save these!
+                        std::cout << token << std::endl;
+                        token = strtok_s(nullptr, separators, &next_token);
+                    }
+                }
+
+                delete[] line;
+            }
+        }
+
+        in_stream.close();
     }
 }

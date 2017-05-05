@@ -3,6 +3,7 @@
 #include "../SymphonyEngine/Engine/SymphonyEngine.h"
 #include "TestScene.h"
 
+
 using namespace Symphony;
 using namespace std;
 
@@ -10,24 +11,24 @@ SymphonyEngine* sEngine = nullptr;
 
 void LoadShaders()
 {
-    vector<const char*> attributes;
+    /*vector<const char*> attributes;
     vector<const char*> uniforms;
-        
+
     attributes = { "position", "color" };
     uniforms = { "modelMatrix", "viewMatrix", "projectionMatrix" };
-    sEngine->LoadShader("UNLIT_COLOR", attributes, uniforms, 
-                        "../../resources/Shaders/Unlit/colored.vert.glsl",
-                        "../../resources/Shaders/Unlit/colored.frag.glsl");
-    
+    sEngine->LoadShader("UNLIT_COLOR", attributes, uniforms,
+        "../../resources/Shaders/Unlit/colored.vert.glsl",
+        "../../resources/Shaders/Unlit/colored.frag.glsl");
+
     attributes = { "position", "textureCoordinate" };
-    sEngine->LoadShader("UNLIT_TEXTURE", attributes, uniforms, 
-                        "../../resources/Shaders/Unlit/textured.vert.glsl",
-                        "../../resources/Shaders/Unlit/textured.frag.glsl");
-    
+    sEngine->LoadShader("UNLIT_TEXTURE", attributes, uniforms,
+        "../../resources/Shaders/Unlit/textured.vert.glsl",
+        "../../resources/Shaders/Unlit/textured.frag.glsl");
+
     attributes = { "position", "textureCoordinate" };
     sEngine->LoadShader("TRANSPARENT", attributes, uniforms,
-                        "../../resources/Shaders/Unlit/transparent.vert.glsl",
-                        "../../resources/Shaders/Unlit/transparent.frag.glsl");
+        "../../resources/Shaders/Unlit/transparent.vert.glsl",
+        "../../resources/Shaders/Unlit/transparent.frag.glsl");
     attributes.clear();
     uniforms.clear();
 
@@ -40,26 +41,26 @@ void LoadShaders()
     uniforms.clear();
 
     attributes = { "position" };
-    uniforms = { "modelMatrix", "viewMatrix", "projectionMatrix", "nearPlane", "farPlane"};
+    uniforms = { "modelMatrix", "viewMatrix", "projectionMatrix", "nearPlane", "farPlane" };
     sEngine->LoadShader("DEPTH", attributes, uniforms,
         "../../resources/Shaders/depthtest.vert.glsl",
         "../../resources/Shaders/depthtest.frag.glsl");
     attributes.clear();
     uniforms.clear();
-    
+
     attributes = { "position", "textureCoordinate" };
     sEngine->LoadShader("SIMPLE", attributes, uniforms,
         "../../resources/Shaders/PostProcess/simple.vert.glsl",
         "../../resources/Shaders/PostProcess/simple.frag.glsl");
     attributes.clear();
     uniforms.clear();
-    
+
     sEngine->LoadShader("SKYBOX", attributes, uniforms,
         "../../resources/Shaders/Unlit/skybox.vert.glsl",
         "../../resources/Shaders/Unlit/skybox.frag.glsl");
     attributes.clear();
     uniforms.clear();
-    
+
     sEngine->LoadShader("REFLECTIVE", attributes, uniforms,
         "../../resources/Shaders/reflection.vert.glsl",
         "../../resources/Shaders/reflection.frag.glsl");
@@ -70,23 +71,25 @@ void LoadShaders()
         "../../resources/Shaders/text.vert.glsl",
         "../../resources/Shaders/text.frag.glsl");
     attributes.clear();
-    uniforms.clear();
+    uniforms.clear();*/
+
 }
 
 int main(int argc, char* args[])
 {
     sEngine = SymphonyEngine::Instance();
+    
+    const char* xmlConfig = "../../resources/SymphonyConfig.xml";
+    const char* commandLineArgs = (args == nullptr || argc < 2) ? nullptr : args[1];
 
-    if (!sEngine->Initialise("../../resources/SymphonyConfig.xml"))
+    if (!sEngine->Initialise(xmlConfig, commandLineArgs))
     {
         std::cout << "Error trying to initialise Symphony Engine" << std::endl;
         system("pause");
         return -1;
     }
 
-    LoadShaders();
-
-    //std::cout << glGetString(GL_VERSION) << std::endl;
+    sEngine->LoadShaders("../../resources/shaders.xml");
     sEngine->AddScene(new TestScene());
     sEngine->Run();
     sEngine->Shutdown();

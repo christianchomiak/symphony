@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SymphonyShaders>
+	<DefaultPath>../../resources/Shaders/</DefaultPath>
+	<FileExtension>.glsl</FileExtension>
+	<Shaders>
+		<Category name="Unlit/">
+			<Shader name="UNLIT_COLOR" vertex="colored" fragment="colored"/>
+			<Shader name="UNLIT_TEXTURE" vertex="textured" fragment="textured"/>
+			<Shader name="TRANSPARENT" vertex="transparent" fragment="transparent"/>
+			<Shader name="SKYBOX" vertex="skybox" fragment="skybox"/>
+		</Category>
+		<Category name="PostProcess/">
+			<Shader name="SIMPLE" vertex="simple" fragment="simple"/>
+		</Category>
+		<Category name="">
+			<Shader name="PHONG" vertex="phong" fragment="phong"/>
+			<Shader name="DEPTH" vertex="depthtest" fragment="depthtest"/>
+			<Shader name="TEXT" vertex="text" fragment="text"/>
+			<Shader name="REFLECTIVE" vertex="reflection" fragment="reflection"/>
+		</Category>
+	</Shaders>
+</SymphonyShaders>

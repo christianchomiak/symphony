@@ -58,7 +58,7 @@ namespace Symphony
             {
             }
 
-            static WindowProperties LoadFromFile(const char* filename);
+            static WindowProperties CreateFromFile(const char* filename);
         };
         
         NO_DEFAULT_CONSTRUCTORS(Window)

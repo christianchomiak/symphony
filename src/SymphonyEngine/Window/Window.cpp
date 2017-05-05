@@ -235,7 +235,7 @@ namespace Symphony
         return false;
     }
 
-    Window::WindowProperties Window::WindowProperties::LoadFromFile(const char * filename)
+    Window::WindowProperties Window::WindowProperties::CreateFromFile(const char* filename)
     {
         WindowProperties wProperties;
         

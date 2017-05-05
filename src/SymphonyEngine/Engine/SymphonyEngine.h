@@ -13,7 +13,7 @@ namespace Symphony
     class SymphonyEngine
     {
     public:
-        const char* SymphonyEngine::Version() const;
+        static const char* version;
 
         /*
         SUMMARY:
@@ -23,18 +23,8 @@ namespace Symphony
         RETURNS:
         \\ Whether the engine initialised correctly
         */
-        bool Initialise();
-
-        /*
-        SUMMARY:
-            \\ Setups the engine with custom window values
-        PARAMS:
-            \\ windowProperties: custom initial values for the window
-        RETURNS:
-            \\ Whether the engine initialised correctly
-        */
-        bool Initialise(const Window::WindowProperties& windowProperties);
-
+        bool Initialise(const char* commandLineFilename);
+        
         /*
         SUMMARY:
         \\ Setups the engine with custom window values defined in a file
@@ -43,13 +33,16 @@ namespace Symphony
         RETURNS:
         \\ Whether the engine initialised correctly
         */
-        bool Initialise(const char* filename);
+        bool Initialise(const char* configFilename, const char* commandLineFilename);
         
         void NextScene();
         void AddScene(Scene* newScene);
         void ChangeScene(string sceneName);
         void ChangeScene(unsigned int sceneID);
         
+
+        void LoadShaders(const char* shadersFilename);
+
         //TO-DO: Perhaps this could be done via a text file?
         void LoadShader(const char* shaderName, const vector<const char*>& attributes, const vector<const char*>& uniforms,
                         const char* vertexShaderFilename, const char* fragmentShaderFilename,
@@ -84,6 +77,18 @@ namespace Symphony
         void LoadNextScene();
         void Unload();
         void LoadFonts();
+        
+        void LoadCommandLineArguments(const char* commandLineFilename);
+
+        /*
+        SUMMARY:
+        \\ Setups the engine with custom window values
+        PARAMS:
+        \\ windowProperties: custom initial values for the window
+        RETURNS:
+        \\ Whether the engine initialised correctly
+        */
+        bool Initialise(const Window::WindowProperties& windowProperties, const char* commandLineFilename);
 
     private:
         static SymphonyEngine* instance;

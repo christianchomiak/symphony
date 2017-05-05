@@ -45,11 +45,20 @@ namespace Symphony
         
     protected:
         static Shader* CreateNewShader(const char* shaderName, const std::vector<const char*>& attributes, const std::vector<const char*>& uniforms,
-            const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* geometryShaderFilename = nullptr);
+                                       const char* vertexShaderFilename, const char* fragmentShaderFilename, const char* geometryShaderFilename = nullptr);
         static bool ShaderExists(const char* shaderName);
         static void DeleteShader(const char* shaderName);
         static void DeleteAllShaders();
-        static std::map<const char*, Shader*> shaderPool;
+
+        struct CharArrayCmp
+        {
+            bool operator()(char const *a, char const *b) const
+            {
+                return std::strcmp(a, b) < 0;
+            }
+        };
+        //TO-DO: Use hashes instead of char*
+        static std::map<const char*, Shader*, CharArrayCmp> shaderPool;
     };
     
 
