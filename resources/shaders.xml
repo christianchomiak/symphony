@@ -16,6 +16,7 @@
 			<Shader name="PHONG" vertex="phong" fragment="phong"/>
 			<Shader name="DEPTH" vertex="depthtest" fragment="depthtest"/>
 			<Shader name="TEXT" vertex="text" fragment="text"/>
+			<Shader name="TEXTBG" vertex="text" fragment="textbg"/>
 			<Shader name="REFLECTIVE" vertex="reflection" fragment="reflection"/>
 		</Category>
 	</Shaders>

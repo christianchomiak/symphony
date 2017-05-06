@@ -13,5 +13,5 @@ void main()
 {
   vSmoothColor = vec4(color, 1);
   //gl_Position = MVP * vec4(position, 1);
-  gl_Position = projectionMatrix * viewMatrix *  modelMatrix * vec4(position, 1.0f);
+  gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0f);
 }

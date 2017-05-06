@@ -40,13 +40,7 @@ namespace Symphony
         void ChangeScene(string sceneName);
         void ChangeScene(unsigned int sceneID);
         
-
         void LoadShaders(const char* shadersFilename);
-
-        //TO-DO: Perhaps this could be done via a text file?
-        void LoadShader(const char* shaderName, const vector<const char*>& attributes, const vector<const char*>& uniforms,
-                        const char* vertexShaderFilename, const char* fragmentShaderFilename,
-                        const char* geometryShaderFilename = nullptr) const;
 
         void Run();
 
@@ -89,6 +83,11 @@ namespace Symphony
         \\ Whether the engine initialised correctly
         */
         bool Initialise(const Window::WindowProperties& windowProperties, const char* commandLineFilename);
+
+        
+        void LoadShader(const char* shaderName, const vector<const char*>& attributes, const vector<const char*>& uniforms,
+            const char* vertexShaderFilename, const char* fragmentShaderFilename,
+            const char* geometryShaderFilename = nullptr) const;
 
     private:
         static SymphonyEngine* instance;

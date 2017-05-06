@@ -1,9 +1,10 @@
 #pragma once
 
 #include <string>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-
-#include "TextCharacter.h"
+#include "../../Rendering/Font.h"
 
 namespace Symphony
 {
@@ -17,12 +18,20 @@ namespace Symphony
             BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT
         };
 
-        glm::vec4 color;
+        enum class BackgroundRenderMode
+        {
+            PER_GLYPH,
+            WHOLE_TEXT
+        };
+
         glm::vec2 offset;
+        glm::vec4 fgColor, bgColor;
+        BackgroundRenderMode bgRenderMode;
         
         Text();
-        Text(const std::string& content, const glm::vec4& color, float scale, Alignment alignment = Alignment::CENTER);
-        Text(const std::string& content, Alignment alignment = Alignment::CENTER);
+        Text(Font* f);
+        Text(Font* f, const std::string& content, const glm::vec4& color, float scale, Alignment alignment = Alignment::CENTER);
+        Text(Font* f, const std::string& content, Alignment alignment = Alignment::CENTER);
 
         glm::vec2 GetPosition() const;
 
@@ -35,18 +44,42 @@ namespace Symphony
         float GetScale() const;
         void SetScale(float newScale);
 
+        Font* GetFont() const;
+        void SetFont(Font* newFont);
+
+        const void GetBounds(glm::vec3& bottomLeft, glm::vec3& bottomRight, glm::vec3& topLeft, glm::vec3& topRight) const
+        {
+            bottomLeft.x    = bounds[0].x;
+            bottomLeft.y    = bounds[0].y;
+
+            bottomRight.x   = bounds[1].x;
+            bottomRight.y   = bounds[1].y;
+
+            topLeft.x       = bounds[2].x;
+            topLeft.y       = bounds[2].y;
+
+            topRight.x      = bounds[3].x;
+            topRight.y      = bounds[3].y;
+        }
+
     protected:
         std::string content; //TO-DO: why not put this public?
         glm::vec2 position;
         Alignment alignment;
         float scale; //TO-DO: Eventually this should be a vec2, perhaps?
         float pixelSize;
+        Font* font;
+
+        glm::vec2 bounds[4]; //This is auto-generated
 
         void UpdatePosition();
 
         float HorizontalPosition();
 
         float VerticalPosition();
+
+        void Regenerate();
+        void RebuildBounds();
     };
     
     inline glm::vec2 Text::GetPosition() const
@@ -86,5 +119,22 @@ namespace Symphony
     {
         alignment = newAlignment;
         UpdatePosition();
+    }
+
+    inline void Text::SetFont(Font* newFont)
+    {
+        font = newFont;
+        Regenerate();
+    }
+
+    inline Font* Text::GetFont() const
+    {
+        return font;
+    }
+
+    inline void Text::SetContent(const std::string& newContent)
+    {
+        content = newContent;
+        Regenerate();
     }
 }

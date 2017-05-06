@@ -50,9 +50,11 @@ namespace Symphony
         static void DeleteShader(const char* shaderName);
         static void DeleteAllShaders();
 
+        //When using Char* as keys of a map, the comparisson is made over the pointer itself and not the actual string
+		//As such, we need to specify a custom function to compare them properly
         struct CharArrayCmp
         {
-            bool operator()(char const *a, char const *b) const
+            bool operator()(char const* a, char const* b) const
             {
                 return std::strcmp(a, b) < 0;
             }

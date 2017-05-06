@@ -12,5 +12,5 @@ void main(void)
 {
   vec4 texColor = texture(textureID, IN.textureCoordinate);
   if (texColor.a == 0.0) discard;
-	gl_FragColor = texColor;
+  gl_FragColor = texColor;
 }

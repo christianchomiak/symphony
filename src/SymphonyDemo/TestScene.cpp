@@ -16,7 +16,8 @@
 
 #include "../SymphonyEngine/Rendering/TextureManager.h"
 
-#include "../SymphonyEngine/Scene/Text/TextCharacter.h"
+#include "../SymphonyEngine/Rendering/FontManager.h"
+//#include "../SymphonyEngine/Scene/Text/TextCharacter.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
@@ -165,29 +166,35 @@ void TestScene::Initialise()
     AddText(txt);*/
     
     
-
     //TEXT
+    Font* arial = FontManager::GetFont("Arial");
+    
     Text2D* txtObject;
     glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.f);
     float scale = 1.f;
     
-    Text text("String", glm::vec4(1, 0, 0, 1), scale, Text::Alignment::CENTER_LEFT);
+    Text text(arial, "String", Color::RED, scale, Text::Alignment::CENTER_LEFT);
+    text.SetFont(arial);
+    text.bgColor = Color::BLACK_ALPHA;
+
     txtObject = new Text2D(text);
     txtObject->transform.SetPosition(pos);
+    txtObject->transform.Rotate(0.0f, 0.0f, -90.0f);
     AddGameObject(txtObject);
 
-    text.color = glm::vec4(0, 1, 0, 1);
+    text.fgColor = Color::GREEN;
     text.SetAlignment(Text::Alignment::CENTER);
     txtObject = new Text2D(text);
     txtObject->transform.SetPosition(pos);
+    txtObject->transform.Rotate(0.0f, 0.0f, 90.0f);
     AddGameObject(txtObject);
     
-    text.color = glm::vec4(0, 0, 1, 1);
+    text.fgColor = Color::BLUE;
     text.SetAlignment(Text::Alignment::CENTER_RIGHT);
     txtObject = new Text2D(text);
     txtObject->transform.SetPosition(pos);
+    txtObject->transform.Rotate(0.0f, 0.0f, 0.0f);
     AddGameObject(txtObject);
-    
 
     /*AddText(new Text("String", pos, glm::vec4(0, 1, 0, 1), scale,
                      Text::Alignment::CENTER));

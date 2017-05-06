@@ -10,6 +10,7 @@
 
 ComplexRenderer::ComplexRenderer()
 {
+	//RBO: Render Buffer Object
     bool useRBO = true;
 
     screenQuad = Mesh::Quad();

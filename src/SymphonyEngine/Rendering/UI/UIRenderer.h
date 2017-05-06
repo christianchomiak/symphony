@@ -23,6 +23,8 @@ namespace Symphony
         //        be rendered using the same shader)
         Shader* textShader;
 
+        Shader* backgroundShader;
+
         glm::mat4 uiProjectionMatrix;
     };
 }

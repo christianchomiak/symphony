@@ -5,28 +5,37 @@
 namespace Symphony
 {
     Text::Text()
-        : scale(1.f), color(Color::WHITE), alignment(Alignment::CENTER)
+        : font(nullptr), scale(1.f), fgColor(Color::WHITE), bgColor(Color::CLEAR), bgRenderMode(BackgroundRenderMode::WHOLE_TEXT),
+          alignment(Alignment::CENTER)
+    {
+    }
+
+    Text::Text(Font* f)
+        : font(f), scale(1.f), fgColor(Color::WHITE), bgColor(Color::CLEAR), bgRenderMode(BackgroundRenderMode::WHOLE_TEXT),
+          alignment(Alignment::CENTER)
     {
         SetContent("");
     }
 
-    Text::Text(const std::string& content, const glm::vec4& color, float scale, Alignment alignment)
-        : color(color), scale(scale), alignment(alignment)
+    Text::Text(Font* f, const std::string& content, const glm::vec4& color, float scale, Alignment alignment)
+        : font(f), fgColor(color), scale(scale), alignment(alignment), bgColor(Color::CLEAR), bgRenderMode(BackgroundRenderMode::WHOLE_TEXT)
     {
         SetContent(content);
     }
 
-    Text::Text(const std::string& content, Alignment alignment)
-        : Text(content, Color::WHITE, 1.f, alignment)
+    Text::Text(Font* f, const std::string& content, Alignment alignment)
+        : Text(f, content, Color::WHITE, 1.0f, alignment)
     {
-        SetContent(content);
+        //SetContent(content);
     }
 
     float Text::HorizontalPosition()
     {
+        if (!font) return 0.0f;
+
         //float offset = 0.f;
         //size_t halfLength , oddity;
-        TextCharacter ch;
+        FontCharacter ch;
 
         switch (alignment)
         {
@@ -82,7 +91,9 @@ namespace Symphony
 
     float Text::VerticalPosition()
     {
-        TextCharacter ch;
+        if (!font) return 0.0f;
+
+        FontCharacter ch;
         float dummyY;
         switch (alignment)
         {
@@ -93,7 +104,7 @@ namespace Symphony
             dummyY = FLT_MIN;
             for (size_t j = 0; j < content.size(); ++j)
             {
-                ch = TextCharacter::characters[content[j]];
+                ch = font->GetCharacter(content[j]); // FontCharacter::characters[content[j]];
                 if (ch.Bearing.y > dummyY) dummyY = (float)ch.Bearing.y;
             }
             return -dummyY * scale; //position.y -
@@ -105,7 +116,7 @@ namespace Symphony
             dummyY = FLT_MAX;
             for (size_t j = 0; j < content.size(); ++j)
             {
-                ch = TextCharacter::characters[content[j]];
+                ch = font->GetCharacter(content[j]); //TextCharacter::characters[content[j]];
                 if (ch.Bearing.y < dummyY) dummyY = (float)ch.Bearing.y;
             }
             return -dummyY * 0.5f * scale; // position.y -
@@ -125,16 +136,73 @@ namespace Symphony
         }
     }
 
-    void Text::SetContent(const std::string& newContent)
+    void Text::Regenerate()
     {
-        content = newContent;
-        pixelSize = 0.f;
-        TextCharacter ch;
-        for (size_t j = 0; j < content.size(); ++j)
+        if (font)
         {
-            ch = TextCharacter::characters[content[j]];
-            pixelSize += (ch.Advance >> 6) * scale;
+            pixelSize = 0.f;
+            FontCharacter ch;
+            for (size_t j = 0; j < content.size(); ++j)
+            {
+                ch = font->GetCharacter(content[j]); // TextCharacter::characters[content[j]];
+                pixelSize += (ch.Advance >> 6) * scale;
+            }
+            UpdatePosition();
+            RebuildBounds();
         }
-        UpdatePosition();
+    }
+
+    void Text::RebuildBounds()
+    {
+        float currentX = 0.0f;
+        float currentY = 0.0f;
+
+        GLfloat minX, maxX;
+        GLfloat minY, maxY;
+
+        std::string::const_iterator c = content.begin();
+
+        FontCharacter ch = font->GetCharacter(*c);
+
+        GLfloat xpos = currentX + ch.Bearing.x * scale;
+        GLfloat ypos = currentY + ch.Bearing.y * scale;
+
+        GLfloat w = ch.Size.x * scale;
+        GLfloat h = ch.Size.y * scale;
+
+        minX = xpos;
+        minY = ypos - h;
+
+        maxY = ypos;
+
+        ++c;
+        for (; c != content.end(); ++c)
+        {
+            currentX += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+
+            ch = font->GetCharacter(*c);
+            xpos = currentX + ch.Bearing.x * scale;
+            ypos = currentY + ch.Bearing.y * scale;
+
+            w = ch.Size.x * scale;
+            h = ch.Size.y * scale;
+
+            maxX = xpos + w;
+
+            if (minY > ypos - h) minY = ypos - h;
+            if (maxY < ypos)     maxY = ypos;
+        }
+
+        bounds[0].x = minX;
+        bounds[0].y = maxY;
+
+        bounds[1].x = maxX;
+        bounds[1].y = maxY;
+
+        bounds[2].x = minX;
+        bounds[2].y = minY;
+
+        bounds[3].x = maxX;
+        bounds[3].y = minY;
     }
 }

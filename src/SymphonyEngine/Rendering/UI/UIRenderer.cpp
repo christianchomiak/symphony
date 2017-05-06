@@ -7,8 +7,10 @@
 namespace Symphony
 {
     UIRenderer::UIRenderer()
-    {
+    {        
         textShader = Shader::GetShader("TEXT");
+        backgroundShader = Shader::GetShader("TEXTBG");
+
         uiProjectionMatrix = glm::ortho(0.0f, (float)Screen::Width(), 0.0f, (float)Screen::Height());
         
         /*
@@ -45,32 +47,70 @@ namespace Symphony
         //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         //glClear(GL_COLOR_BUFFER_BIT);
 
-         //glEnable(GL_CULL_FACE);
+        //glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         //glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
         //glBlendFunc(GL_ONE, GL_ZERO);
         //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-        textShader->Use();
 
         glActiveTexture(GL_TEXTURE0);
         //glBindVertexArray(VAO);
 
-        glUniformMatrix4fv(glGetUniformLocation(textShader->ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(uiProjectionMatrix));
         
         const Text2D* go;
+
+
+        backgroundShader->Use();
+        glUniformMatrix4fv(glGetUniformLocation(backgroundShader->ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(uiProjectionMatrix));
+
+        textShader->Use();
+        glUniformMatrix4fv(glGetUniformLocation(textShader->ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(uiProjectionMatrix));
+
         for (auto t : objects)
         {
             //TO-DO: create a new UIObject from which Text2D and others will derive from
             go = static_cast<const Text2D*>(t.obj);
             
-            glUniform4f(glGetUniformLocation(textShader->ID(), "textColor"),
-                go->text.color.r, go->text.color.g, go->text.color.b, go->text.color.a);
+            const glm::mat4x4& goMat = go->transform.GetWorldTransformMatrix();
+
+            //Render background
+            if (go->text.bgRenderMode == Text::BackgroundRenderMode::WHOLE_TEXT && go->text.bgColor != Color::CLEAR)
+            {
+                backgroundShader->Use();
+
+                glUniformMatrix4fv(glGetUniformLocation(backgroundShader->ID(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(goMat));
+                
+                const glm::vec4& bgColor = go->text.bgColor;
+                
+                glUniform4f(glGetUniformLocation(backgroundShader->ID(), "bgColor"), bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+                
+                go->RenderBackground();
+
+                glUseProgram(0);
+            }
+
+            //Render foreground
+            textShader->Use();
+
+            glUniformMatrix4fv(glGetUniformLocation(textShader->ID(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(goMat));
+
+            glUniform4f(glGetUniformLocation(textShader->ID(), "foregroundColor"),
+                        go->text.fgColor.r,
+                        go->text.fgColor.g,
+                        go->text.fgColor.b,
+                        go->text.fgColor.a);
+
+            const glm::vec4& bgColor = (go->text.bgRenderMode == Text::BackgroundRenderMode::PER_GLYPH)
+                                     ? go->text.bgColor
+                                     : Color::CLEAR;
+            
+            glUniform4f(glGetUniformLocation(textShader->ID(), "backgroundColor"), bgColor.r, bgColor.g, bgColor.b, bgColor.a);
 
             go->Render();
         }
-        
+
         glUseProgram(0);
     }
     

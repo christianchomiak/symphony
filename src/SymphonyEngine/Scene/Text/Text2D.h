@@ -10,9 +10,10 @@ namespace Symphony
     public:
         Text2D();
         Text2D(const Text&);
-        explicit Text2D(const std::string&);
+        explicit Text2D(Font* font, const std::string&);
         virtual ~Text2D();
-
+        
+        void RenderBackground() const;
         void Render() const;
 
         Text text;

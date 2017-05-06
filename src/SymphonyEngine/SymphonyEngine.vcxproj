@@ -145,11 +145,13 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
+    <ClInclude Include="Rendering\Font.h" />
     <ClInclude Include="Input\GamePad.h" />
     <ClInclude Include="IO\DataReader.h" />
     <ClInclude Include="Macros\ClassMacros.h" />
     <ClInclude Include="Macros\PlatformMacros.h" />
     <ClInclude Include="Macros\QAMacros.h" />
+    <ClInclude Include="Rendering\FontManager.h" />
     <ClInclude Include="Rendering\Material.h" />
     <ClInclude Include="Rendering\Skybox.h" />
     <ClInclude Include="Rendering\UI\UIRenderer.h" />
@@ -191,6 +193,8 @@
     <ClCompile Include="Debugging\Debugging.cpp" />
     <ClCompile Include="Input\GamePad.cpp" />
     <ClCompile Include="IO\DataReader.cpp" />
+    <ClCompile Include="Rendering\Font.cpp" />
+    <ClCompile Include="Rendering\FontManager.cpp" />
     <ClCompile Include="Rendering\Skybox.cpp" />
     <ClCompile Include="Rendering\UI\UIRenderer.cpp" />
     <ClCompile Include="Scene\Camera\Camera.cpp" />

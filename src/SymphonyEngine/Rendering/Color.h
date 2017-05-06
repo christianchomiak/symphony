@@ -6,6 +6,8 @@ namespace Symphony
 {
     namespace Color
     {
+        const glm::vec4 CLEAR   = glm::vec4(0.f);
+        
         const glm::vec4 WHITE   = glm::vec4(1.f);
         const glm::vec4 BLACK   = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
         const glm::vec4 GREY    = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
@@ -19,5 +21,7 @@ namespace Symphony
         const glm::vec4 MAGENTA = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
 
         const glm::vec4 CORAL   = glm::vec4(1.0f, 0.5f, 0.1f, 1.0f);
+        
+        const glm::vec4 BLACK_ALPHA = glm::vec4(0.0f, 0.0f, 0.0f, 0.5f);
     }
 }
