@@ -16,7 +16,7 @@
 
 #include "../SymphonyEngine/Rendering/TextureManager.h"
 
-#include "../SymphonyEngine/Rendering/FontManager.h"
+#include "../SymphonyEngine/Rendering/Font.h"
 //#include "../SymphonyEngine/Scene/Text/TextCharacter.h"
 
 #include <glm/gtc/type_ptr.hpp>
@@ -167,7 +167,7 @@ void TestScene::Initialise()
     
     
     //TEXT
-    Font* arial = FontManager::GetFont("Arial");
+    Font* arial = Font::Find("Arial");
     
     Text2D* txtObject;
     glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.f);

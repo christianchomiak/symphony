@@ -121,9 +121,6 @@
     <ClInclude Include="Scene\Text\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Text\TextCharacter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\Text\Text2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -149,9 +146,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering\Font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering\FontManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -231,9 +225,6 @@
     <ClCompile Include="Rendering\Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Text\TextCharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\Text\Text2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -250,9 +241,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\Font.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering\FontManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

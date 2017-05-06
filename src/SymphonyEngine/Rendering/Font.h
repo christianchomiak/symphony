@@ -32,30 +32,68 @@ namespace Symphony
             Font(const char* fontName);
             ~Font();
             
-            inline void AddGlyph(GLchar glyph, FontCharacter& newFontCharacter)
-            {
-                characters[glyph] = newFontCharacter;
-            }
+            void AddGlyph(GLchar glyph, FontCharacter& newFontCharacter);
 
-            inline bool GlyphExists(GLchar glyph) const
-            {
-                return characters.find(glyph) != characters.end();
-            }
+            bool GlyphExists(GLchar glyph) const;
 
-            inline FontCharacter GetCharacter(GLchar character) const
-            {
-                auto iterator = characters.find(character);
-
-                if (iterator != characters.end())
-                {
-                    return iterator->second;
-                }
-                
-                return FontCharacter();
-            }
+            FontCharacter GetCharacter(GLchar character) const;
 
         protected:
             std::string name;
             std::map<GLchar, FontCharacter> characters;
+            
+
+            //Static Manager
+        public:
+            static bool LoaderWorks();
+            static bool Exists(const char* fontName);
+            static Font* Find(const char* fontName);
+
+            static Font* Load(const char* fontName, const char* fontPath);
+            static void UnloadAll();
+
+        protected:
+            static std::map<const char*, Font*> fontPool;
     };
+
+    inline void Font::AddGlyph(GLchar glyph, FontCharacter& newFontCharacter)
+    {
+        characters[glyph] = newFontCharacter;
+    }
+
+    inline bool Font::GlyphExists(GLchar glyph) const
+    {
+        return characters.find(glyph) != characters.end();
+    }
+
+    inline FontCharacter Font::GetCharacter(GLchar character) const
+    {
+        auto iterator = characters.find(character);
+
+        if (iterator != characters.end())
+        {
+            return iterator->second;
+        }
+
+        return FontCharacter();
+    }
+
+    //Static Manager
+    inline bool Font::Exists(const char* fontName)
+    {
+        return fontPool.find(fontName) != fontPool.end();
+    }
+
+    inline Font* Font::Find(const char* fontName)
+    {
+        auto iterator = fontPool.find(fontName);
+
+        if (iterator != fontPool.end())
+        {
+            return iterator->second;
+        }
+
+        return nullptr;
+    }
+
 }

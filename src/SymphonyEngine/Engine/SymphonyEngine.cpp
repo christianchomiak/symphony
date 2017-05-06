@@ -9,7 +9,7 @@
 #include "../Input/InputManager.h"
 #include "../Rendering/Shader.h"
 #include "../Rendering/TextureManager.h"
-#include "../Rendering/FontManager.h"
+#include "../Rendering/Font.h"
 
 namespace Symphony
 {
@@ -75,11 +75,11 @@ namespace Symphony
 
         LoadCommandLineArguments(commandLineFilename);
         
-        initialised &= FontManager::FontLibraryCanBeLoaded();
+        initialised &= Font::LoaderWorks();
 
         if (initialised)
         {
-            FontManager::LoadFont("Arial", "../../resources/Fonts/arial.ttf");
+            Font::Load("Arial", "../../resources/Fonts/arial.ttf");
         }
 
         return initialised;
@@ -249,7 +249,7 @@ namespace Symphony
         //I can't find any reason not to do it in here, before that.
         Shader::DeleteAllShaders();
         TextureManager::ClearTextureCache();
-        FontManager::UnloadFonts();
+        Font::UnloadAll();
     }
 
     void SymphonyEngine::LoadShaders(const char* filename)
