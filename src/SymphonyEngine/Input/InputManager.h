@@ -1,13 +1,13 @@
 #pragma once
 
 //#include "../Utilities/Singleton.h"
-#include "Keyboard.h"
 #include "Mouse.h"
+#include "Keyboard.h"
 #include "GamePad.h"
 
+#include "../Macros/ClassMacros.h"
 #include "../Debugging/Debugging.h"
 #include "../Macros/PlatformMacros.h"
-#include "../Macros/ClassMacros.h"
 
 namespace Symphony
 {
@@ -33,7 +33,7 @@ namespace Symphony
             Mouse* mouse = Instance()->mouse;
             //mouse->position.x = (float) xpos;
             //mouse->position.y = (float) ypos;
-            mouse->UpdatePosition((float)xpos, (float)ypos);
+            mouse->UpdatePosition((float) xpos, (float) ypos);
         }
 
         static void GamePadStatusCallback(int gamepadID, int event);
@@ -42,7 +42,7 @@ namespace Symphony
         static Keyboard* GetKeyboard() { return Instance()->keyboard;   }
         static GamePad*  GetGamepad(int index)
         {
-            GamePad* gamepad = index > -1 && index < GLFW_JOYSTICK_LAST + 1 ? Instance()->gamepad[index] : nullptr;
+            GamePad* gamepad = (index > -1 && index < GLFW_JOYSTICK_LAST + 1) ? Instance()->gamepad[index] : nullptr;
             DEBUG_ONLY(if (!gamepad) Debug::LogWarningF("Could not find controller #%d", index));
             return gamepad;
         }
@@ -50,16 +50,16 @@ namespace Symphony
         static void Update() { Instance()->UpdateInput(); }
 
     protected:
+        Mouse*    mouse;
         Keyboard* keyboard;
-        Mouse* mouse;
         
         //TO-DO: Would it be better if all the gamepad objects were instantiated by default
         GamePad* gamepad[GLFW_JOYSTICK_LAST + 1];
         
         void UpdateInput()
         {
-            keyboard->Update();
             mouse->Update();
+            keyboard->Update();
             
             for (size_t i = 0; i < GLFW_JOYSTICK_LAST + 1; ++i)
             {
@@ -69,7 +69,5 @@ namespace Symphony
                 }
             }
         }
-
-    public: 
     };
 }

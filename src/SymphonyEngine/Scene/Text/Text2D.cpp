@@ -1,25 +1,27 @@
 #include "Text2D.h"
 
+#include "../../Rendering/MutableMesh.h"
+
 namespace Symphony
 {
     Text2D::Text2D()
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
-        renderObject = new RenderObject(Mesh::TextMesh(), nullptr);
+        renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
     }
 
     Text2D::Text2D(const Text& t)
         : text(t)
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
-        renderObject = new RenderObject(Mesh::TextMesh(), nullptr);
+        renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
     }
     
     Text2D::Text2D(Font* font, const std::string& content)
         : text(Text(font, content))
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
-        renderObject = new RenderObject(Mesh::TextMesh(), nullptr);
+        renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
     }
 
     Text2D::~Text2D()
@@ -30,7 +32,7 @@ namespace Symphony
     {
         if (!renderObject || !renderObject->GetMesh()) return;
 
-        Mesh* m = renderObject->GetMesh();
+        MutableMesh* m = static_cast<MutableMesh*>(renderObject->GetMesh());
 
         glm::vec3 startingPosition = glm::vec3(text.GetPosition(), 0.0f); //transform.GetPosition() + 
 
@@ -55,8 +57,8 @@ namespace Symphony
     void Text2D::Render() const
     {
         if (!renderObject || !renderObject->GetMesh()) return;
-
-        Mesh* mesh = renderObject->GetMesh();
+        
+        MutableMesh* mesh = static_cast<MutableMesh*>(renderObject->GetMesh());
 
         glm::vec3 startingPosition = glm::vec3(text.GetPosition(), 0.0f); //transform.GetPosition() + 
         float currentX = startingPosition.x;

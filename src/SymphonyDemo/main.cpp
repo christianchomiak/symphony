@@ -1,11 +1,14 @@
 #pragma comment(lib, "SymphonyEngine.lib")
 
+#include <memory>
+
 #include "../SymphonyEngine/Engine/SymphonyEngine.h"
 #include "TestScene.h"
 
+#include "../SymphonyEngine/Utilities/HashString.h"
 
-using namespace Symphony;
 using namespace std;
+using namespace Symphony;
 
 SymphonyEngine* sEngine = nullptr;
 
@@ -73,6 +76,17 @@ void LoadShaders()
     attributes.clear();
     uniforms.clear();*/
 
+}
+
+void TestGround()
+{
+    std::cout.setf(std::ios::boolalpha);
+
+    HashString hs1 = "Test";
+    std::string s1 = "Test";
+    const char* s2 = "Test";
+    hs1 = s2;
+    std::cout << "HS1 == HS2: " << (hs1 == s2) << std::endl;
 }
 
 int main(int argc, char* args[])

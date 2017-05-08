@@ -139,7 +139,7 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObjec
     for (auto go : objects)
     {
         auto rObject = go.obj->GetRenderObject();
-        Shader& ss = *(rObject->GetShader());
+        Shader const& ss = *(rObject->GetShader());
         ss.Use();
 
         if (rObject->GetMesh()->AllowFaceCulling())

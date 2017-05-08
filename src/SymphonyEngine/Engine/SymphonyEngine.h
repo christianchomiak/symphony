@@ -70,7 +70,6 @@ namespace Symphony
 
         void LoadNextScene();
         void Unload();
-        void LoadFonts();
         
         void LoadCommandLineArguments(const char* commandLineFilename);
 
@@ -85,9 +84,8 @@ namespace Symphony
         bool Initialise(const Window::WindowProperties& windowProperties, const char* commandLineFilename);
 
         
-        void LoadShader(const char* shaderName, const vector<const char*>& attributes, const vector<const char*>& uniforms,
-            const char* vertexShaderFilename, const char* fragmentShaderFilename,
-            const char* geometryShaderFilename = nullptr) const;
+        void LoadShader(const char* shaderName, const char* vertexShaderFilename,
+                        const char* fragmentShaderFilename, const char* geometryShaderFilename = nullptr) const;
 
     private:
         static SymphonyEngine* instance;

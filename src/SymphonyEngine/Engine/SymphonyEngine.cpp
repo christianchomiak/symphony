@@ -21,8 +21,8 @@ namespace Symphony
         currentScene    = nullptr;
         window          = nullptr;
         running         = true;
-        initialised     = false;
         changeSceneFlag = true;
+        initialised     = false;
     }
 
     SymphonyEngine::~SymphonyEngine()
@@ -134,8 +134,7 @@ namespace Symphony
                 currentScene->Render();
             }
 
-
-            /*if (keyboard->KeyDown(Keyboard::KEY_SPACE))
+            /*if (keyboard->KeyDown(Key::SPACE))
             {
                 window->ChangeMode();
             }*/
@@ -223,11 +222,10 @@ namespace Symphony
     }
     
     void SymphonyEngine::LoadShader(const char* shaderName,
-                                    const vector<const char*>& attributes, const vector<const char*>& uniforms,
                                     const char* vertexShaderFilename, const char* fragmentShaderFilename,
                                     const char* geometryShaderFilename) const
     {
-        Shader::CreateNewShader(shaderName, attributes, uniforms, vertexShaderFilename, fragmentShaderFilename, geometryShaderFilename);
+        Shader::CreateNewShader(shaderName, vertexShaderFilename, fragmentShaderFilename, geometryShaderFilename);
     }
 
     void SymphonyEngine::LoadNextScene()
@@ -343,7 +341,7 @@ namespace Symphony
                     /*std::cout << shaderName << " ---\"" << fullVertexPath << '"' << std::endl;
                     std::cout << shaderName << " ---\"" << fullFragmentPath << '"' << std::endl;*/
                     
-                    LoadShader(shaderName, attributes, uniforms, fullVertexPath.c_str(), fullFragmentPath.c_str(), fullGeometryPath.c_str());
+                    LoadShader(shaderName, fullVertexPath.c_str(), fullFragmentPath.c_str(), fullGeometryPath.c_str());
                 }
 
                 shaderData = shaderData->NextSiblingElement();

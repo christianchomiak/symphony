@@ -6,6 +6,7 @@
 #include <glm/geometric.hpp>
 
 #include "../Debugging/Debugging.h"
+#include "MutableMesh.h"
 
 namespace Symphony
 {
@@ -99,7 +100,7 @@ namespace Symphony
     }
 
     //TO-DO: Could it be benefitial to cache the result of operations such as `numberOfVertices * sizeof(glm::vecX)`?
-    void Mesh::BufferData()
+    void Mesh::BufferData() const
     {
         glGenVertexArrays(1, &vaoID);
         glBindVertexArray(vaoID);
@@ -160,7 +161,7 @@ namespace Symphony
         glBindVertexArray(0);
     }
 
-    void Mesh::Render()
+    void Mesh::Render() const
     {
         glBindVertexArray(vaoID);
         
@@ -588,9 +589,9 @@ namespace Symphony
         return mesh;
     }
 
-    Mesh* Mesh::TextMesh()
+    MutableMesh* Mesh::TextMesh()
     {
-        Mesh* m = new Mesh();
+        MutableMesh* m = new MutableMesh();
         
         m->typeOfPrimitive = GL_TRIANGLE_STRIP;
         m->typeOfDraw = GL_DYNAMIC_DRAW;
@@ -614,7 +615,7 @@ namespace Symphony
         return m;
     }
     
-    bool Mesh::UpdateVertices(glm::vec3* newVertexData, int numberOfNewVertexData)
+    /*bool Mesh::UpdateVertices(glm::vec3* newVertexData, int numberOfNewVertexData)
     {
         if (numberOfNewVertexData != numberOfVertices) return false;
 
@@ -630,6 +631,6 @@ namespace Symphony
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         return true;
-    }
+    }*/
 }
 

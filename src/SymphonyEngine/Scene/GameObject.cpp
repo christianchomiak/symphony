@@ -7,10 +7,9 @@
 
 namespace Symphony
 {
-    GameObject::GameObject() : name("New GameObject")
+    GameObject::GameObject()
+        : name("New GameObject"), enabled(true), renderObject(nullptr)
     {
-        enabled = true;
-        renderObject = nullptr;
     }
 
     GameObject::~GameObject()
@@ -56,10 +55,12 @@ namespace Symphony
         if (child == nullptr) return;
 
         children.erase(std::remove(children.begin(), children.end(), child), children.end());
+
+        //TO-DO: Is this safe when calling RemoveChild in a context other than the child's destructor?
         child->transform.parent = nullptr;
     }
 
-    void Symphony::GameObject::SetParent(GameObject* newParent)
+    void GameObject::SetParent(GameObject* newParent)
     {
         if (transform.parent != nullptr) transform.parent->RemoveChild(this);
 
@@ -68,7 +69,7 @@ namespace Symphony
     }
 
     //TO-DO: There's no need to have this inline, right? RIGHT?
-    void Symphony::GameObject::AddRenderObject(RenderObject* rObject)
+    void GameObject::AddRenderObject(RenderObject* rObject)
     {
         if (rObject != nullptr)
         {

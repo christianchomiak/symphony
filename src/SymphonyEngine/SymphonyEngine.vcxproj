@@ -152,6 +152,7 @@
     <ClInclude Include="Macros\PlatformMacros.h" />
     <ClInclude Include="Macros\QAMacros.h" />
     <ClInclude Include="Rendering\Material.h" />
+    <ClInclude Include="Rendering\MutableMesh.h" />
     <ClInclude Include="Rendering\Skybox.h" />
     <ClInclude Include="Rendering\UI\UIRenderer.h" />
     <ClInclude Include="Scene\SceneRoot.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Rendering\Texture.h" />
     <ClInclude Include="Rendering\TextureManager.h" />
     <ClInclude Include="Time\Time.h" />
+    <ClInclude Include="Utilities\HashString.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="Window\Screen.h" />
     <ClInclude Include="Window\Window.h" />
@@ -192,6 +194,7 @@
     <ClCompile Include="Input\GamePad.cpp" />
     <ClCompile Include="IO\DataReader.cpp" />
     <ClCompile Include="Rendering\Font.cpp" />
+    <ClCompile Include="Rendering\MutableMesh.cpp" />
     <ClCompile Include="Rendering\Skybox.cpp" />
     <ClCompile Include="Rendering\UI\UIRenderer.cpp" />
     <ClCompile Include="Scene\Camera\Camera.cpp" />

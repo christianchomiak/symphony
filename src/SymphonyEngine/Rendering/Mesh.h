@@ -18,30 +18,29 @@ namespace Symphony
         MAX_BUFFER
     };
     
+    class MutableMesh;
+
     //TO-DO: Provide means to have pooled meshes and individual meshes (whose lifetimes are determined by the programmer)
     class Mesh
     {
+
     public:
         bool allowFaceCulling;
 
         ~Mesh();
-        void BufferData();
-        void Render();
+
+        void Render() const;
+        void BufferData() const;
         bool AllowFaceCulling() const;
 
-        unsigned int GetVBO()
-        {
-            return vboID[VERTEX_BUFFER];
-        }
-        unsigned int GetVAO()
-        {
-            return vaoID;
-        }
+        unsigned int GetVBO() const;
+        unsigned int GetVAO() const;
 
-        bool UpdateVertices(glm::vec3* newVertexData, int numberOfNewVertexData);
+        //bool UpdateVertices(glm::vec3* newVertexData, int numberOfNewVertexData);
+
     protected:
-        unsigned int vaoID;
-        unsigned int vboID[MAX_BUFFER];
+        mutable unsigned int vaoID;
+        mutable unsigned int vboID[MAX_BUFFER];
         unsigned int typeOfPrimitive;
         unsigned int typeOfDraw;
 
@@ -59,6 +58,7 @@ namespace Symphony
         Mesh();
 
         void GenerateNormals();
+
     public:
         static Mesh* Triangle();
         static Mesh* Quad();
@@ -66,8 +66,19 @@ namespace Symphony
         static Mesh* HeightMap(const char* heigtmapFileName, float sizeX, float sizeZ, float maxHeight = 1.f);
         static Mesh* Surface(size_t width, size_t height, float sizeX, float sizeZ);
         static Mesh* CoordinateSystem(float size = 1.f);
-        static Mesh* TextMesh();
+        static MutableMesh* TextMesh();
     };
+
+
+    inline unsigned int Mesh::GetVBO() const
+    {
+        return vboID[VERTEX_BUFFER];
+    }
+
+    inline unsigned int Mesh::GetVAO() const
+    {
+        return vaoID;
+    }
 
     inline bool Mesh::AllowFaceCulling() const
     {

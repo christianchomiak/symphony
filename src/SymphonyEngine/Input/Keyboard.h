@@ -120,10 +120,8 @@ namespace Symphony
     class Keyboard
     {
         friend class InputManager;
-    public:
-        Keyboard();
-        ~Keyboard();
 
+    public:
         inline bool AnyKeyPressed() const { return anyKeyPressed; }
 
         bool KeyUp(Key key)     const;
@@ -142,6 +140,8 @@ namespace Symphony
         int numberOfKeys;
         InputState* keys;
 
+        Keyboard();
+        ~Keyboard();
         void Update();
         void UpdateKey(int id, int state);
         void Reset();

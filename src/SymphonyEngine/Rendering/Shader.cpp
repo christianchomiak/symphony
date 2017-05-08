@@ -18,7 +18,17 @@ namespace Symphony
     void Shader::Use()       const { glUseProgram(programID); };
     void Shader::Release()   const { glUseProgram(0);         };
     
-    Shader* Shader::GetShader(const char* shaderName)
+    Shader::Shader()
+        : programID(0)
+    {
+    }
+
+    Shader::~Shader()
+    {
+        glDeleteProgram(programID);
+    }
+
+    /*static*/ Shader* Shader::GetShader(const char* shaderName)
     {
         if (ShaderExists(shaderName))
         {
@@ -27,35 +37,25 @@ namespace Symphony
         return nullptr;
     }
 
-    Shader::Shader()
-    {
-        shaders[VERTEX_SHADER] = 0;
-        shaders[FRAGMENT_SHADER] = 0;
-        shaders[GEOMETRY_SHADER] = 0;
-    }
-
-    Shader::~Shader()
-    {
-        glDeleteProgram(programID);
-    }
-
-    bool Shader::CreateAndLink()
+    bool Shader::CreateAndLink(unsigned int vertexShader, unsigned int fragmentShader, unsigned int geometryShader)
     {
         programID = glCreateProgram();
-        if (shaders[VERTEX_SHADER] != 0) {
-            glAttachShader(programID, shaders[VERTEX_SHADER]);
+
+        if (vertexShader != 0)
+        {
+            glAttachShader(programID, vertexShader);
         }
-        if (shaders[FRAGMENT_SHADER] != 0) {
-            glAttachShader(programID, shaders[FRAGMENT_SHADER]);
+
+        if (fragmentShader != 0)
+        {
+            glAttachShader(programID, fragmentShader);
         }
-        if (shaders[GEOMETRY_SHADER] != 0) {
-            glAttachShader(programID, shaders[GEOMETRY_SHADER]);
+
+        if (geometryShader != 0)
+        {
+            glAttachShader(programID, geometryShader);
         }
         
-        //TO-DO: We don't need to set the default attributes here because
-        //       we'll be using layouts instead
-        //SetDefaultAttributes();
-
         //link and check whether the program links fine
         GLint status;
         glLinkProgram(programID);
@@ -76,18 +76,14 @@ namespace Symphony
 
         Debug::Log("Linking: OK\n\n");
         
-        glDeleteShader(shaders[VERTEX_SHADER]);
-        glDeleteShader(shaders[FRAGMENT_SHADER]);
-        glDeleteShader(shaders[GEOMETRY_SHADER]);
-
-        shaders[VERTEX_SHADER]   = 0;
-        shaders[FRAGMENT_SHADER] = 0;
-        shaders[GEOMETRY_SHADER] = 0;
-
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+        glDeleteShader(geometryShader);
+        
         return true;
     }
 
-    bool Shader::LoadFromString(ShaderType typeOfShader, const char* source)
+    unsigned int Shader::LoadFromString(ShaderType typeOfShader, const char* source)
     {
         GLenum whichShader;
 
@@ -112,17 +108,16 @@ namespace Symphony
             Debug::LogError("\tCompilation: ERROR");
             std::cerr << "Compile log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
-            return false;
+            
+            return 0;
         }
-                
+
         Debug::Log("\tCompilation: OK");
         
-        shaders[typeOfShader] = shader;
-
-        return true;
+        return shader;
     }
 
-    bool Shader::LoadFromFile(ShaderType typeOfShader, const char* filename)
+    unsigned int Shader::LoadFromFile(ShaderType typeOfShader, const char* filename)
     {
         char* shaderName;
         
@@ -150,23 +145,11 @@ namespace Symphony
 
         Debug::Log("\tLoading: ERROR\n\n");
 
-        return false;
-    }
-    
-    void Shader::AddAttribute(const char* attribute)
-    {
-        attributeList[attribute] = glGetAttribLocation(programID, attribute);
-    }
-    
-    void Shader::AddUniform(const char* uniform)
-    {
-        uniformLocationList[uniform] = glGetUniformLocation(programID, uniform);
+        return 0;
     }
 
-    Shader* Shader::CreateNewShader(const char* shaderName,
-                                    const vector<const char*>& attributes, const vector<const char*>& uniforms,
-                                    const char* vertexShaderFilename, const char* fragmentShaderFilename,
-                                    const char* geometryShaderFilename)
+    Shader* Shader::CreateNewShader(const char* shaderName, const char* vertexShaderFilename,
+                                    const char* fragmentShaderFilename, const char* geometryShaderFilename)
     {
 
         //There's no point in creating the same shader over and over again
@@ -181,35 +164,41 @@ namespace Symphony
         Shader* newShader = new Shader();
 
         //Load all programs for this shader
-        if (!newShader->LoadFromFile(ShaderType::VERTEX_SHADER, vertexShaderFilename))
-            return nullptr;
-
-        if (!newShader->LoadFromFile(ShaderType::FRAGMENT_SHADER, fragmentShaderFilename))
-            return nullptr;
         
-        if (geometryShaderFilename != nullptr && geometryShaderFilename[0] != '\0' 
-            && !newShader->LoadFromFile(ShaderType::GEOMETRY_SHADER, geometryShaderFilename))
+        unsigned int vertexShader = newShader->LoadFromFile(ShaderType::VERTEX_SHADER, vertexShaderFilename);
+
+        if (vertexShader == 0)
+        {
+            delete newShader;
             return nullptr;
+        }
+
+        unsigned int fragmentShader = newShader->LoadFromFile(ShaderType::FRAGMENT_SHADER, fragmentShaderFilename);
+
+        if (fragmentShader == 0)
+        {
+            delete newShader;
+            return nullptr;
+        }
+        
+        unsigned int geometryShader(0);
+        if (geometryShaderFilename != nullptr && geometryShaderFilename[0] != '\0')
+        {
+            geometryShader = newShader->LoadFromFile(ShaderType::GEOMETRY_SHADER, geometryShaderFilename);
+
+            if (geometryShader == 0)
+            {
+                delete newShader;
+                return nullptr;
+            }
+        }
         
         //compile and link shader
-        if (!newShader->CreateAndLink())
+        if (!newShader->CreateAndLink(vertexShader, fragmentShader, geometryShader))
+        {
+            delete newShader;
             return nullptr;
-
-        newShader->Use();
-
-        //Add attributes
-        for (unsigned int i = 0; i < attributes.size(); ++i)
-        {
-            newShader->AddAttribute(attributes[i]);
         }
-
-        //Add uniforms
-        for (unsigned int i = 0; i < uniforms.size(); ++i)
-        {
-            newShader->AddUniform(uniforms[i]);
-        }
-        
-        newShader->Release();
 
         newShader->name = shaderName;
 

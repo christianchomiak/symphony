@@ -68,7 +68,7 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObject
     for (auto go : objects)
     {
         auto rObject = go.obj->GetRenderObject();
-        Shader& ss = *(rObject->GetShader());
+        Shader const& ss = *(rObject->GetShader());
         ss.Use();
 
         if (rObject->GetMesh()->AllowFaceCulling())

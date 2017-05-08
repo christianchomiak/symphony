@@ -50,7 +50,7 @@ namespace Symphony
         ~RenderObject();
     };
     
-    inline void RenderObject::SetMesh(Mesh *m)
+    inline void RenderObject::SetMesh(Mesh* m)
     {
         NULL_POINTER_WARNING(m, return);
         mesh = m;

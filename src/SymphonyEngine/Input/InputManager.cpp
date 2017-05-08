@@ -6,8 +6,8 @@ namespace Symphony
 
     InputManager::InputManager()
     {
+        mouse    = new Mouse();
         keyboard = new Keyboard();
-        mouse = new Mouse();
 
         for (size_t i = 0; i < GLFW_JOYSTICK_LAST + 1; ++i)
         {
@@ -22,8 +22,8 @@ namespace Symphony
 
     InputManager::~InputManager()
     {
-        delete keyboard;
         delete mouse;
+        delete keyboard;
 
         for (size_t i = 0; i < GLFW_JOYSTICK_LAST + 1; ++i)
         {
