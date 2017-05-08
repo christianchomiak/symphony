@@ -5,10 +5,8 @@ namespace Symphony
     SINGLETON_INSTANCE_INIT(InputManager)
 
     InputManager::InputManager()
+        : mouse(), keyboard()
     {
-        mouse    = new Mouse();
-        keyboard = new Keyboard();
-
         for (size_t i = 0; i < GLFW_JOYSTICK_LAST + 1; ++i)
         {
             if (glfwJoystickPresent(i))
@@ -22,9 +20,6 @@ namespace Symphony
 
     InputManager::~InputManager()
     {
-        delete mouse;
-        delete keyboard;
-
         for (size_t i = 0; i < GLFW_JOYSTICK_LAST + 1; ++i)
         {
             delete gamepad[i];

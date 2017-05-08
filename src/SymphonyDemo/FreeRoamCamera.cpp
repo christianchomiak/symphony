@@ -6,14 +6,13 @@
 FreeRoamCamera::FreeRoamCamera()
     : PerspectiveCamera(60.f)
 {
-    Mouse* mouse = InputManager::GetMouse();
 }
 
 void FreeRoamCamera::Update()
 {
-    Mouse* mouse = InputManager::GetMouse();
+    MouseRef mouse = InputManager::GetMouse();
 
-    glm::vec2 mouseOffset = mouse->DeltaPosition();
+    glm::vec2 mouseOffset = mouse.DeltaPosition();
 
     yaw -= mouseOffset.x;
     pitch += mouseOffset.y;
@@ -25,34 +24,34 @@ void FreeRoamCamera::Update()
 
     //transform.Rotate(-mouseOffset.y, mouseOffset.x, 0);
     
-    Keyboard* keyboard = InputManager::GetKeyboard();
+    KeyboardRef keyboard = InputManager::GetKeyboard();
 
     float speed = 50.f;
 
     glm::vec3 dir;
-    if (keyboard->KeyPressed(Key::Q))
+    if (keyboard.KeyPressed(Key::Q))
     {
         dir += glm::vec3(0, 1, 0); // transform.Up();
     }
-    else if (keyboard->KeyPressed(Key::E))
+    else if (keyboard.KeyPressed(Key::E))
     {
         dir -= glm::vec3(0, 1, 0); // transform.Up();
     }
 
-    if (keyboard->KeyPressed(Key::W))
+    if (keyboard.KeyPressed(Key::W))
     {
         dir -= transform.Forward();
     }
-    else if (keyboard->KeyPressed(Key::S))
+    else if (keyboard.KeyPressed(Key::S))
     {
         dir += transform.Forward();
     }
 
-    if (keyboard->KeyPressed(Key::A))
+    if (keyboard.KeyPressed(Key::A))
     {
         dir-= transform.Right();
     }
-    else if (keyboard->KeyPressed(Key::D))
+    else if (keyboard.KeyPressed(Key::D))
     {
         dir += transform.Right();
     }
@@ -65,6 +64,6 @@ void FreeRoamCamera::Update()
     
     PerspectiveCamera::Update();
 
-    if (keyboard->KeyDown(Key::SPACE)) std::cout << transform << std::endl;
+    if (keyboard.KeyDown(Key::SPACE)) std::cout << transform << std::endl;
 }
 

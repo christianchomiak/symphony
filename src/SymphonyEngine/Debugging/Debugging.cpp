@@ -7,8 +7,12 @@
 #if _WIN32
 #   include <windows.h>   // WinApi header
 #   define SET_TERMINAL_TEXT_COLOR(color) \
-        { HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\
-        if (hConsole != nullptr) SetConsoleTextAttribute(hConsole, color); }
+        {\
+            if (HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE)) \
+            {\
+                SetConsoleTextAttribute(hConsole, color);\
+            }\
+        }
 #else
 #   define SET_TERMINAL_TEXT_COLOR(color)
 #endif

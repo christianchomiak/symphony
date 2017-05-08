@@ -3,6 +3,8 @@
 #include <cstring>
 #include <iostream>
 
+#include "../Debugging/Debugging.h"
+
 namespace Symphony
 {
     Mouse::Mouse()
@@ -52,7 +54,7 @@ namespace Symphony
     {
         if (!CheckButtonID(id))
         {
-            std::cerr << "Trying to update unknow button" << std::endl;
+            Debug::LogErrorF("Trying to update unknow mouse button (%d)", id);
             return;
         }
 
@@ -80,7 +82,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            std::cerr << "Trying to query unknow button" << std::endl;
+            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::HOLD || buttons[button] == InputState::DOWN;
@@ -90,7 +92,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            std::cerr << "Trying to query unknow button" << std::endl;
+            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::UP;
@@ -100,7 +102,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            std::cerr << "Trying to query unknow button" << std::endl;
+            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::DOWN;
@@ -110,7 +112,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            std::cerr << "Trying to query unknow button" << std::endl;
+            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::HOLD;
@@ -119,13 +121,13 @@ namespace Symphony
 
     void Mouse::SetSensitivity(float newSensitivity)
     {
-        if (newSensitivity >= 0.f)
+        if (newSensitivity >= 0.0f)
         {
             sensitivity = newSensitivity;
         }
         else
         {
-            std::cout << "Trying to set a negative sensitivity to the mouse. Current value not overwritten." << std::endl;
+            Debug::LogWarningF("Trying to set a negative sensitivity of %.3f to the mouse. Current value not overwritten.", newSensitivity);
         }
     }
 }

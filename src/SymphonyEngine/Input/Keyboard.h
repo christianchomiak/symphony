@@ -124,10 +124,10 @@ namespace Symphony
     public:
         inline bool AnyKeyPressed() const { return anyKeyPressed; }
 
-        bool KeyUp(Key key)     const;
+        bool KeyUp(Key key)      const;
         bool KeyPressed(Key key) const;
-        bool KeyDown(Key key)   const;
-        bool KeyHold(Key key)   const;
+        bool KeyDown(Key key)    const;
+        bool KeyHold(Key key)    const;
         //int KeyStatus(Key key)  const;
         
         inline bool CheckKeyID(Key id) const

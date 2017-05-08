@@ -110,8 +110,9 @@ namespace Symphony
             running = false;
         }
         
-        Mouse* mouse        = InputManager::GetMouse();
-        Keyboard* keyboard  = InputManager::GetKeyboard();
+        MouseRef mouse       = InputManager::GetMouse();
+        KeyboardRef keyboard = InputManager::GetKeyboard();
+
         while (running)
         {
             InputManager::Update();
@@ -160,7 +161,7 @@ namespace Symphony
             }*/
             
             window->SwapBuffers();
-            running &= !window->Closed() && !keyboard->KeyDown(Key::ESC);
+            running &= !window->Closed() && !keyboard.KeyDown(Key::ESC);
         }
 
         Unload();
