@@ -187,6 +187,7 @@
     <ClInclude Include="Time\Time.h" />
     <ClInclude Include="Utilities\HashString.h" />
     <ClInclude Include="Utilities\Singleton.h" />
+    <ClInclude Include="Macros\VectorMacros.h" />
     <ClInclude Include="Window\Screen.h" />
     <ClInclude Include="Window\Window.h" />
   </ItemGroup>

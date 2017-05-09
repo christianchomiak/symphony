@@ -22,6 +22,8 @@
 #include "../SymphonyEngine/Rendering/UI/Font.h"
 
 #include "../SymphonyEngine/Macros/ResourcesMacros.h"
+#include "../SymphonyEngine/Macros/VectorMacros.h"
+#include "FPSCounterObject.h"
 
 TestScene::TestScene()
 {
@@ -60,8 +62,7 @@ void TestScene::Initialise()
     int lightType = 0;
     if (lightType < 0)
     {
-        light = new PointLight(glm::vec3(0.0f, 0, 0.0f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f),
-            50.f, 1.0f, 0.014f, 0.0007f);
+        light = new PointLight(V3_ZERO, V3_ONE, V3_ZERO, 50.f, 1.0f, 0.014f, 0.0007f);
         light->name = "Point Light";
 
         cam->AddChild(light);
@@ -69,7 +70,7 @@ void TestScene::Initialise()
     }
     else if (lightType == 0)
     {
-        light = new DirectionalLight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f));
+        light = new DirectionalLight(glm::vec3(0.1f, 0.1f, 0.1f), V3_ONE, V3_ZERO);
         light->name = "Directional Light";
         /*cam->AddChild(dLight);
         RegisterLight(dLight);*/
@@ -80,7 +81,7 @@ void TestScene::Initialise()
     }
     else
     {
-        light = new Spotlight(glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3(1.f, 1.f, 1.f), glm::vec3(0.f, 0.f, 0.f),
+        light = new Spotlight(glm::vec3(0.1f, 0.1f, 0.1f), V3_ONE, V3_ZERO,
                               12.5f, 15.f, 1.0f, 0.007f, 0.0002f);
         light->name = "Spotlight";
 
@@ -153,7 +154,7 @@ void TestScene::Initialise()
     hMap->name = "Height Map";
     AddGameObject(hMap);
     hMap->AddRenderObject(
-        new RenderObject(Mesh::HeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.f),
+        new RenderObject(Mesh::HeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.0f),
             TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/hmTexture.jpg), Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
             Shader::GetShader("PHONG")));
     hMap->transform.SetLocalPosition(0, 0, -100);
@@ -186,24 +187,32 @@ void TestScene::Initialise()
     txtObject->transform.Rotate(0.0f, 0.0f, -90.0f);
     AddGameObject(txtObject);
 
+    /////
+
     text.fgColor = Color::GREEN;
     text.SetAlignment(Text::Alignment::CENTER);
+
     txtObject = new Text2D(text);
     txtObject->transform.SetPosition(pos);
     txtObject->transform.Rotate(0.0f, 0.0f, 90.0f);
     AddGameObject(txtObject);
-    
+
+    /////
+
     text.fgColor = Color::BLUE;
     text.SetAlignment(Text::Alignment::CENTER_RIGHT);
+
     txtObject = new Text2D(text);
     txtObject->transform.SetPosition(pos);
-    txtObject->transform.Rotate(0.0f, 0.0f, 0.0f);
     AddGameObject(txtObject);
 
-    /*AddText(new Text("String", pos, glm::vec4(0, 1, 0, 1), scale,
-                     Text::Alignment::CENTER));
-    AddText(new Text("String", pos, glm::vec4(0, 0, 1, 1), scale,
-                     Text::Alignment::CENTER_RIGHT));*/
+    ////FPS-counter
+    text.fgColor = Color::WHITE;
+    text.SetAlignment(Text::Alignment::BOTTOM_LEFT);
+    
+    txtObject = new FPSCounterObject(text);
+    txtObject->transform.SetPosition(pos);
+    AddGameObject(txtObject);
 }
 
 void TestScene::Clean()

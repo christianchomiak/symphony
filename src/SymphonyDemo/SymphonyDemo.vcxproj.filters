@@ -44,5 +44,8 @@
     <ClInclude Include="ComplexRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FPSCounterObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

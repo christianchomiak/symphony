@@ -17,14 +17,15 @@ namespace Symphony
         
     protected:
         static double deltaTime;
-        static double currentTime;
-        
-        static void Update();
+        static double latestTime; //Latest queried time
+
+        static double Update();
         static double GetCurrentTime();
     };
 
-    inline float Time::DeltaTime() 
-    { 
-        return (float) deltaTime;
+    inline float Time::DeltaTime()
+    {
+        return (float)deltaTime;
     }
+
 }

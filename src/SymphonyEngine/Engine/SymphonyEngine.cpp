@@ -1,6 +1,5 @@
 #include "SymphonyEngine.h"
 
-
 #include <sstream>
 #include <fstream>
 
@@ -97,7 +96,6 @@ namespace Symphony
 
         float deltaTime;
 
-        
         ChangeScene(0);
         LoadNextScene();
         
@@ -122,9 +120,8 @@ namespace Symphony
 
         while (running)
         {
-            Time::Update();
+            frameStartTime = Time::Update();
             deltaTime      = Time::DeltaTime();
-            frameStartTime = Time::currentTime;
 
             InputManager::Update();
             window->Update();
@@ -156,7 +153,7 @@ namespace Symphony
             frameTotalTime = frameEndTime - frameStartTime;
             if (!paused || skipPauseThisFrame)
             {
-                if (frame <= targetFrame)
+                /*if (frame <= targetFrame)
                 {
                     ss.clear();
                     ss.str("FPS: ");
@@ -169,7 +166,7 @@ namespace Symphony
                     //Currently we need to do this every frame
                     //if we want to print the frame data in the window title
                     targetFrame = frame + 1;
-                }
+                }*/
 
                 ++frame;
             }

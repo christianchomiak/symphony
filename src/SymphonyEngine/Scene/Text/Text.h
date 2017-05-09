@@ -79,6 +79,7 @@ namespace Symphony
         float VerticalPosition();
 
         void Regenerate();
+
         void RebuildBounds();
     };
     

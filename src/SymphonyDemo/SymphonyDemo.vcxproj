@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComplexRenderer.h" />
+    <ClInclude Include="FPSCounterObject.h" />
     <ClInclude Include="FreeRoamCamera.h" />
     <ClInclude Include="SimpleRenderer.h" />
     <ClInclude Include="TestScene.h" />
