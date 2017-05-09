@@ -64,6 +64,8 @@ void FreeRoamCamera::Update()
     
     PerspectiveCamera::Update();
 
-    if (keyboard.KeyDown(Key::SPACE)) std::cout << transform << std::endl;
+    if (keyboard.KeyDown(Key::T))
+    {
+        std::cout << transform << std::endl;
+    }
 }
-

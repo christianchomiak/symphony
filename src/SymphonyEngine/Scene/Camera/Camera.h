@@ -3,7 +3,7 @@
 #include <glm/mat4x4.hpp>
 #include "../GameObject.h"
 #include "ViewPort.h"
-#include "../../Rendering/Skybox.h"
+#include "../../Rendering/Textures/Skybox.h"
 
 #include "Frustum.h"
 

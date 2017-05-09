@@ -11,4 +11,5 @@
       <ResolutionHeight>768</ResolutionHeight>
       <CursorMode>0</CursorMode>
     </WindowData>
+    <Shaders>shaders.xml</Shaders>
 </SymphonyConfigData>

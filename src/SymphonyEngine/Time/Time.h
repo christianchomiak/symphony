@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "../Utilities/Singleton.h"
+//#include "../Utilities/Singleton.h"
 #include "../Macros/ClassMacros.h"
 
 namespace Symphony
@@ -20,6 +20,7 @@ namespace Symphony
         static double currentTime;
         
         static void Update();
+        static double GetCurrentTime();
     };
 
     inline float Time::DeltaTime() 

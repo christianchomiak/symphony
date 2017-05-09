@@ -2,7 +2,7 @@
 
 #include "../Renderer.h"
 #include "../Shader.h"
-#include "../Mesh.h"
+#include "../Mesh/Mesh.h"
 
 namespace Symphony
 {

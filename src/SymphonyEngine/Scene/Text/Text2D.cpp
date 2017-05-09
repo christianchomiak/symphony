@@ -1,6 +1,6 @@
 #include "Text2D.h"
 
-#include "../../Rendering/MutableMesh.h"
+#include "../../Rendering/Mesh/MutableMesh.h"
 
 namespace Symphony
 {

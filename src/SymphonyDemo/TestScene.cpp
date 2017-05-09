@@ -1,7 +1,12 @@
 #include "TestScene.h"
 
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
+
 #include "SimpleRenderer.h"
 #include "ComplexRenderer.h"
+#include "FreeRoamCamera.h"
+
 #include "../SymphonyEngine/Debugging/Debugging.h"
 #include "../SymphonyEngine/Input/InputManager.h"
 
@@ -12,19 +17,15 @@
 #include "../SymphonyEngine/Scene/Light/DirectionalLight.h"
 #include "../SymphonyEngine/Scene/Light/Spotlight.h"
 
-#include "FreeRoamCamera.h"
+#include "../SymphonyEngine/Rendering/Textures/TextureManager.h"
 
-#include "../SymphonyEngine/Rendering/TextureManager.h"
+#include "../SymphonyEngine/Rendering/UI/Font.h"
 
-#include "../SymphonyEngine/Rendering/Font.h"
-//#include "../SymphonyEngine/Scene/Text/TextCharacter.h"
-
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/transform.hpp>
+#include "../SymphonyEngine/Macros/ResourcesMacros.h"
 
 TestScene::TestScene()
 {
-    name = "TEST_SCENE1";
+    name = "TEST_SCENE_1";
 }
 
 TestScene::~TestScene()
@@ -46,13 +47,13 @@ void TestScene::Initialise()
     //cam->transform.Rotate(0, 90, 0);
     AddGameObject(cam);
     cam->SetSkybox(TextureManager::LoadSkybox("SKY",
-        "../../resources/Textures/Skybox/right.jpg",
-        "../../resources/Textures/Skybox/left.jpg",
-        "../../resources/Textures/Skybox/top.jpg",
-        "../../resources/Textures/Skybox/bottom.jpg",
-        "../../resources/Textures/Skybox/back.jpg",
-        "../../resources/Textures/Skybox/front.jpg"),
-        Shader::GetShader("SKYBOX"));
+         RESOURCES_FOLDER(Textures/Skybox/right.jpg ),
+         RESOURCES_FOLDER(Textures/Skybox/left.jpg  ),
+         RESOURCES_FOLDER(Textures/Skybox/top.jpg   ),
+         RESOURCES_FOLDER(Textures/Skybox/bottom.jpg),
+         RESOURCES_FOLDER(Textures/Skybox/back.jpg  ),
+         RESOURCES_FOLDER(Textures/Skybox/front.jpg )),
+         Shader::GetShader("SKYBOX"));
 
     Light* light;
 
@@ -103,7 +104,10 @@ void TestScene::Initialise()
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
-            TextureManager::LoadTexture("../../resources/Textures/window.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::SEMI),
+            TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/window.png),
+                                        Texture::WrappingType::CLAMP,
+                                        Texture::FilteringType::LINEAR,
+                                        true, Texture::Transparency::SEMI),
             Shader::GetShader("UNLIT_TEXTURE")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
 
@@ -136,7 +140,7 @@ void TestScene::Initialise()
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
-            TextureManager::LoadTexture("../../resources/Textures/grass.png", Texture::WrappingType::CLAMP, Texture::FilteringType::NEAREST, true, Texture::Transparency::FULL),
+            TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/grass.png), Texture::WrappingType::CLAMP, Texture::FilteringType::NEAREST, true, Texture::Transparency::FULL),
             Shader::GetShader("TRANSPARENT")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
     cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
@@ -149,8 +153,8 @@ void TestScene::Initialise()
     hMap->name = "Height Map";
     AddGameObject(hMap);
     hMap->AddRenderObject(
-        new RenderObject(Mesh::HeightMap("../../resources/Textures/hm2.png", 16.f, 16.f, 1000.f),
-            TextureManager::LoadTexture("../../resources/Textures/hmTexture.jpg", Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
+        new RenderObject(Mesh::HeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.f),
+            TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/hmTexture.jpg), Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
             Shader::GetShader("PHONG")));
     hMap->transform.SetLocalPosition(0, 0, -100);
     hMap->transform.Scale(0.1f);
@@ -170,7 +174,7 @@ void TestScene::Initialise()
     Font* arial = Font::Find("Arial");
     
     Text2D* txtObject;
-    glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.f);
+    glm::vec3 pos = glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.0f);
     float scale = 1.f;
     
     Text text(arial, "String", Color::RED, scale, Text::Alignment::CENTER_LEFT);
@@ -217,10 +221,10 @@ void TestScene::Update(float deltaTime)
     Scene::Update(deltaTime);
     //txt->content = std::to_string(deltaTime).c_str();
 
-    if (InputManager::GetMouse().ButtonPressed(MButton::BTN_LEFT))
+    /*if (InputManager::GetMouse().ButtonPressed(MButton::BTN_LEFT))
     {
         Debug::Log("Mouse");
-    }
+    }*/
 }
 
 void TestScene::Render()

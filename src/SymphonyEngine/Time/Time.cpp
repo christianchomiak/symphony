@@ -13,4 +13,9 @@ namespace Symphony
         deltaTime      = current - currentTime;
         currentTime    = current;
     }
+
+    double Time::GetCurrentTime()
+    {
+        return glfwGetTime();
+    }
 }

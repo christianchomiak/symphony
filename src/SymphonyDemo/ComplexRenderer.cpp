@@ -8,6 +8,8 @@
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
 
+#include "../SymphonyEngine/Debugging/Debugging.h"
+
 ComplexRenderer::ComplexRenderer()
 {
 	//RBO: Render Buffer Object
@@ -61,13 +63,17 @@ ComplexRenderer::ComplexRenderer()
     
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) // || !bufferDepthTexture || !bufferColourTexture)
     {
-        std::cerr << "Problem in ComplexRenderer" << std::endl;
+        Debug::LogError("Problem in ComplexRenderer");
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     
     glBindTexture(GL_TEXTURE_2D, 0);
-    if (useRBO) glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    
+    if (useRBO)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    }
 }
 
 ComplexRenderer::~ComplexRenderer()
@@ -139,8 +145,8 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObjec
     for (auto go : objects)
     {
         auto rObject = go.obj->GetRenderObject();
-        Shader const& ss = *(rObject->GetShader());
-        ss.Use();
+        Shader const& objectShader = *(rObject->GetShader()); //TO-DO: Check if shader is valid!
+        objectShader.Use();
 
         if (rObject->GetMesh()->AllowFaceCulling())
         {
@@ -154,7 +160,7 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObjec
         }
 
         cam->UpdateShaderWithSkybox(rObject->GetShader());
-        glUniform3fv(glGetUniformLocation(ss.ID(), "cameraPosition"), 1, glm::value_ptr(cam->transform.GetPosition()));
+        glUniform3fv(glGetUniformLocation(objectShader.ID(), "cameraPosition"), 1, glm::value_ptr(cam->transform.GetPosition()));
 
         /* Update the shader with light data if it uses lights */
         /* Update the shader with light data only if object is within the light's reach (radius) */
@@ -162,10 +168,13 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObjec
         size_t activeLights = 0;
         for (; activeLights < lights.size(); ++activeLights)
         {
-            if (!lights[activeLights]->enabled) continue;
+            if (!lights[activeLights]->enabled)
+            {
+                continue;
+            }
             lights[activeLights]->UpdateShader(rObject->GetShader(), activeLights);
         }
-        glUniform1i(glGetUniformLocation(ss.ID(), "numberOfIncomingLights"), activeLights);
+        glUniform1i(glGetUniformLocation(objectShader.ID(), "numberOfIncomingLights"), activeLights);
 
         if (rObject->GetTexture().ID() > 0)
         {
@@ -174,30 +183,30 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObjec
         }
         
         // Set material properties
-        glUniform3fv(glGetUniformLocation(ss.ID(), "material.ambient"), 1, glm::value_ptr(rObject->material.ambient));
-        glUniform3fv(glGetUniformLocation(ss.ID(), "material.diffuse"), 1, glm::value_ptr(rObject->material.diffuse));
-        glUniform3fv(glGetUniformLocation(ss.ID(), "material.specular"), 1, glm::value_ptr(rObject->material.specular));
-        glUniform1f(glGetUniformLocation(ss.ID(), "material.shininess"), rObject->material.shininess);
+        glUniform3fv(glGetUniformLocation(objectShader.ID(), "material.ambient"), 1, glm::value_ptr(rObject->material.ambient));
+        glUniform3fv(glGetUniformLocation(objectShader.ID(), "material.diffuse"), 1, glm::value_ptr(rObject->material.diffuse));
+        glUniform3fv(glGetUniformLocation(objectShader.ID(), "material.specular"), 1, glm::value_ptr(rObject->material.specular));
+        glUniform1f(glGetUniformLocation(objectShader.ID(),  "material.shininess"), rObject->material.shininess);
 
         //glUniformMatrix4fv(ss("MVP"), 1, GL_FALSE, glm::value_ptr(P*V*go->transform.GetWorldTransformMatrix()));
-        glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(go.obj->transform.GetWorldTransformMatrix()));
-        glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "viewMatrix"), 1, GL_FALSE, glm::value_ptr(V));
-        glUniformMatrix4fv(glGetUniformLocation(ss.ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(P));
+        glUniformMatrix4fv(glGetUniformLocation(objectShader.ID(), "modelMatrix"), 1, GL_FALSE, glm::value_ptr(go.obj->transform.GetWorldTransformMatrix()));
+        glUniformMatrix4fv(glGetUniformLocation(objectShader.ID(), "viewMatrix"), 1, GL_FALSE, glm::value_ptr(V));
+        glUniformMatrix4fv(glGetUniformLocation(objectShader.ID(), "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(P));
         
         //These two are only for the Depth Testing shader
-        glUniform1f(glGetUniformLocation(ss.ID(), "nearPlane"), cam->GetNearPlane());
-        glUniform1f(glGetUniformLocation(ss.ID(), "farPlane"), cam->GetFarPlane());
+        glUniform1f(glGetUniformLocation(objectShader.ID(), "nearPlane"), cam->GetNearPlane());
+        glUniform1f(glGetUniformLocation(objectShader.ID(), "farPlane"),  cam->GetFarPlane());
 
         rObject->GetMesh()->Render();
 
-        ss.Release();
+        objectShader.Release();
     }
     //glActiveTexture(0);
 }
 
 void ComplexRenderer::PrepareObjects(const Camera* camera, const GameObject* obj,
-    std::vector<OrderableObject>& opaqueObjectsOut,
-    std::vector<OrderableObject>& transparentObjectsOut)
+                                     std::vector<OrderableObject>& opaqueObjectsOut,
+                                     std::vector<OrderableObject>& transparentObjectsOut)
 {
     if (obj == nullptr || !obj->enabled) return;
 
@@ -222,29 +231,3 @@ void ComplexRenderer::PrepareObjects(const Camera* camera, const GameObject* obj
         PrepareObjects(camera, o, opaqueObjectsOut, transparentObjectsOut);
     }
 }
-
-/*void ComplexRenderer::PrepareObjects(const Camera * camera, const GameObject * obj,
-std::vector<const GameObject*>& objsOut, bool filterOpaque)
-{
-if (obj == nullptr || !obj->enabled) return;
-
-bool renderingCondition = obj->GetRenderObject() != nullptr
-&& obj->GetRenderObject()->OkToRender()
-&& (
-(filterOpaque && !obj->GetRenderObject()->GetTexture().HasTransparency())
-|| (!filterOpaque &&  obj->GetRenderObject()->GetTexture().HasTransparency())
-)
-&& camera->GetFrustum().InsideFrustrum(obj->transform.GetPosition(),
-obj->GetRenderObject()->GetBoundingRadius())
-;
-
-if (renderingCondition)
-{
-objsOut.push_back(obj);
-}
-
-for (GameObject* o : obj->GetChildren())
-{
-PrepareObjects(camera, o, objsOut);
-}
-}*/

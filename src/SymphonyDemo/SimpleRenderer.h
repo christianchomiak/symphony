@@ -3,7 +3,7 @@
 #include "../SymphonyEngine/Rendering/Renderer.h"
 #include "../SymphonyEngine/Rendering/Shader.h"
 #include "../SymphonyEngine/Scene/Light/Light.h"
-#include "../SymphonyEngine/Rendering/Mesh.h"
+#include "../SymphonyEngine/Rendering/Mesh/Mesh.h"
 
 using namespace Symphony;
 

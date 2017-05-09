@@ -8,8 +8,8 @@
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 #include "../Rendering/Shader.h"
-#include "../Rendering/TextureManager.h"
-#include "../Rendering/Font.h"
+#include "../Rendering/textures/TextureManager.h"
+#include "../Rendering/UI/Font.h"
 
 namespace Symphony
 {
@@ -79,7 +79,9 @@ namespace Symphony
 
         if (initialised)
         {
-            Font::Load("Arial", "../../resources/Fonts/arial.ttf");
+            Font::Load("Arial", RESOURCES_FOLDER(Fonts/arial.ttf));
+
+            LoadShaders(RESOURCES_FOLDER(shaders.xml));
         }
 
         return initialised;
@@ -95,11 +97,6 @@ namespace Symphony
 
         float deltaTime;
 
-        //TO-DO: Code regarding FPS check could be enabled/disabled by the user
-        /*int numberOfFrames = 0;
-        float frameStartTime, frameEndTime = 0.0f, frameTotalTime;
-        float nextTimeLap = frameEndTime + 1.0f;
-        std::stringstream ss;*/
         
         ChangeScene(0);
         LoadNextScene();
@@ -113,52 +110,69 @@ namespace Symphony
         MouseRef mouse       = InputManager::GetMouse();
         KeyboardRef keyboard = InputManager::GetKeyboard();
 
+
+        //TO-DO: Code regarding FPS check could be enabled/disabled by the user
+        double frameStartTime, frameEndTime = 0.0, frameTotalTime;
+        unsigned long long frame = 0;
+        unsigned long long targetFrame = 0;
+        std::stringstream ss;
+
+        bool paused = false;
+        bool skipPauseThisFrame = false;
+
         while (running)
         {
+            Time::Update();
+            deltaTime      = Time::DeltaTime();
+            frameStartTime = Time::currentTime;
+
             InputManager::Update();
             window->Update();
+
+            if (keyboard.KeyDown(Key::SPACE))
+            {
+                //window->ChangeMode();
+                paused = !paused;
+            }
+
+            skipPauseThisFrame = keyboard.KeyDown(Key::ARROW_RIGHT);
 
             if (changeSceneFlag)
             {
                 LoadNextScene();
             }
             
-            Time::Update();
-            deltaTime = Time::DeltaTime(); //gameTimer->GetDeltaTime();
-            //window->SetTitle(std::to_string(deltaTime).c_str());
-            
-            //frameStartTime = gameTimer->GetMS();
-                        
             if (currentScene)
             {
-                currentScene->Update(deltaTime);
+                if (!paused || skipPauseThisFrame)
+                {
+                    currentScene->Update(deltaTime);
+                }
+
                 currentScene->Render();
             }
 
-            /*if (keyboard->KeyDown(Key::SPACE))
-            {
-                window->ChangeMode();
-            }*/
-
-            /*Debug::Log("");
-            _WATCHPOINT*/
-            //running = false;
-            
-            //TO-DO: Code regarding FPS check could be enabled/disabled by the user
-            //Frame-rendering performance check
-            /*frameEndTime = gameTimer->GetMS();
+            frameEndTime = Time::GetCurrentTime();
             frameTotalTime = frameEndTime - frameStartTime;
-            ++numberOfFrames;
-            if (nextTimeLap - frameEndTime <= 0.0f)
+            if (!paused || skipPauseThisFrame)
             {
-                ss.clear();
-                ss.str("FPS: ");
-                ss << "FPS: " << (1000.0 / double(frameTotalTime)) << " | ms/frame: " << frameTotalTime << " | deltaTime: " << deltaTime;
-                //windowManager->SetWindowTitle(ss.str().c_str());
+                if (frame <= targetFrame)
+                {
+                    ss.clear();
+                    ss.str("FPS: ");
+                    ss << "FPS: " << (1.0 / frameTotalTime)
+                       << " | ms/frame: "  << frameTotalTime
+                       << " | deltaTime: " << deltaTime
+                       << " | frame: "     << frame;
+                    window->SetTitle(ss.str().c_str());
 
-                numberOfFrames = 0;
-                nextTimeLap = frameEndTime + 100.0f;
-            }*/
+                    //Currently we need to do this every frame
+                    //if we want to print the frame data in the window title
+                    targetFrame = frame + 1;
+                }
+
+                ++frame;
+            }
             
             window->SwapBuffers();
             running &= !window->Closed() && !keyboard.KeyDown(Key::ESC);
@@ -166,7 +180,7 @@ namespace Symphony
 
         Unload();
 
-        Debug::LogF("Symphony Engine has now finished execution");
+        Debug::Log("Symphony Engine has now finished execution");
     }
 
     void SymphonyEngine::AddScene(Scene* newScene)

@@ -3,7 +3,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-#include "Color.h" //Already includes <glm/vec4.hpp>
+#include "../Color.h" //Already includes <glm/vec4.hpp>
 
 namespace Symphony
 {

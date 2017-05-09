@@ -6,5 +6,36 @@
     MyClass(const MyClass&) = delete;
     // no assign
     MyClass& operator=(const MyClass&) = delete;
+
 * Fix: When changing the size of the screen during runtime, controls start to work incorrectly
+
 * List all third-party modules (in the command line) while starting the engine
+
+* Add OS messages for debugging purposes:
+    //https://msdn.microsoft.com/en-us/library/windows/desktop/ms644996(v=vs.85).aspx#message_box
+    #include <windows.h>
+    int DisplayResourceNAMessageBox()
+    {
+        int msgboxID = MessageBox(
+            NULL,
+            "Resource not available\nDo you want to try again?",
+            "Symphony Engine",
+            MB_ICONERROR | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2
+        );
+
+        switch (msgboxID)
+        {
+        case IDABORT:
+            // TODO: add code
+            exit(-1);
+            break;
+        case IDRETRY:
+            // TODO: add code
+            break;
+        case IDIGNORE:
+            // TODO: add code
+            break;
+        }
+
+        return msgboxID;
+    }

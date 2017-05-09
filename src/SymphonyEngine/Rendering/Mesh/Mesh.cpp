@@ -5,7 +5,7 @@
 #include <SOIL2/SOIL2.h>
 #include <glm/geometric.hpp>
 
-#include "../Debugging/Debugging.h"
+#include "../../Debugging/Debugging.h"
 #include "MutableMesh.h"
 
 namespace Symphony
@@ -23,9 +23,9 @@ namespace Symphony
         normals             = nullptr;
         tangents            = nullptr;
         textureCoordinates  = nullptr;
-        
+
+        typeOfDraw      = GL_STATIC_DRAW;
         typeOfPrimitive = GL_TRIANGLES;
-        typeOfDraw = GL_STATIC_DRAW;
 
         for (unsigned short i = 0; i < MAX_BUFFER; ++i)
         {
@@ -445,12 +445,9 @@ namespace Symphony
     Mesh* Mesh::HeightMap(const char* heigtmapFileName, float sizeX, float sizeZ, float maxHeight)
     {
         int width, height, channels;
-        unsigned char *ht_map = SOIL_load_image
-        (
-            heigtmapFileName,
-            &width, &height, &channels,
-            SOIL_LOAD_L
-        );
+        unsigned char *ht_map = SOIL_load_image(heigtmapFileName,
+                                                &width, &height,
+                                                &channels, SOIL_LOAD_L);
         
         if (ht_map == nullptr)
         {
@@ -501,8 +498,8 @@ namespace Symphony
         m->textureCoordinates = new glm::vec2[m->numberOfVertices];
         m->colours = new glm::vec4[m->numberOfVertices];
 
-        float textureX = 1.f / sizeX;
-        float textureZ = 1.f / sizeZ;
+        float textureX = 1.0f / sizeX;
+        float textureZ = 1.0f / sizeZ;
         
         glm::vec3 originOffset = glm::vec3(width * sizeX * -0.5f, 0.f, height * sizeZ * -0.5f);
 
@@ -561,7 +558,7 @@ namespace Symphony
         mesh->numberOfVertices = 6;
 
         mesh->vertices = new glm::vec3[mesh->numberOfVertices];
-        mesh->colours = new glm::vec4[mesh->numberOfVertices];
+        mesh->colours  = new glm::vec4[mesh->numberOfVertices];
         
         //x axis arrow
         mesh->vertices[0] = glm::vec3(0.0f, 0.0f, 0.0f);

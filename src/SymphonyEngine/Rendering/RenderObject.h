@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Mesh.h"
-#include "Texture.h"
+#include "Mesh/Mesh.h"
+#include "Textures/Texture.h"
 #include "Shader.h"
 #include "Material.h"
 
@@ -39,9 +39,9 @@ namespace Symphony
         //static bool CompareByCameraDistance(RenderObject*, RenderObject*);
 
     protected:
-        Mesh* mesh;
-        Texture texture;    //TO-DO: Textures should be part of a material, together with the shader reference
+        Mesh*   mesh;
         Shader* shader;
+        Texture texture;    //TO-DO: Textures should be part of a material, together with the shader reference
 
         //TO-DO: this value should be calculated using the proportions from the mesh and the scale of the object
         float boundingRadius;

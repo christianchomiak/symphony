@@ -3,7 +3,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "../Debugging/Debugging.h"
+#include "../../Debugging/Debugging.h"
 
 namespace Symphony
 {
@@ -100,14 +100,14 @@ namespace Symphony
             glGenTextures(1, &texture);
             glBindTexture(GL_TEXTURE_2D, texture);
             glTexImage2D(GL_TEXTURE_2D,
-                0,
-                GL_RED,
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                0,
-                GL_RED,
-                GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer);
+                         0,
+                         GL_RED,
+                         face->glyph->bitmap.width,
+                         face->glyph->bitmap.rows,
+                         0,
+                         GL_RED,
+                         GL_UNSIGNED_BYTE,
+                         face->glyph->bitmap.buffer);
 
             // Set texture options
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -125,8 +125,6 @@ namespace Symphony
             };
 
             newFont->AddGlyph(c, character);
-
-            //FontCharacter::characters.insert(std::pair<GLchar, TextCharacter>(c, character));
         }
 
         FT_Done_Face(face);

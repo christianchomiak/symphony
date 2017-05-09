@@ -88,7 +88,11 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObject
         size_t activeLights = 0;
         for (; activeLights < lights.size(); ++activeLights)
         {
-            if (!lights[activeLights]->enabled) continue;
+            if (!lights[activeLights]->enabled)
+            {
+                continue;
+            }
+
             lights[activeLights]->UpdateShader(rObject->GetShader(), activeLights);
         }
         glUniform1i(glGetUniformLocation(ss.ID(), "numberOfIncomingLights"), activeLights);
@@ -150,29 +154,3 @@ void SimpleRenderer::PrepareObjects(const Camera* camera, const GameObject* obj,
         PrepareObjects(camera, o, opaqueObjectsOut, transparentObjectsOut);
     }
 }
-
-/*void SimpleRenderer::PrepareObjects(const Camera * camera, const GameObject * obj,
-                                    std::vector<const GameObject*>& objsOut, bool filterOpaque)
-{
-    if (obj == nullptr || !obj->enabled) return;
-    
-    bool renderingCondition = obj->GetRenderObject() != nullptr
-                           && obj->GetRenderObject()->OkToRender()
-                           && (
-                                    (filterOpaque && !obj->GetRenderObject()->GetTexture().HasTransparency())
-                                || (!filterOpaque &&  obj->GetRenderObject()->GetTexture().HasTransparency())
-                            )
-                           && camera->GetFrustum().InsideFrustrum(obj->transform.GetPosition(),
-                                                                  obj->GetRenderObject()->GetBoundingRadius())
-                           ;
-    
-    if (renderingCondition)
-    {
-        objsOut.push_back(obj);
-    }
-
-    for (GameObject* o : obj->GetChildren())
-    {
-        PrepareObjects(camera, o, objsOut);
-    }
-}*/

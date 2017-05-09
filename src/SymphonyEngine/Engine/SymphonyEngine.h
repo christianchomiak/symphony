@@ -5,6 +5,7 @@
 #include "../Time/Time.h"
 #include "../Scene/Scene.h"
 #include "../Window/Window.h"
+#include "../Macros/ResourcesMacros.h"
 
 using namespace std;
 
