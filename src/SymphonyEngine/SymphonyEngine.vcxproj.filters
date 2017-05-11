@@ -160,6 +160,15 @@
     <ClInclude Include="Macros\VectorMacros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UI\imgui\ImGuiManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\SymphonyEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\ImGuiMemoryEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\SymphonyEngine.cpp">
@@ -256,6 +265,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rendering\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\imgui\ImGuiManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools\SymphonyEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

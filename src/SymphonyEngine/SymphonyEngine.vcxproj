@@ -185,6 +185,9 @@
     <ClInclude Include="Rendering\Textures\Texture.h" />
     <ClInclude Include="Rendering\Textures\TextureManager.h" />
     <ClInclude Include="Time\Time.h" />
+    <ClInclude Include="Tools\ImGuiMemoryEditor.h" />
+    <ClInclude Include="Tools\SymphonyEditor.h" />
+    <ClInclude Include="UI\imgui\ImGuiManager.h" />
     <ClInclude Include="Utilities\HashString.h" />
     <ClInclude Include="Utilities\Singleton.h" />
     <ClInclude Include="Macros\VectorMacros.h" />
@@ -222,6 +225,8 @@
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Rendering\Textures\TextureManager.cpp" />
     <ClCompile Include="Time\Time.cpp" />
+    <ClCompile Include="Tools\SymphonyEditor.cpp" />
+    <ClCompile Include="UI\imgui\ImGuiManager.cpp" />
     <ClCompile Include="Window\Screen.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>

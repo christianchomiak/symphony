@@ -22,7 +22,7 @@ namespace Symphony
         virtual void Initialise() = 0;
         virtual void Clean();
 
-        virtual void Update(float deltaTime);
+        virtual void Update();
         virtual void Render() = 0;
 
         //TO-DO: What if these functions receive an optional parameter representing the parent of the object?

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+
 #include "Input.h"
 
 namespace Symphony
@@ -25,7 +26,7 @@ namespace Symphony
         ENTER       = GLFW_KEY_ENTER,
         TAB         = GLFW_KEY_TAB,
         BACKSPACE   = GLFW_KEY_BACKSPACE,
-        DELETE      = GLFW_KEY_DELETE,
+        DEL         = GLFW_KEY_DELETE,
         INSERT      = GLFW_KEY_INSERT,
         PAGE_UP     = GLFW_KEY_PAGE_UP,
         PAGE_DOWN   = GLFW_KEY_PAGE_DOWN,

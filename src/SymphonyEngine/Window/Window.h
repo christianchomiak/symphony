@@ -22,10 +22,12 @@ namespace Symphony
 
         struct WindowProperties
         {
+        public:
             std::string title;
 
             //TO-DO: Provide alterate means of specifying that the width and height should be queried from the monitor
             unsigned int width, height;
+            unsigned int frameBufferWidth, frameBufferHeight;
 
             bool fullscreen;
             
@@ -54,7 +56,8 @@ namespace Symphony
                              bool switchableToOtherModes, Window::CursorMode cursorMode)
                 : title(title), width(width), height(height), fullscreen(fullscreen),
                   resizeable(resizeable), borderless(decorated), maximised(maximised),
-                  switchableToOtherModes(switchableToOtherModes), cursorMode(cursorMode)
+                  switchableToOtherModes(switchableToOtherModes), cursorMode(cursorMode),
+                  frameBufferWidth(width), frameBufferHeight(height)
             {
             }
 
@@ -77,8 +80,18 @@ namespace Symphony
 
         void ChangeMode();
 
-        inline const int Width() const { return properties.width; }
-        inline const int Height() const { return properties.height; }
+        bool IsFocused() const;
+
+        inline const WindowProperties& GetDefaultProperties() const
+        {
+            return defaultProperties;
+        }
+
+        inline int WindowWidth() const  { return properties.width;  }
+        inline int WindowHeight() const { return properties.height; }
+
+        inline int FrameBufferWidth() const  { return properties.frameBufferWidth;  }
+        inline int FrameBufferHeight() const { return properties.frameBufferHeight; }
 
         void HandleResize();
         static void glfwErrorCallback(int error, const char* description);
@@ -88,6 +101,7 @@ namespace Symphony
 
     protected:
         WindowProperties properties;
+        WindowProperties defaultProperties;
         GLFWwindow* window;
         
         Window(const char* title, int width, int height, bool resizeable, bool borderless, bool maximised, bool switchableToFullscreen);

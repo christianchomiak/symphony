@@ -10,6 +10,9 @@
 #include "../Rendering/textures/TextureManager.h"
 #include "../Rendering/UI/Font.h"
 
+#include <imgui/imgui.h>
+#include "../UI/imgui/ImGuiManager.h"
+
 namespace Symphony
 {
     SymphonyEngine* SymphonyEngine::instance = nullptr;
@@ -93,9 +96,7 @@ namespace Symphony
             Debug::LogError("Symphony Engine hasn't been initialised yet");
             return;
         }
-
-        float deltaTime;
-
+        
         ChangeScene(0);
         LoadNextScene();
         
@@ -118,11 +119,12 @@ namespace Symphony
         bool paused = false;
         bool skipPauseThisFrame = false;
 
+        bool useImGui = true;
+
+        ImGuiManager imGuiManager;
+
         while (running)
         {
-            frameStartTime = Time::Update();
-            deltaTime      = Time::DeltaTime();
-
             InputManager::Update();
             window->Update();
 
@@ -133,25 +135,50 @@ namespace Symphony
             }
 
             skipPauseThisFrame = keyboard.KeyDown(Key::ARROW_RIGHT);
+            
+            Time::paused = paused && !skipPauseThisFrame;
+            
+            ////////////
 
+            frameStartTime = Time::Update();
+            
+            if (InputManager::inputBlockedInGame)
+            {
+                window->ChangeCursorMode(imGuiManager.IsImGuiDrawingCursor()
+                    ? Window::CursorMode::HIDDEN
+                    : Window::CursorMode::VISIBLE);
+            }
+            else
+            {
+                window->ChangeCursorMode(imGuiManager.IsImGuiDrawingCursor()
+                    ? Window::CursorMode::HIDDEN
+                    : window->GetDefaultProperties().cursorMode);
+            }
+
+            imGuiManager.PrepareForNewFrame(Time::TrueDeltaTime(),
+                window->IsFocused(),
+                window->WindowWidth(), window->WindowHeight(),
+                window->FrameBufferWidth(), window->FrameBufferHeight());
+
+            ////////////
+            
             if (changeSceneFlag)
             {
                 LoadNextScene();
             }
-            
+
             if (currentScene)
             {
-                if (!paused || skipPauseThisFrame)
-                {
-                    currentScene->Update(deltaTime);
-                }
-
+                currentScene->Update();
                 currentScene->Render();
             }
+            
+            imGuiManager.Render(window->WindowWidth(), window->WindowHeight(),
+                window->FrameBufferWidth(), window->FrameBufferHeight());
 
             frameEndTime = Time::GetCurrentTime();
             frameTotalTime = frameEndTime - frameStartTime;
-            if (!paused || skipPauseThisFrame)
+            if (!Time::paused)
             {
                 /*if (frame <= targetFrame)
                 {
@@ -175,6 +202,7 @@ namespace Symphony
             running &= !window->Closed() && !keyboard.KeyDown(Key::ESC);
         }
 
+        imGuiManager.Shutdown();
         Unload();
 
         Debug::Log("Symphony Engine has now finished execution");

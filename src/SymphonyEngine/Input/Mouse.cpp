@@ -8,7 +8,7 @@
 namespace Symphony
 {
     Mouse::Mouse()
-        : anyButtonPressed(false), sensitivity(0.05f),
+        : anyButtonPressed(false), sensitivity(5.0f), //0.05f),
           numberOfButtons(GLFW_MOUSE_BUTTON_LAST + 1)
     {
         buttons = new InputState[numberOfButtons];

@@ -9,6 +9,8 @@
 #include "../Debugging/Debugging.h"
 #include "../Macros/PlatformMacros.h"
 
+#include "../UI/imgui/ImGuiManager.h"
+
 namespace Symphony
 {
     typedef const Mouse&    MouseRef;
@@ -24,21 +26,39 @@ namespace Symphony
         //TO-DO: Figure out why there's a linking error when these static functions are defined outside of the class
         //       but within the header file
         
-        inline static void KeyboardKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+        inline static void KeyboardKeyCallback(GLFWwindow*, int key, int scancode, int action, int mods)
         {
             Instance()->keyboard.UpdateKey(key, action);
+            ImGuiManager::ImGui_ImplGlfwGL3_KeyCallback(key, scancode, action, mods);
+            
+            //TO-DO: Figure out a fancier way to handle this
+            //       Currently, non-imgui code may not honour `inputBlockedInGame`
+            if (key == Key::CTRL_LEFT && action == GLFW_PRESS)
+            {
+                inputBlockedInGame = !inputBlockedInGame;
+            }
         }
 
-        inline static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+        inline static void MouseButtonCallback(GLFWwindow*, int button, int action, int mods)
         {
             Instance()->mouse.UpdateButton(button, action);
         }
 
-        inline static void MousePositionCallback(GLFWwindow* window, double xpos, double ypos)
+        inline static void MousePositionCallback(GLFWwindow*, double xpos, double ypos)
         {
             //mouse->position.x = (float) xpos;
             //mouse->position.y = (float) ypos;
             Instance()->mouse.UpdatePosition((float) xpos, (float) ypos);
+        }
+
+        inline static void ImGui_ImplGlfwGL3_ScrollCallback(GLFWwindow*, double xoffset, double yoffset)
+        {
+            Instance()->mouse.UpdateScroll(xoffset, yoffset); // Use fractional mouse wheel, 1.0 unit 5 lines.
+        }
+
+        inline static void ImGui_ImplGlfwGL3_CharCallback(GLFWwindow*, unsigned int c)
+        {
+            ImGuiManager::ImGui_ImplGlfwGL3_CharCallback(c);
         }
 
         static void GamePadStatusCallback(int gamepadID, int event);
@@ -52,6 +72,8 @@ namespace Symphony
             return gamepad;
         }
         
+        static bool inputBlockedInGame;
+
     protected:
         Mouse    mouse;
         Keyboard keyboard;

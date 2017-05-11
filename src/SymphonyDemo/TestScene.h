@@ -2,6 +2,7 @@
 
 #include "../SymphonyEngine/Scene/Scene.h"
 #include "../SymphonyEngine/Rendering/UI/UIRenderer.h"
+#include "../SymphonyEngine/Tools/SymphonyEditor.h"
 
 using namespace Symphony;
 
@@ -13,9 +14,10 @@ public:
     
     virtual void Initialise() override;
     virtual void Clean() override;
-    virtual void Update(float deltaTime) override;
+    virtual void Update() override;
     virtual void Render() override;
 
 protected:
     UIRenderer* uiRenderer;
+    SymphonyEditor* editor;
 };

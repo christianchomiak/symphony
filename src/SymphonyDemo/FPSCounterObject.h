@@ -23,11 +23,14 @@ public:
 
     virtual void Update()
     {
-        sstream.clear();
-        sstream.str("FPS: ");
-        sstream << "FPS: " << glm::round((1.0 / (double)Time::DeltaTime()));
+        if (!Time::IsPaused())
+        {
+            sstream.clear();
+            sstream.str("FPS: ");
+            sstream << "FPS: " << glm::round((1.0 / (double)Time::TrueDeltaTime()));
 
-        text.SetContent(sstream.str());
+            text.SetContent(sstream.str());
+        }
     }
 protected:
     std::stringstream sstream;

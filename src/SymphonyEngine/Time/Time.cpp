@@ -4,14 +4,18 @@
 
 namespace Symphony
 {
-    double Time::latestTime = 0.0;
-    double Time::deltaTime  = 0.0;
+    double Time::latestTime     = 0.0;
+    double Time::deltaTime      = 0.0;
+    double Time::trueDeltaTime  = 0.0;
+    bool   Time::paused = false;
 
     double Time::Update()
     {
         double currentTime = glfwGetTime();
-        deltaTime          = currentTime - latestTime;
+        trueDeltaTime      = currentTime - latestTime;
         latestTime         = currentTime;
+
+        deltaTime = paused ? 0.0f : trueDeltaTime;
 
         return latestTime;
     }

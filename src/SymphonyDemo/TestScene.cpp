@@ -25,6 +25,8 @@
 #include "../SymphonyEngine/Macros/VectorMacros.h"
 #include "FPSCounterObject.h"
 
+#include <imgui/imgui.h>
+
 TestScene::TestScene()
 {
     name = "TEST_SCENE_1";
@@ -34,10 +36,13 @@ TestScene::~TestScene()
 {
     delete renderer;
     delete uiRenderer;
+    delete editor;
 }
 
 void TestScene::Initialise()
 {
+    editor = new SymphonyEditor();
+
     renderer = new ComplexRenderer();
     uiRenderer = new UIRenderer();
 
@@ -225,9 +230,12 @@ void TestScene::Clean()
     }*/
 }
 
-void TestScene::Update(float deltaTime)
+void TestScene::Update()
 {
-    Scene::Update(deltaTime);
+    Scene::Update();
+
+    editor->Update();
+
     //txt->content = std::to_string(deltaTime).c_str();
 
     /*if (InputManager::GetMouse().ButtonPressed(MButton::BTN_LEFT))

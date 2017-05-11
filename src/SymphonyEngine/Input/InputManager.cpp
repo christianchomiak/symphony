@@ -4,6 +4,8 @@ namespace Symphony
 {
     SINGLETON_INSTANCE_INIT(InputManager)
 
+    bool InputManager::inputBlockedInGame = false;
+
     InputManager::InputManager()
         : mouse(), keyboard()
     {

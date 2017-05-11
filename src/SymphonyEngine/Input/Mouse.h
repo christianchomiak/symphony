@@ -9,8 +9,8 @@ namespace Symphony
     class Mouse
     {
         friend class InputManager;
-    public:
-        float filter;
+    //public:
+    //    float filter; //Not currently used
 
     public:
         bool AnyButtonPressed() const;
@@ -22,13 +22,15 @@ namespace Symphony
         
         double PositionX() const;
         double PositionY() const;
+        double ScrollWheel() const;
+        double GetAndClearScrollWheel();
 
         glm::vec2      Position() const;
         glm::vec2 DeltaPosition() const;
         
         bool CheckButtonID(int id) const;
         void SetSensitivity(float sensitivity);
-        
+
     protected:
         int numberOfButtons;
         bool anyButtonPressed;
@@ -37,6 +39,7 @@ namespace Symphony
         glm::vec2 deltaPosition;
 
         float sensitivity;
+        double scrollWheelX, scrollWheelY;
 
         InputState* buttons;
 
@@ -47,6 +50,12 @@ namespace Symphony
         void Update();
         void UpdateButton(int id, int state);
         void UpdatePosition(float newX, float newY);
+        
+        inline void UpdateScroll(double deltaX, double deltaY)
+        {
+            scrollWheelX = deltaX; //+=
+            scrollWheelY = deltaY; //+=
+        }
     };
 
     inline bool Mouse::AnyButtonPressed() const
@@ -54,9 +63,22 @@ namespace Symphony
         return anyButtonPressed;
     }
 
+
+    inline double Mouse::ScrollWheel() const
+    {
+        return scrollWheelX;
+    }
+
+    inline double Mouse::GetAndClearScrollWheel()
+    {
+        double scroll = scrollWheelY;
+        scrollWheelY = 0.0;
+        return scroll;
+    }
+
     inline double Mouse::PositionX() const
     { 
-        return position.x; 
+        return position.x;
     }
     
     inline double Mouse::PositionY() const
@@ -82,9 +104,9 @@ namespace Symphony
     
     enum MButton
     {
-        BTN_LEFT = GLFW_MOUSE_BUTTON_1,
-        BTN_RIGHT = GLFW_MOUSE_BUTTON_2,
-        BTN_MIDDLE = GLFW_MOUSE_BUTTON_3,
+        BTN_LEFT    = GLFW_MOUSE_BUTTON_1,
+        BTN_RIGHT   = GLFW_MOUSE_BUTTON_2,
+        BTN_MIDDLE  = GLFW_MOUSE_BUTTON_3,
 
         BTN_1 = GLFW_MOUSE_BUTTON_1,
         BTN_2 = GLFW_MOUSE_BUTTON_2,

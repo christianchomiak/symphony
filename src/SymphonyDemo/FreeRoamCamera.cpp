@@ -10,23 +10,26 @@ FreeRoamCamera::FreeRoamCamera()
 
 void FreeRoamCamera::Update()
 {
-    MouseRef mouse = InputManager::GetMouse();
-
-    glm::vec2 mouseOffset = mouse.DeltaPosition();
-
-    yaw -= mouseOffset.x;
-    pitch += mouseOffset.y;
-
-    if      (pitch >  89.f) pitch = 89.f;
-    else if (pitch < -89.f) pitch = -89.f;
-
-    transform.SetLocalRotation(pitch, yaw, 0.f);
-
-    //transform.Rotate(-mouseOffset.y, mouseOffset.x, 0);
-    
     KeyboardRef keyboard = InputManager::GetKeyboard();
 
-    float speed = 50.f;
+    if (!InputManager::inputBlockedInGame)
+    {
+        MouseRef mouse = InputManager::GetMouse();
+
+        glm::vec2 mouseOffset = mouse.DeltaPosition() *Time::DeltaTime();
+
+        yaw   -= mouseOffset.x;
+        pitch += mouseOffset.y;
+
+        if (pitch >  89.f) pitch = 89.f;
+        else if (pitch < -89.f) pitch = -89.f;
+
+        transform.SetLocalRotation(pitch, yaw, 0.f);
+
+        //transform.Rotate(-mouseOffset.y, mouseOffset.x, 0);
+    }
+
+    float speed = 50.0f;
 
     glm::vec3 dir;
     if (keyboard.KeyPressed(Key::Q))
@@ -56,7 +59,7 @@ void FreeRoamCamera::Update()
         dir += transform.Right();
     }
     
-    if (dir.length() > 0.f)
+    if (glm::length2(dir) > 0.0f)
     {
         dir *= speed * Time::DeltaTime();
         transform.Translate(dir.x, dir.y, dir.z);

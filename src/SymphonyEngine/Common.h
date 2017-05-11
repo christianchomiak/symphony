@@ -9,10 +9,12 @@
 #   pragma comment(lib, "SOIL2/soil2-debug.lib")
 #   pragma comment(lib, "FreeType/freetyped.lib")
 #   pragma comment(lib, "TinyXML2/tinyxml2d.lib")
+#   pragma comment(lib, "imgui/imguid32.lib")
 #else
 #   pragma comment(lib, "SOIL2/soil2.lib")
 #   pragma comment(lib, "FreeType/freetype.lib")
 #   pragma comment(lib, "TinyXML2/tinyxml2.lib")
+#   pragma comment(lib, "imgui/imgui32.lib")
 #endif
 
 /*#ifdef _WIN64

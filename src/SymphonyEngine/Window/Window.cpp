@@ -1,8 +1,19 @@
 #include "Window.h"
 
+#ifdef _WIN32
+#undef APIENTRY
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WGL
+#include <GLFW/glfw3native.h>
+#endif
+
+//#include <imgui/imgui.h>
+
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 #include "../IO/DataReader.h"
+
+#include "../UI/imgui/ImGuiManager.h"
 
 #include "Screen.h"
 
@@ -27,7 +38,7 @@ namespace Symphony
     }
 
     Window::Window(const WindowProperties& initialProperties)
-        : properties(initialProperties)
+        : properties(initialProperties), defaultProperties(initialProperties)
     {
         window = nullptr;
     }
@@ -60,9 +71,13 @@ namespace Symphony
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+#if __APPLE__
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
         if (properties.fullscreen)
         {
-            window = glfwCreateWindow(properties.width, properties.height, properties.title.c_str(), glfwGetPrimaryMonitor(), NULL);
+            window = glfwCreateWindow(properties.frameBufferWidth, properties.frameBufferHeight, properties.title.c_str(), glfwGetPrimaryMonitor(), NULL);
         }
         else
         {
@@ -70,7 +85,7 @@ namespace Symphony
             glfwWindowHint(GLFW_DECORATED, properties.borderless ? GL_FALSE : GL_TRUE);
             glfwWindowHint(GLFW_MAXIMIZED, properties.maximised  ? GL_TRUE : GL_FALSE);
             
-            window = glfwCreateWindow(properties.width, properties.height, properties.title.c_str(), NULL, NULL);
+            window = glfwCreateWindow(properties.frameBufferWidth, properties.frameBufferHeight, properties.title.c_str(), NULL, NULL);
         }
 
         if (!window)
@@ -95,6 +110,15 @@ namespace Symphony
             return false;
         }
         
+#ifdef IMGUI_API
+
+#ifdef _WIN32
+        ImGuiManager::Init(glfwGetWin32Window(window));
+#endif
+
+        glfwSetCharCallback(window, InputManager::ImGui_ImplGlfwGL3_CharCallback);
+#endif
+
         HandleResize();
         //glViewport(0, 0, width, height);
         OutputRenderingInfo();
@@ -104,7 +128,7 @@ namespace Symphony
         const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if (!properties.fullscreen && !properties.maximised)
         {
-            glfwSetWindowPos(window, (mode->width - properties.width) / 2, (mode->height - properties.height) / 2);
+            glfwSetWindowPos(window, (mode->width - properties.frameBufferWidth) / 2, (mode->height - properties.frameBufferHeight) / 2);
         }
 
         //TO-DO: Set the window's icon
@@ -155,20 +179,24 @@ namespace Symphony
         glfwGetFramebufferSize(window, &w, &h);
         glViewport(0, 0, w, h);
 
-        properties.width = w;
-        properties.height = h;
+        properties.frameBufferWidth  = w;
+        properties.frameBufferHeight = h;
+        
+        Screen::width  = properties.frameBufferWidth;
+        Screen::height = properties.frameBufferHeight;
 
-        Screen::width = properties.width;
-        Screen::height = properties.height;
+        glfwGetWindowSize(window, &w, &h);
+        properties.width  = w;
+        properties.height = h;
     }
     
     void Window::OutputRenderingInfo() const
     {
-        std::cout << "Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-        std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-        std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-        std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-        std::cout << "GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl << std::endl;
+        std::cout << "Using GLEW "  << glewGetString(GLEW_VERSION)  << std::endl;
+        std::cout << "Vendor: "     << glGetString(GL_VENDOR)       << std::endl;
+        std::cout << "Renderer: "   << glGetString(GL_RENDERER)     << std::endl;
+        std::cout << "Version: "    << glGetString(GL_VERSION)      << std::endl;
+        std::cout << "GLSL: "       << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl << std::endl;
 
         int major, minor, revision;
         glfwGetVersion(&major, &minor, &revision);
@@ -205,20 +233,25 @@ namespace Symphony
         if (properties.fullscreen)
         {
             const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, properties.width, properties.height, GLFW_DONT_CARE); 
+            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, properties.frameBufferWidth, properties.frameBufferHeight, GLFW_DONT_CARE);
             // mode->width, mode->height, GLFW_DONT_CARE);// mode->refreshRate);
         }
         else
         {
-            glfwSetWindowMonitor(window, NULL, 0, 0, properties.width, properties.height, GLFW_DONT_CARE);
+            glfwSetWindowMonitor(window, NULL, 0, 0, properties.frameBufferWidth, properties.frameBufferHeight, GLFW_DONT_CARE);
         }
         
         HandleResize();
     }
 
+    bool Window::IsFocused() const
+    {
+        return glfwGetWindowAttrib(window, GLFW_FOCUSED);
+    }
+
     void Window::glfwErrorCallback(int error, const char* description)
     {
-        fprintf(stderr, "Error: %s\n", description);
+        fprintf(stderr, "Error %d: %s\n", error, description);
     }
 
     bool Window::GetMonitorResolution(int & w, int & h)

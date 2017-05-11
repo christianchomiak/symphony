@@ -25,7 +25,7 @@ void Symphony::Scene::Clean()
     uiRoot = new SceneRoot();
 }
 
-void Symphony::Scene::Update(float deltaTime)
+void Symphony::Scene::Update()
 {
     root->Update();
     uiRoot->Update();
