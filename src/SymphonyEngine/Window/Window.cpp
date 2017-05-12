@@ -1,10 +1,10 @@
 #include "Window.h"
 
 #ifdef _WIN32
-#undef APIENTRY
-#define GLFW_EXPOSE_NATIVE_WIN32
-#define GLFW_EXPOSE_NATIVE_WGL
-#include <GLFW/glfw3native.h>
+    #undef APIENTRY
+    #define GLFW_EXPOSE_NATIVE_WIN32
+    #define GLFW_EXPOSE_NATIVE_WGL
+    #include <GLFW/glfw3native.h>
 #endif
 
 //#include <imgui/imgui.h>
@@ -102,6 +102,7 @@ namespace Symphony
         glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
         glfwSetCursorPosCallback(window, InputManager::MousePositionCallback);
         glfwSetJoystickCallback(InputManager::GamePadStatusCallback);
+        glfwSetScrollCallback(window, InputManager::ImGui_ImplGlfwGL3_ScrollCallback);
 
         glewExperimental = GL_TRUE;
         if (glewInit() != GLEW_OK)
@@ -110,14 +111,12 @@ namespace Symphony
             return false;
         }
         
-#ifdef IMGUI_API
 
 #ifdef _WIN32
         ImGuiManager::Init(glfwGetWin32Window(window));
 #endif
-
         glfwSetCharCallback(window, InputManager::ImGui_ImplGlfwGL3_CharCallback);
-#endif
+
 
         HandleResize();
         //glViewport(0, 0, width, height);

@@ -6,6 +6,7 @@
 #include "../Scene/Scene.h"
 #include "../Window/Window.h"
 #include "../Macros/ResourcesMacros.h"
+#include "../Tools/SymphonyEditor.h"
 
 using namespace std;
 
@@ -68,6 +69,7 @@ namespace Symphony
         Scene* currentScene;
         unsigned int nextSceneID = 0;
         Window* window;
+        SymphonyEditor* editor;
 
         void LoadNextScene();
         void Unload();

@@ -14,5 +14,8 @@ namespace Symphony
 
     protected:
         MemoryEditor memoryEditor;
+        bool inEditorMode;
+
+        void DrawMainMenuBar();
     };
 }

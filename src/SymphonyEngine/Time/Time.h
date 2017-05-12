@@ -9,7 +9,7 @@ namespace Symphony
     class Time
     {
         friend class SymphonyEngine;
-
+        friend class SymphonyEditor;
     public:
         NO_DEFAULT_CONSTRUCTORS(Time)
 
@@ -23,7 +23,8 @@ namespace Symphony
         static double trueDeltaTime;
         static double latestTime; //Latest queried time
         static bool paused;
-        
+        static unsigned long long frame;
+
         static double Update();
         static double GetCurrentTime();
     };

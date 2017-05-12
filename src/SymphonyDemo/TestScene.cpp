@@ -36,13 +36,10 @@ TestScene::~TestScene()
 {
     delete renderer;
     delete uiRenderer;
-    delete editor;
 }
 
 void TestScene::Initialise()
 {
-    editor = new SymphonyEditor();
-
     renderer = new ComplexRenderer();
     uiRenderer = new UIRenderer();
 
@@ -233,8 +230,6 @@ void TestScene::Clean()
 void TestScene::Update()
 {
     Scene::Update();
-
-    editor->Update();
 
     //txt->content = std::to_string(deltaTime).c_str();
 

@@ -1,6 +1,8 @@
 #include "SymphonyEditor.h"
 
-#include <imgui\imgui.h>
+#include <imgui/imgui.h>
+#include "../Input/InputManager.h"
+#include "../Time/Time.h"
 
 namespace Symphony
 {
@@ -13,33 +15,49 @@ namespace Symphony
     {
     }
 
+    void SymphonyEditor::DrawMainMenuBar()
+    {
+        if (ImGui::BeginMainMenuBar())
+        {
+            ImGui::Text("Symphony Engine");
+
+                ImGui::SameLine();
+
+            ImGui::Text("| %s Mode |", InputManager::InputIsBlocked() ? "Editor" : "Game");
+
+                ImGui::SameLine();
+
+            ImGui::Checkbox("Paused", &Time::paused);
+
+                ImGui::SameLine();
+
+            ImGui::Text("| Frame %llu, %.3f ms (%.1f FPS) |", Time::frame, 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+                        
+            ImGui::EndMainMenuBar();
+        }
+    }
+
     void SymphonyEditor::Update()
     {
-        {
-            //ImGui::ShowTestWindow();
+        DrawMainMenuBar();
 
+        //ImGui::ShowTestWindow();
+
+        /*static char input[128] = "Enter something...";
+
+        ImGuiIO& io = ImGui::GetIO();
+
+        ImGui::InputText("Input", input, 128);
+
+        {
             static bool menuEnabled = false;
 
             static bool itemSelected = false;
             static bool itemEnabled = false;
 
-            if (ImGui::BeginMainMenuBar())
-            {
-                if (ImGui::BeginMenu("Symphony Engine", true))
-                {
-                    ImGui::MenuItem("Test", NULL, itemSelected, itemEnabled);
-                    ImGui::EndMenu();
-                }
-                
-                ImGui::SameLine();
-                ImGui::Separator();
-                ImGui::SameLine();
-                
-                ImGui::Text("| %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-                ImGui::EndMainMenuBar();
-            }
-        }
+            
+        }*/
 
         //memoryEditor.Draw("Memory Editor", mem_block, mem_block_size, (size_t)mem_block);
     }

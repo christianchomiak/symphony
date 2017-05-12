@@ -23,6 +23,7 @@ namespace Symphony
         void Render(int windowWidth, int windowHeight, int windowFrameBufferWidth, int windowFrameBufferHeight);
 
         bool IsImGuiDrawingCursor() const;
+        static bool WantsToCaptureKeyboard();
 
     protected:
         unsigned int g_FontTexture = 0;
@@ -58,7 +59,7 @@ namespace Symphony
         // GLFW callbacks (installed by default if you enable 'install_callbacks' during initialization)
         // Provided here if you want to chain callbacks.
         // You can also handle inputs yourself and use those as a reference.
-        static void     ImGui_ImplGlfwGL3_KeyCallback(int key, int scancode, int action, int mods);
-        static void     ImGui_ImplGlfwGL3_CharCallback(unsigned int c);
+        static void ImGui_ImplGlfwGL3_KeyCallback(int key, int scancode, int action, int mods);
+        static void ImGui_ImplGlfwGL3_CharCallback(unsigned int c);
     };
 }

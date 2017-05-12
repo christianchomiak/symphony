@@ -175,7 +175,7 @@ namespace Symphony
 
         if (action == GLFW_PRESS)   io.KeysDown[key] = true;
         if (action == GLFW_RELEASE) io.KeysDown[key] = false;
-
+        
         (void)mods; // Modifiers are not reliable across systems
         io.KeyCtrl  = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
         io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT]   || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
@@ -208,8 +208,7 @@ namespace Symphony
 
         return true;
     }
-
-
+    
     void ImGuiManager::InvalidateDeviceObjects()
     {
         if (g_VaoHandle) glDeleteVertexArrays(1, &g_VaoHandle);
@@ -319,6 +318,12 @@ namespace Symphony
         return io.MouseDrawCursor;
     }
 
+    bool ImGuiManager::WantsToCaptureKeyboard()
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        return io.WantCaptureKeyboard;
+    }
+
     void ImGuiManager::PrepareForNewFrame(float deltaTime, bool windowIsFocused, int windowWidth, int windowHeight, int windowFrameBufferWidth, int windowFrameBufferHeight)
     {
         if (!g_FontTexture)
@@ -363,9 +368,6 @@ namespace Symphony
         
         io.MouseWheel = (float) mouse.ScrollWheel();
 
-        // Hide OS mouse cursor if ImGui is drawing it
-        //glfwSetInputMode(g_Window, GLFW_CURSOR, io.MouseDrawCursor ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
-        
         // Start the frame
         ImGui::NewFrame();
     }

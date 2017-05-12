@@ -31,11 +31,10 @@ namespace Symphony
             Instance()->keyboard.UpdateKey(key, action);
             ImGuiManager::ImGui_ImplGlfwGL3_KeyCallback(key, scancode, action, mods);
             
-            //TO-DO: Figure out a fancier way to handle this
-            //       Currently, non-imgui code may not honour `inputBlockedInGame`
+            //We'd like to render the mouse cursor and interact with imgui
             if (key == Key::CTRL_LEFT && action == GLFW_PRESS)
             {
-                inputBlockedInGame = !inputBlockedInGame;
+                Instance()->engineIsBlockingInput = !Instance()->engineIsBlockingInput;
             }
         }
 
@@ -71,12 +70,18 @@ namespace Symphony
             DEBUG_ONLY(if (!gamepad) Debug::LogWarningF("Could not find controller #%d", index));
             return gamepad;
         }
-        
-        static bool inputBlockedInGame;
+
+        //In a future, this should block high level input actions, instead of the actual input
+        //i.e. it doesn't affect querying if a key is pressed but whether an action mapped to that key is on.
+        inline static bool InputIsBlocked()
+        {
+            return Instance()->engineIsBlockingInput || ImGuiManager::WantsToCaptureKeyboard();
+        }
 
     protected:
         Mouse    mouse;
         Keyboard keyboard;
+        bool     engineIsBlockingInput;
         
         //TO-DO: Would it be better if all the gamepad objects were instantiated by default
         GamePad* gamepad[GLFW_JOYSTICK_LAST + 1];

@@ -2,7 +2,6 @@
 
 #include "../SymphonyEngine/Scene/Scene.h"
 #include "../SymphonyEngine/Rendering/UI/UIRenderer.h"
-#include "../SymphonyEngine/Tools/SymphonyEditor.h"
 
 using namespace Symphony;
 
@@ -19,5 +18,4 @@ public:
 
 protected:
     UIRenderer* uiRenderer;
-    SymphonyEditor* editor;
 };

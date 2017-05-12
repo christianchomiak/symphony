@@ -44,10 +44,13 @@ namespace Symphony
             {
                 buttons[i] = InputState::IDLE;
             }
-
-            deltaPosition.x = 0;
-            deltaPosition.y = 0;
         }
+        
+        deltaPosition.x = 0;
+        deltaPosition.y = 0;
+
+        scrollWheel.x = 0.0;
+        scrollWheel.y = 0.0;
     }
 
     void Mouse::UpdateButton(int id, int state)

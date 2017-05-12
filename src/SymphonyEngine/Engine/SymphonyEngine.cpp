@@ -10,7 +10,7 @@
 #include "../Rendering/textures/TextureManager.h"
 #include "../Rendering/UI/Font.h"
 
-#include <imgui/imgui.h>
+//#include <imgui/imgui.h>
 #include "../UI/imgui/ImGuiManager.h"
 
 namespace Symphony
@@ -22,6 +22,8 @@ namespace Symphony
     {
         currentScene    = nullptr;
         window          = nullptr;
+        editor          = nullptr;
+        
         running         = true;
         changeSceneFlag = true;
         initialised     = false;
@@ -34,6 +36,7 @@ namespace Symphony
             delete s;
         }
         delete window;
+        delete editor;
     }
         
     bool SymphonyEngine::Initialise(const char* commandLineFilename)
@@ -84,6 +87,8 @@ namespace Symphony
             Font::Load("Arial", RESOURCES_FOLDER(Fonts/arial.ttf));
 
             LoadShaders(RESOURCES_FOLDER(shaders.xml));
+
+            editor = new SymphonyEditor();
         }
 
         return initialised;
@@ -108,16 +113,13 @@ namespace Symphony
         
         MouseRef mouse       = InputManager::GetMouse();
         KeyboardRef keyboard = InputManager::GetKeyboard();
-
-
+        
         //TO-DO: Code regarding FPS check could be enabled/disabled by the user
         double frameStartTime, frameEndTime = 0.0, frameTotalTime;
-        unsigned long long frame = 0;
-        unsigned long long targetFrame = 0;
         std::stringstream ss;
 
-        bool paused = false;
-        bool skipPauseThisFrame = false;
+        bool frameStartedWithPausedFrame;
+        bool forceFrameExecution;
 
         bool useImGui = true;
 
@@ -127,22 +129,17 @@ namespace Symphony
         {
             InputManager::Update();
             window->Update();
-
-            if (keyboard.KeyDown(Key::SPACE))
-            {
-                //window->ChangeMode();
-                paused = !paused;
-            }
-
-            skipPauseThisFrame = keyboard.KeyDown(Key::ARROW_RIGHT);
             
-            Time::paused = paused && !skipPauseThisFrame;
-            
-            ////////////
+            frameStartedWithPausedFrame = Time::IsPaused();
+            forceFrameExecution = frameStartedWithPausedFrame && keyboard.KeyDown(Key::ARROW_RIGHT);
+
+            Time::paused = frameStartedWithPausedFrame && !forceFrameExecution;
 
             frameStartTime = Time::Update();
-            
-            if (InputManager::inputBlockedInGame)
+
+            ////////////
+
+            if (InputManager::InputIsBlocked())
             {
                 window->ChangeCursorMode(imGuiManager.IsImGuiDrawingCursor()
                     ? Window::CursorMode::HIDDEN
@@ -162,6 +159,10 @@ namespace Symphony
 
             ////////////
             
+            //TO-DO: Should this be split in two functions, one at the start and
+            //       the other at the end of the frame?
+            editor->Update();
+
             if (changeSceneFlag)
             {
                 LoadNextScene();
@@ -173,32 +174,48 @@ namespace Symphony
                 currentScene->Render();
             }
             
-            imGuiManager.Render(window->WindowWidth(), window->WindowHeight(),
-                window->FrameBufferWidth(), window->FrameBufferHeight());
+            imGuiManager.Render(window->WindowWidth(),      window->WindowHeight(),
+                                window->FrameBufferWidth(), window->FrameBufferHeight());
 
-            frameEndTime = Time::GetCurrentTime();
-            frameTotalTime = frameEndTime - frameStartTime;
-            if (!Time::paused)
-            {
-                /*if (frame <= targetFrame)
-                {
-                    ss.clear();
-                    ss.str("FPS: ");
-                    ss << "FPS: " << (1.0 / frameTotalTime)
-                       << " | ms/frame: "  << frameTotalTime
-                       << " | deltaTime: " << deltaTime
-                       << " | frame: "     << frame;
-                    window->SetTitle(ss.str().c_str());
-
-                    //Currently we need to do this every frame
-                    //if we want to print the frame data in the window title
-                    targetFrame = frame + 1;
-                }*/
-
-                ++frame;
-            }
-            
             window->SwapBuffers();
+
+            ////////////
+
+            frameEndTime   = Time::GetCurrentTime();
+            frameTotalTime = frameEndTime - frameStartTime;
+            
+            if (!frameStartedWithPausedFrame || forceFrameExecution)
+            {
+                ++Time::frame;
+            }
+
+            //If we skipped the frame, we may have changed its paused status assuming a different scenario
+            /*if (frameStartedWithPausedFrame && forceFrameExecution && frameStartedWithPausedFrame != Time::paused)
+            {
+                Time::paused = !Time::paused;
+            }*/
+
+            //This represents the above without the need of any branching
+            //bool requiresFix = frameStartedWithPausedFrame && forceFrameExecution && frameStartedWithPausedFrame != Time::paused;
+            
+            //This simplifies even more the above statement
+            //bool requiresFix = forceFrameExecution && !Time::paused;
+            //Time::paused = (!requiresFix && Time::paused) || (requiresFix && !Time::paused);
+
+            //Time::paused = ((!forceFrameExecution || Time::paused) && Time::paused) || (forceFrameExecution && !Time::paused);
+            Time::paused |= forceFrameExecution;
+            
+            //Do we want to start next frame paused?
+            /*if (keyboard.KeyDown(Key::SPACE))
+            {
+                Time::paused = !Time::paused;
+            }*/
+            
+            //Ain't nobody got time to waste time branching on an if-statement, let's XOR it
+            //Time::paused = (!Time::paused && keyboard.KeyDown(Key::SPACE)) || (Time::paused  && !keyboard.KeyDown(Key::SPACE));
+            //Time::paused XOR keyboard.KeyDown(Key::SPACE)
+            Time::paused ^= keyboard.KeyDown(Key::SPACE);
+
             running &= !window->Closed() && !keyboard.KeyDown(Key::ESC);
         }
 

@@ -23,7 +23,6 @@ namespace Symphony
         double PositionX() const;
         double PositionY() const;
         double ScrollWheel() const;
-        double GetAndClearScrollWheel();
 
         glm::vec2      Position() const;
         glm::vec2 DeltaPosition() const;
@@ -37,9 +36,9 @@ namespace Symphony
 
         glm::vec2 position;
         glm::vec2 deltaPosition;
+        glm::dvec2 scrollWheel;
 
         float sensitivity;
-        double scrollWheelX, scrollWheelY;
 
         InputState* buttons;
 
@@ -53,8 +52,8 @@ namespace Symphony
         
         inline void UpdateScroll(double deltaX, double deltaY)
         {
-            scrollWheelX = deltaX; //+=
-            scrollWheelY = deltaY; //+=
+            scrollWheel.x += deltaX;
+            scrollWheel.y += deltaY;
         }
     };
 
@@ -66,14 +65,7 @@ namespace Symphony
 
     inline double Mouse::ScrollWheel() const
     {
-        return scrollWheelX;
-    }
-
-    inline double Mouse::GetAndClearScrollWheel()
-    {
-        double scroll = scrollWheelY;
-        scrollWheelY = 0.0;
-        return scroll;
+        return scrollWheel.y;
     }
 
     inline double Mouse::PositionX() const
