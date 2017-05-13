@@ -40,8 +40,8 @@ TestScene::~TestScene()
 
 void TestScene::Initialise()
 {
-    renderer = new ComplexRenderer();
     uiRenderer = new UIRenderer();
+    renderer   = new ComplexRenderer();
 
     FreeRoamCamera* cam = new FreeRoamCamera();
     cam->name = "Camera";
@@ -95,15 +95,13 @@ void TestScene::Initialise()
         light->transform.SetLocalRotation(15, 0, 0);*/
     }
 
-    GameObject* coord = new GameObject();
-    coord->name = "Coordinate System";
+    GameObject* coord = new GameObject("Coordinate System");
     //AddGameObject(coord);
     coord->AddRenderObject(new RenderObject(Mesh::CoordinateSystem(), Texture(), Shader::GetShader("UNLIT_COLOR")));
     //coord->transform.SetLocalPosition(0, 150, -10.f);
     light->AddChild(coord);
 
-    GameObject* cube = new GameObject();
-    cube->name = "Cube";
+    GameObject* cube = new GameObject("Cube");
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
@@ -126,8 +124,7 @@ void TestScene::Initialise()
     0.1f);                             //Shininess
     */
     
-    cube = new GameObject();
-    cube->name = "Cube2";
+    cube = new GameObject("Cube2");
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
@@ -138,8 +135,7 @@ void TestScene::Initialise()
     cube->transform.Translate(0, 0, 15);
     cube->transform.Scale(5.f);
 
-    cube = new GameObject();
-    cube->name = "Cube3";
+    cube = new GameObject("Cube3");
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(Mesh::Cube(),
@@ -152,8 +148,7 @@ void TestScene::Initialise()
 
 
 
-    GameObject* hMap = new GameObject();
-    hMap->name = "Height Map";
+    GameObject* hMap = new GameObject("Height Map");
     AddGameObject(hMap);
     hMap->AddRenderObject(
         new RenderObject(Mesh::HeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.0f),
@@ -184,7 +179,7 @@ void TestScene::Initialise()
     text.SetFont(arial);
     text.bgColor = Color::BLACK_ALPHA;
 
-    txtObject = new Text2D(text);
+    txtObject = new Text2D(text, "RedString");
     txtObject->transform.SetPosition(pos);
     txtObject->transform.Rotate(0.0f, 0.0f, -90.0f);
     AddGameObject(txtObject);
@@ -194,7 +189,7 @@ void TestScene::Initialise()
     text.fgColor = Color::GREEN;
     text.SetAlignment(Text::Alignment::CENTER);
 
-    txtObject = new Text2D(text);
+    txtObject = new Text2D(text, "GreenString");
     txtObject->transform.SetPosition(pos);
     txtObject->transform.Rotate(0.0f, 0.0f, 90.0f);
     AddGameObject(txtObject);
@@ -204,7 +199,7 @@ void TestScene::Initialise()
     text.fgColor = Color::BLUE;
     text.SetAlignment(Text::Alignment::CENTER_RIGHT);
 
-    txtObject = new Text2D(text);
+    txtObject = new Text2D(text, "BlueString");
     txtObject->transform.SetPosition(pos);
     AddGameObject(txtObject);
 

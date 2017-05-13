@@ -8,10 +8,9 @@ namespace Symphony
     class Text2D : public GameObject
     {
     public:
-        Text2D();
-        Text2D(const Text&);
-        explicit Text2D(Font* font, const Text&);
-        explicit Text2D(Font* font, const std::string&);
+        Text2D(char* objName = nullptr);
+        Text2D(const Text&, char* objName = nullptr);
+        explicit Text2D(Font* font, const std::string& content, char* objName = nullptr);
         virtual ~Text2D();
         
         void RenderBackground() const;

@@ -4,8 +4,8 @@
 
 Symphony::Scene::Scene()
 {
-    root = new SceneRoot();
-    uiRoot = new SceneRoot();
+    root     = new SceneRoot();
+    uiRoot   = new SceneRoot();
     renderer = nullptr;
 	id = 0;
 }

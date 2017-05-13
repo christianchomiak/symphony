@@ -8,7 +8,12 @@
 namespace Symphony
 {
     GameObject::GameObject()
-        : name("New GameObject"), enabled(true), renderObject(nullptr)
+        : GameObject("New GameObject")
+    {
+    }
+
+    GameObject::GameObject(const char* objName)
+        : name(objName != nullptr ? objName : "New GameObject"), enabled(true), renderObject(nullptr)
     {
     }
 

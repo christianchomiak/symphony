@@ -161,7 +161,7 @@ namespace Symphony
             
             //TO-DO: Should this be split in two functions, one at the start and
             //       the other at the end of the frame?
-            editor->Update();
+            editor->Update(currentScene);
 
             if (changeSceneFlag)
             {

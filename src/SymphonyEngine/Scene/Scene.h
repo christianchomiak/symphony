@@ -62,7 +62,7 @@ namespace Symphony
         
         //std::vector<Text2D*> uiRoot;
         std::vector<Camera*> cameras;
-        std::vector<Light*> lights;
+        std::vector<Light*>  lights;
 
         void SetID(unsigned int);
     };

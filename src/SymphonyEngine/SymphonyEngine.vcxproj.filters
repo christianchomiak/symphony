@@ -103,9 +103,6 @@
     <ClInclude Include="Scene\Text\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Text\Text2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SceneRoot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -167,6 +164,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tools\ImGuiMemoryEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Text\Text2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -234,9 +234,6 @@
     <ClCompile Include="Scene\Light\Spotlight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Text\Text2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Rendering\UI\UIRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -271,6 +268,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Tools\SymphonyEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Text\Text2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

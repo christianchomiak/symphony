@@ -21,6 +21,7 @@ namespace Symphony
 
     public:
         GameObject();
+        GameObject(const char* objName);
         virtual ~GameObject();
         
         //TO-DO: Should the update of the GameObject's logic be independent

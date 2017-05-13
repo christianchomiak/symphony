@@ -4,18 +4,23 @@
 
 namespace Symphony
 {
+    class Scene;
+    class GameObject;
+
     class SymphonyEditor
     {
     public:
         SymphonyEditor();
         ~SymphonyEditor();
 
-        void Update();
+        void Update(Scene* currentScene);
 
     protected:
-        MemoryEditor memoryEditor;
         bool inEditorMode;
-
+        MemoryEditor memoryEditor;
+        
         void DrawMainMenuBar();
+        void DrawSceneTree(Scene* currentScene);
+        void DrawSceneTreeNode(const GameObject* root);
     };
 }

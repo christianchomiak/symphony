@@ -11,7 +11,7 @@ namespace Symphony
         SceneRoot(const SceneRoot&) = delete;
         SceneRoot& operator=(const SceneRoot&) = delete;
     protected:
-        SceneRoot() {}
+        SceneRoot() : GameObject("Root") { }
         virtual ~SceneRoot() {}
     };
 }

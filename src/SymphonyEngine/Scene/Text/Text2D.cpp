@@ -4,21 +4,22 @@
 
 namespace Symphony
 {
-    Text2D::Text2D()
+    Text2D::Text2D(char* objName)
+        : GameObject(objName)
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
         renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
     }
 
-    Text2D::Text2D(const Text& t)
-        : text(t)
+    Text2D::Text2D(const Text& t, char* objName)
+        : GameObject(objName), text(t)
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
         renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
     }
     
-    Text2D::Text2D(Font* font, const std::string& content)
-        : text(Text(font, content))
+    Text2D::Text2D(Font* font, const std::string& content, char* objName)
+        : GameObject(objName), text(Text(font, content))
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
         renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
