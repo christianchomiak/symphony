@@ -8,7 +8,7 @@ Basic game engine made in C++
 * GLM 0.9.8.4
 * SOIL 2 (2017-04-20)
 * FreeType 2.7.1
-* TinyXML2 4.0.1
+* TinyXML2 5.0.1
 * ImGUI 1.49
 
 ##etc
