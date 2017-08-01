@@ -31,12 +31,23 @@ namespace Symphony
 
     SymphonyEngine::~SymphonyEngine()
     {
-        for (Scene* s : scenes)
+        for (Scene* scene : scenes)
         {
-            delete s;
+            if (scene)
+            {
+                delete scene;
+            }
         }
-        delete window;
-        delete editor;
+        
+        if (window)
+        {
+            delete window;
+        }
+
+        if (editor)
+        {
+            delete editor;
+        }
     }
         
     bool SymphonyEngine::Initialise(const char* commandLineFilename)
@@ -49,7 +60,7 @@ namespace Symphony
         wProperties.height      = 720;
         wProperties.maximised   = false;
         wProperties.resizeable  = true;
-        wProperties.title = "Symphony Engine demo";
+        wProperties.title       = "Symphony Engine demo";
         wProperties.switchableToOtherModes = false;
         
         return Initialise(wProperties, commandLineFilename);
@@ -98,7 +109,7 @@ namespace Symphony
     {
         if (!initialised)
         {
-            Debug::LogError("Symphony Engine hasn't been initialised yet");
+            LogError("Symphony Engine hasn't been initialised yet");
             return;
         }
         
@@ -107,11 +118,11 @@ namespace Symphony
         
         if (!currentScene)
         {
-            Debug::LogError("No initial scene was found");
+            LogError("No initial scene was found");
             running = false;
         }
         
-        MouseRef mouse       = InputManager::GetMouse();
+        MouseRef    mouse    = InputManager::GetMouse();
         KeyboardRef keyboard = InputManager::GetKeyboard();
         
         //TO-DO: Code regarding FPS check could be enabled/disabled by the user
@@ -188,6 +199,8 @@ namespace Symphony
             {
                 ++Time::frame;
             }
+            
+            //Assert(!keyboard.KeyDown(Key::E), "Symphony Engine", "Resource not available\nDo you want to try again?");
 
             //If we skipped the frame, we may have changed its paused status assuming a different scenario
             /*if (frameStartedWithPausedFrame && forceFrameExecution && frameStartedWithPausedFrame != Time::paused)
@@ -222,19 +235,19 @@ namespace Symphony
         imGuiManager.Shutdown();
         Unload();
 
-        Debug::Log("Symphony Engine has now finished execution");
+        Log("Symphony Engine has now finished execution");
     }
 
     void SymphonyEngine::AddScene(Scene* newScene)
     {
+        Assert(newScene, "Trying to add a null scene to the engine");
+
         if (newScene)
         {
             newScene->SetID(scenes.size());
             scenes.push_back(newScene);
             return;
         }
-
-        Debug::LogWarningF("Trying to add a null scene to the engine");
     }
     
     void SymphonyEngine::NextScene()
@@ -253,28 +266,27 @@ namespace Symphony
             }
         }
         
-        if (!newScene)
+        Assert(newScene, "Trying to change into an inexistent scene");
+
+        if (newScene)
         {
-            Debug::LogErrorF("Scene %s doesn't exist", sceneName);
-            return;
+            ChangeScene(newScene->GetID());
         }
-        
-        ChangeScene(newScene->GetID());
     }
 
     void SymphonyEngine::ChangeScene(unsigned int newSceneID)
     {
         if (scenes.size() == 0)
         {
-            Debug::LogError("No scenes are registered in the engine");
+            LogError("No scenes are registered in the engine");
             return;
         }
         else if (newSceneID >= scenes.size())
         {
-            Debug::LogErrorF("Error trying to load scene #%d, only %d scene(s) exist", newSceneID, scenes.size());
+            LogErrorF("Error trying to load scene #%d, only %d scene(s) exist", newSceneID, scenes.size());
             return;
         }
-        nextSceneID = newSceneID;
+        nextSceneID     = newSceneID;
         changeSceneFlag = true;
     }
     
@@ -311,7 +323,7 @@ namespace Symphony
     {
         if (filename == nullptr)
         {
-            Debug::LogError("No filename was specified, cannot load any shaders");
+            LogError("No filename was specified, cannot load any shaders");
             return;
         }
         
@@ -319,7 +331,7 @@ namespace Symphony
 
         if (!ValidateXmlLoading(filename, shadersFile.LoadFile(filename)))
         {
-            Debug::LogError("Cannot load any shaders");
+            LogError("Cannot load any shaders");
             return;
         }
 
@@ -329,7 +341,7 @@ namespace Symphony
 
         if (!root)
         {
-            Debug::LogErrorF("Could not find the root SymphonyShaders property in \"%s\". Aborting.", filename);
+            LogErrorF("Could not find the root SymphonyShaders property in \"%s\". Aborting.", filename);
             return;
         }
 
@@ -340,7 +352,7 @@ namespace Symphony
 
         if (!shadersData)
         {
-            Debug::LogErrorF("Could not find any shader data in \"%s\". Aborting.", filename);
+            LogErrorF("Could not find any shader data in \"%s\". Aborting.", filename);
             return;
         }
 
@@ -348,7 +360,7 @@ namespace Symphony
 
         if (!fileExtension)
         {
-            Debug::LogErrorF("Could not find any file extension specified in \"%s\". Aborting.", filename);
+            LogErrorF("Could not find any file extension specified in \"%s\". Aborting.", filename);
             return;
         }
 

@@ -35,7 +35,7 @@ namespace Symphony
 
         if (FT_Init_FreeType(&ft))
         {
-            Debug::LogError("ERROR::FREETYPE: Could not init FreeType Library");
+            LogError("ERROR::FREETYPE: Could not init FreeType Library");
             FT_Done_FreeType(ft);
             return false;
         }
@@ -49,19 +49,19 @@ namespace Symphony
         //TO-DO: Also check for empty strings
         if (!fontPath)
         {
-            Debug::LogError("ERROR: No font path was specified");
+            LogError("ERROR: No font path was specified");
             return nullptr;
         }
 
         if (!fontName)
         {
-            Debug::LogError("ERROR: No font name was specified");
+            LogError("ERROR: No font name was specified");
             return nullptr;
         }
 
         if (Font::Exists(fontName))
         {
-            Debug::LogWarningF("WARNING: There's an existing font named %s, returning that", fontName);
+            LogWarningF("WARNING: There's an existing font named %s, returning that", fontName);
             return Font::Find(fontName);
         }
 
@@ -70,14 +70,14 @@ namespace Symphony
 
         if (FT_Init_FreeType(&ft))
         {
-            Debug::LogError("ERROR::FREETYPE: Could not init FreeType Library");
+            LogError("ERROR::FREETYPE: Could not init FreeType Library");
             return nullptr;
         }
 
         FT_Face face;
         if (FT_New_Face(ft, fontPath, 0, &face))
         {
-            Debug::LogErrorF("ERROR::FREETYPE: Failed to load font %s (path: %s)", fontName, fontPath);
+            LogErrorF("ERROR::FREETYPE: Failed to load font %s (path: %s)", fontName, fontPath);
             return nullptr;
         }
 
@@ -91,7 +91,7 @@ namespace Symphony
             // Load character glyph 
             if (FT_Load_Char(face, c, FT_LOAD_RENDER))
             {
-                Debug::LogError("ERROR::FREETYTPE: Failed to load Glyph");
+                LogError("ERROR::FREETYTPE: Failed to load Glyph");
                 continue;
             }
 
@@ -132,17 +132,17 @@ namespace Symphony
 
         fontPool[fontName] = newFont;
 
-        Debug::LogF("Loaded font %s from path %s", fontName, fontPath);
+        LogF("Loaded font %s from path %s", fontName, fontPath);
 
         return newFont;
     }
 
     void Font::UnloadAll()
     {
-        Debug::Log("[Deleting fonts]");
+        Log("[Deleting fonts]");
         for (const auto& kv : fontPool)
         {
-            Debug::LogF("[Deleting font %s]", kv.first);
+            LogF("[Deleting font %s]", kv.first);
             delete kv.second;
         }
         fontPool.clear();

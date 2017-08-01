@@ -31,8 +31,8 @@ namespace Symphony
 
             if (id == 0)
             {
-                Debug::LogErrorF("SOIL loading error: %s", SOIL_last_result());
-                Debug::LogErrorF("Couldn't load texture: %s", textureFilename);
+                LogErrorF("SOIL loading error: %s", SOIL_last_result());
+                LogErrorF("Couldn't load texture: %s", textureFilename);
                 return newTexture;
             }
             else
@@ -72,8 +72,8 @@ namespace Symphony
             
             if (newSkybox == 0)
             {
-                Debug::LogErrorF("SOIL loading error: %s", SOIL_last_result());
-                Debug::LogErrorF("Couldn't load skybox: %s", skyboxName);
+                LogErrorF("SOIL loading error: %s", SOIL_last_result());
+                LogErrorF("Couldn't load skybox: %s", skyboxName);
             }
 
             return newSkybox;
@@ -106,10 +106,10 @@ namespace Symphony
     
     void TextureManager::ClearTextureCache()
     {
-        Debug::Log("[Deleting textures]");
+        Log("[Deleting textures]");
         for (const auto& kv : texturePool)
         {
-            Debug::LogF("\tDeleting texture: %s", kv.first);
+            LogF("\tDeleting texture: %s", kv.first);
             glDeleteTextures(1, &kv.second);
         }
         texturePool.clear();

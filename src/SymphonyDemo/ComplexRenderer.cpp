@@ -63,7 +63,7 @@ ComplexRenderer::ComplexRenderer()
     
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) // || !bufferDepthTexture || !bufferColourTexture)
     {
-        Debug::LogError("Problem in ComplexRenderer");
+        LogError("Problem in ComplexRenderer");
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

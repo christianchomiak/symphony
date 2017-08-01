@@ -11,7 +11,7 @@ namespace Symphony
         {
             if (glfwJoystickPresent(i))
             {
-                Debug::LogF("Connected gamepad #%d (%s)", i, glfwGetJoystickName(i));
+                LogF("Connected gamepad #%d (%s)", i, glfwGetJoystickName(i));
             }
 
             gamepad[i] = glfwJoystickPresent(i) ? new GamePad(i) : nullptr;
@@ -37,7 +37,7 @@ namespace Symphony
             }
             
             // The gamepad was connected
-            Debug::LogF("Connected gamepad #%d (%s)", gamepadID, glfwGetJoystickName(gamepadID));
+            LogF("Connected gamepad #%d (%s)", gamepadID, glfwGetJoystickName(gamepadID));
         }
         else if (event == GLFW_DISCONNECTED)
         {
@@ -45,7 +45,7 @@ namespace Symphony
             Instance()->gamepad[gamepadID] = nullptr;*/
 
             // The gamepad was disconnected
-            Debug::LogF("Disconnected gamepad #%d", gamepadID);
+            LogF("Disconnected gamepad #%d", gamepadID);
         }
 
         Instance()->gamepad[gamepadID]->connected = (event == GLFW_CONNECTED);

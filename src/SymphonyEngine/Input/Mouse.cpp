@@ -57,7 +57,7 @@ namespace Symphony
     {
         if (!CheckButtonID(id))
         {
-            Debug::LogErrorF("Trying to update unknow mouse button (%d)", id);
+            LogErrorF("Trying to update unknow mouse button (%d)", id);
             return;
         }
 
@@ -85,7 +85,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
+            LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::HOLD || buttons[button] == InputState::DOWN;
@@ -95,7 +95,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
+            LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::UP;
@@ -105,7 +105,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
+            LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::DOWN;
@@ -115,7 +115,7 @@ namespace Symphony
     {
         if (!CheckButtonID(button))
         {
-            Debug::LogErrorF("Trying to query unknow mouse button (%d)", button);
+            LogErrorF("Trying to query unknow mouse button (%d)", button);
             return false;
         }
         return buttons[button] == InputState::HOLD;
@@ -130,7 +130,7 @@ namespace Symphony
         }
         else
         {
-            Debug::LogWarningF("Trying to set a negative sensitivity of %.3f to the mouse. Current value not overwritten.", newSensitivity);
+            LogWarningF("Trying to set a negative sensitivity of %.3f to the mouse. Current value not overwritten.", newSensitivity);
         }
     }
 }

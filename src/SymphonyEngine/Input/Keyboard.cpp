@@ -23,7 +23,7 @@ namespace Symphony
     {
         if (!CheckKeyID(key))
         {
-            Debug::LogWarning("Trying to query unknow key");
+            LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::HOLD || keys[key] == InputState::DOWN;
@@ -33,7 +33,7 @@ namespace Symphony
     {
         if (!CheckKeyID(key))
         {
-            Debug::LogWarning("Trying to query unknow key");
+            LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::UP;
@@ -43,7 +43,7 @@ namespace Symphony
     {
         if (!CheckKeyID(key))
         {
-            Debug::LogWarning("Trying to query unknow key");
+            LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::DOWN;
@@ -53,7 +53,7 @@ namespace Symphony
     {
         if (!CheckKeyID(key))
         {
-            Debug::LogWarning("Trying to query unknow key");
+            LogWarning("Trying to query unknow key");
             return false;
         }
         return keys[key] == InputState::HOLD;
@@ -95,7 +95,7 @@ namespace Symphony
     {
         if ((id < 0 || id >= numberOfKeys))
         {
-            Debug::LogWarning("Trying to query unknow key");
+            LogWarning("Trying to query unknow key");
             return;
         }
 

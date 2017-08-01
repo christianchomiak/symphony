@@ -1,32 +1,33 @@
 #include "Debugging.h"
 
-#include <string>
-#include <cstdarg>
+#if _DEBUG
+
+#   include <string>
+#   include <cstdarg>
 
 //TO-DO: Should _WIN32 be wrapped somewhere?
-#if _WIN32
-#   include <windows.h>   // WinApi header
-#   define SET_TERMINAL_TEXT_COLOR(color) \
-        {\
-            if (HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE)) \
+#   if _WIN32
+#       include <windows.h>   // WinApi header
+#       define SET_TERMINAL_TEXT_COLOR(color) \
             {\
-                SetConsoleTextAttribute(hConsole, color);\
-            }\
-        }
-#else
-#   define SET_TERMINAL_TEXT_COLOR(color)
-#endif
+                if (HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE)) \
+                {\
+                    SetConsoleTextAttribute(hConsole, color);\
+                }\
+            }
+#   else
+#       define SET_TERMINAL_TEXT_COLOR(color)
+#   endif
 
 namespace Symphony
 {
     SINGLETON_INSTANCE_INIT(Debug)
 
-    Debug::Debug() {}
+    Debug::Debug()  {}
     Debug::~Debug() {}
 
     void Debug::LogF(const char* format, ...)
     {
-#ifdef _DEBUG
         va_list arg;
         char buffer[MESSAGE_BUFFER_SIZE];
         va_start(arg, format);
@@ -34,12 +35,10 @@ namespace Symphony
         va_end(arg);
 
         Instance()->InternalLog(buffer);
-#endif
     }
 
-    void Debug::LogWarningF(const char* format, ...)
+    void Debug::DoLogWarningF(const char* format, ...)
     {
-#ifdef _DEBUG
         va_list arg;
         char buffer[MESSAGE_BUFFER_SIZE];
         va_start(arg, format);
@@ -47,12 +46,10 @@ namespace Symphony
         va_end(arg);
 
         Instance()->InternalLogWarning(buffer);
-#endif
     }
 
-    void Debug::LogErrorF(const char* format, ...)
+    void Debug::DoLogErrorF(const char* format, ...)
     {
-#ifdef _DEBUG
         va_list arg;
         char buffer[MESSAGE_BUFFER_SIZE];
         va_start(arg, format);
@@ -60,7 +57,6 @@ namespace Symphony
         va_end(arg);
 
         Instance()->InternalLogError(buffer);
-#endif
     }
 
     
@@ -87,29 +83,46 @@ namespace Symphony
         SET_TERMINAL_TEXT_COLOR(LOG_COLOR);
     }
 
-
-
-    void Debug::Watchpoint(const char* file, int line, const char* function)
+    bool Debug::DoAssertTest(bool condition, const char* msgTitle, const char* msgBody)
     {
-        DEBUG_ONLY(Instance()->InternalWatchpoint(file, line, function));
+        if (!condition)
+        {
+            int msgboxID = MessageBox(
+                NULL,
+                msgBody,
+                msgTitle,
+                MB_ICONERROR | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2
+            );
+            
+            Debug::DoLogError(msgBody);
+
+            switch (msgboxID)
+            {
+            case IDABORT:
+                //TODO1: Flush debug log into disk
+                //TODO2: Should the resources be freed when doing a force exit?
+                exit(-1);
+                break;
+            case IDRETRY:
+                break;
+            case IDIGNORE:
+                break;
+            }
+        }
+
+        return condition;
     }
 
-    void Debug::InternalWatchpoint(const char* file, int line, const char* function)
+    bool Debug::DoAssertTestWithFormat(bool condition, const char* msgTitle, const char* msgBodyFormat, ...)
     {
-#ifdef _DEBUG
-        const char *szFile = file; // __FILE__;
-        int iLine = line;
-        const char *szFunc = function; // __FUNCTION__; // Func name
-        const char *szFunD = __FUNCDNAME__; // Decorated
-        const char *szFunS = __FUNCSIG__; // Signature
+        va_list arg;
+        char buffer[MESSAGE_BUFFER_SIZE];
+        va_start(arg, msgBodyFormat);
+        int ret = vsprintf_s(buffer, msgBodyFormat, arg);
+        va_end(arg);
 
-        printf("[BREAKPOINT]\n");
-        printf("File: %s\n", szFile);
-        printf("Line: %d\n", iLine);
-        printf("Function: %s\n", szFunc);
-        printf("[/BREAKPOINT]\n");
-        /*printf("Function (dec): %s\n", szFunD);
-        printf("Function (sig): %s\n", szFunS);*/
-#endif
+        return DoAssertTest(condition, msgTitle, buffer);
     }
 }
+
+#endif

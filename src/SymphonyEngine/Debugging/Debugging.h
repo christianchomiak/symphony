@@ -5,13 +5,22 @@
 #include <iostream>
 
 #ifdef _DEBUG
-#   define _WATCHPOINT Debug::Watchpoint(__FILE__, __LINE__, __FUNCTION__);
-#else
-#   define _WATCHPOINT
-#endif
 
-#include "../Macros/PlatformMacros.h"
-#include "../Macros/ClassMacros.h"
+//#   include "../Macros/PlatformMacros.h"
+#   include "../Macros/ClassMacros.h"
+
+#   define _WATCHPOINT Debug::DoWatchpoint(__FILE__, __LINE__, __FUNCTION__);
+
+#   define LogF(format, ...)        Debug::DoLogF(format, __VA_ARGS__)
+#   define LogWarningF(format, ...) Debug::DoLogWarningF(format, __VA_ARGS__)
+#   define LogErrorF(format, ...)   Debug::DoLogErrorF(format, __VA_ARGS__)
+
+#   define Log(message)         Debug::DoLog(message)
+#   define LogWarning(message)  Debug::DoLogWarning(message)
+#   define LogError(message)    Debug::DoLogError(message)
+
+#   define Assert(condition,  message)            Debug::DoAssertTest((condition), "Symphony Engine", (message))
+#   define AssertF(condition, msgBodyFormat, ...) Debug::DoAssertTestWithFormat((condition), "Symphony Engine", (msgBodyFormat), __VA_ARGS__)
 
 namespace Symphony
 {
@@ -21,58 +30,95 @@ namespace Symphony
 
         //friend class Singleton<Debug>;
     public:
-        static void LogF(const char* format, ...);
-        static void LogWarningF(const char* format, ...);
-        static void LogErrorF(const char* format, ...);
+        static void DoLogF(const char* format, ...);
+        static void DoLogWarningF(const char* format, ...);
+        static void DoLogErrorF(const char* format, ...);
 
-        static void Log(const char* message);
-        static void LogWarning(const char* message);
-        static void LogError(const char* message);
-        
-        static void Log(const std::string& message);
-        static void LogWarning(const std::string& message);
-        static void LogError(const std::string& message);
-        
-        static void Watchpoint(const char* file, int line, const char* function);
+        static void DoLog(const char* message);
+        static void DoLogWarning(const char* message);
+        static void DoLogError(const char* message);
+
+        static void DoLog(const std::string& message);
+        static void DoLogWarning(const std::string& message);
+        static void DoLogError(const std::string& message);
+
+        static void DoWatchpoint(const char* file, int line, const char* function);
+
+        static bool DoAssertTest(bool condition, const char* msgTitle, const char* msgBody);
+        static bool DoAssertTestWithFormat(bool condition, const char* msgTitle, const char* msgBodyFormat, ...);
 
     protected:
         static const size_t MESSAGE_BUFFER_SIZE = 1024; //TO-DO: Is this enough or too much for a log entry?
-        static const int LOG_COLOR      = 7;  //WHITE
-        static const int WARNING_COLOR  = 14; //LIGHT YELLOW
-        static const int ERROR_COLOR    = 12; //LIGHT RED
+        static const int LOG_COLOR      = 7;    //WHITE
+        static const int WARNING_COLOR  = 14;   //LIGHT YELLOW
+        static const int ERROR_COLOR    = 12;   //LIGHT RED
 
         void InternalLog(const char* message);
         void InternalLogWarning(const char* message);
         void InternalLogError(const char* message);
-        
-        void InternalWatchpoint(const char* file, int line, const char* function);
     };
 }
 
 
-inline void Symphony::Debug::Log(const char* message)
+inline void Symphony::Debug::DoLog(const char* message)
 {
-    DEBUG_ONLY(Instance()->InternalLog(message));
-}
-inline void Symphony::Debug::Log(const std::string& message)
-{
-    DEBUG_ONLY(Instance()->InternalLog(message.c_str()));
+    Instance()->InternalLog(message);
 }
 
-inline void Symphony::Debug::LogWarning(const char* message)
+inline void Symphony::Debug::DoLog(const std::string& message)
 {
-    DEBUG_ONLY(Instance()->InternalLogWarning(message));
-}
-inline void Symphony::Debug::LogWarning(const std::string& message)
-{
-    DEBUG_ONLY(Instance()->InternalLogWarning(message.c_str()));
+    Instance()->InternalLog(message.c_str());
 }
 
-inline void Symphony::Debug::LogError(const char* message)
+inline void Symphony::Debug::DoLogWarning(const char* message)
 {
-    DEBUG_ONLY(Instance()->InternalLogError(message));
+    Instance()->InternalLogWarning(message);
 }
-inline void Symphony::Debug::LogError(const std::string& message)
+
+inline void Symphony::Debug::DoLogWarning(const std::string& message)
 {
-    DEBUG_ONLY(Instance()->InternalLogError(message.c_str()));
+    Instance()->InternalLogWarning(message.c_str());
 }
+
+inline void Symphony::Debug::DoLogError(const char* message)
+{
+    Instance()->InternalLogError(message);
+}
+
+inline void Symphony::Debug::DoLogError(const std::string& message)
+{
+    Instance()->InternalLogError(message.c_str());
+}
+
+inline void Symphony::Debug::DoWatchpoint(const char* file, int line, const char* function)
+{
+    const char *szFile = file; // __FILE__;
+    int iLine          = line;
+    const char *szFunc = function; // __FUNCTION__; // Func name
+    const char *szFunD = __FUNCDNAME__; // Decorated
+    const char *szFunS = __FUNCSIG__; // Signature
+
+    printf("[BREAKPOINT]\n");
+    printf("File: %s\n", szFile);
+    printf("Line: %d\n", iLine);
+    printf("Function: %s\n", szFunc);
+    printf("[/BREAKPOINT]\n");
+    /*printf("Function (dec): %s\n", szFunD);
+    printf("Function (sig): %s\n", szFunS);*/
+}
+
+#else
+#   define _WATCHPOINT
+
+#   define LogF(format, ...)
+#   define LogWarningF(format, ...)
+#   define LogErrorF(format, ...)
+
+#   define Log(message)
+#   define LogWarning(message)
+#   define LogError(message)
+
+#   define Assert(condition, message)
+#   define AssertF(condition, msgBodyFormat, ...)
+
+#endif

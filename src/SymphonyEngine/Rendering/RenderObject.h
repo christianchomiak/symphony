@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "Material.h"
 
-#include "../Macros/QAMacros.h"
+#include "../Debugging/Debugging.h"
 
 namespace Symphony
 {
@@ -15,6 +15,7 @@ namespace Symphony
     class RenderObject
     {
         friend class GameObject;
+
     public:
         Material material;
 
@@ -50,10 +51,14 @@ namespace Symphony
         ~RenderObject();
     };
     
-    inline void RenderObject::SetMesh(Mesh* m)
+    inline void RenderObject::SetMesh(Mesh* newMesh)
     {
-        NULL_POINTER_WARNING(m, return);
-        mesh = m;
+        Assert(newMesh, "Trying to set a null mesh");
+
+        if (newMesh)
+        {
+            mesh = newMesh;
+        }
     }
 
     inline void RenderObject::SetTexture(const Texture& t)
@@ -61,10 +66,14 @@ namespace Symphony
         texture.CopyValuesFromTexture(t);
     }
 
-    inline void RenderObject::SetShader(Shader* s)
+    inline void RenderObject::SetShader(Shader* newShader)
     {
-        NULL_POINTER_WARNING(s, return);
-        shader = s;
+        Assert(newShader, "Trying to set a null shader");
+
+        if (newShader)
+        {
+            shader = newShader;
+        }
     }
 
     inline Mesh* RenderObject::GetMesh() const

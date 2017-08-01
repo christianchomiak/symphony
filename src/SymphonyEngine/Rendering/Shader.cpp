@@ -68,13 +68,13 @@ namespace Symphony
             glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
             GLchar *infoLog = new GLchar[infoLogLength];
             glGetProgramInfoLog(programID, infoLogLength, NULL, infoLog);
-            Debug::LogError("Linking: ERROR\n\n");
+            LogError("Linking: ERROR\n\n");
             std::cerr << "Link log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
             return false;
         }
 
-        Debug::Log("Linking: OK\n\n");
+        Log("Linking: OK\n\n");
         
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
@@ -105,14 +105,14 @@ namespace Symphony
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
             GLchar *infoLog = new GLchar[infoLogLength];
             glGetShaderInfoLog(shader, infoLogLength, NULL, infoLog);
-            Debug::LogError("\tCompilation: ERROR");
+            LogError("\tCompilation: ERROR");
             std::cerr << "Compile log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
             
             return 0;
         }
 
-        Debug::Log("\tCompilation: OK");
+        Log("\tCompilation: OK");
         
         return shader;
     }
@@ -125,7 +125,7 @@ namespace Symphony
         else if (typeOfShader == ShaderType::GEOMETRY_SHADER) shaderName = "Geometry";
         else                                                  shaderName = "Fragment"; //if (whichShader == GL_FRAGMENT_SHADER)
 
-        Debug::LogF("> %s shader (%s)", shaderName, filename);
+        LogF("> %s shader (%s)", shaderName, filename);
         
         ifstream fp;
         fp.open(filename, ios_base::in);
@@ -138,12 +138,12 @@ namespace Symphony
                 buffer.append(line);
                 buffer.append("\r\n");
             }
-            Debug::Log("\tLoading: OK");
+            Log("\tLoading: OK");
             //copy to source
             return LoadFromString(typeOfShader, buffer.c_str());
         }
 
-        Debug::Log("\tLoading: ERROR\n\n");
+        Log("\tLoading: ERROR\n\n");
 
         return 0;
     }
@@ -155,11 +155,11 @@ namespace Symphony
         //There's no point in creating the same shader over and over again
         if (ShaderExists(shaderName))
         {
-            Debug::LogF("Using previously loaded shader: %s", shaderName);
+            LogF("Using previously loaded shader: %s", shaderName);
             return shaderPool[shaderName];
         }
 
-        Debug::LogF("Creating new shader: \"%s\"", shaderName);
+        LogF("Creating new shader: \"%s\"", shaderName);
 
         Shader* newShader = new Shader();
 

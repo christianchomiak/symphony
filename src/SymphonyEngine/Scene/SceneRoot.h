@@ -7,9 +7,11 @@ namespace Symphony
     class SceneRoot final : public GameObject
     {
         friend class Scene;
+
     public:
-        SceneRoot(const SceneRoot&) = delete;
+        SceneRoot(const SceneRoot&)            = delete;
         SceneRoot& operator=(const SceneRoot&) = delete;
+
     protected:
         SceneRoot() : GameObject("Root") { }
         virtual ~SceneRoot() {}

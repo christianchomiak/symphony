@@ -55,7 +55,7 @@ namespace Symphony
         /* Initialize the library */
         if (!glfwInit())
         {
-            Debug::LogError("Failed to initialise GLFW");
+            LogError("Failed to initialise GLFW");
             return false;
         }
 
@@ -90,7 +90,7 @@ namespace Symphony
 
         if (!window)
         {
-            Debug::LogError("Failed to initialise window");
+            LogError("Failed to initialise window");
             glfwTerminate();
             return false;
         }
@@ -107,7 +107,7 @@ namespace Symphony
         glewExperimental = GL_TRUE;
         if (glewInit() != GLEW_OK)
         {
-            Debug::LogError("Could not initialise GLEW!");
+            LogError("Could not initialise GLEW!");
             return false;
         }
         
@@ -199,7 +199,7 @@ namespace Symphony
 
         int major, minor, revision;
         glfwGetVersion(&major, &minor, &revision);
-        Debug::LogF("Running against GLFW %i.%i.%i\n", major, minor, revision);
+        LogF("Running against GLFW %i.%i.%i\n", major, minor, revision);
     }
 
     void Window::ChangeCursorMode(CursorMode newMode)
@@ -218,7 +218,7 @@ namespace Symphony
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
             break;
         default:
-            Debug::LogWarning("Trying to set the cursor of the window in an unavailable state.");
+            LogWarning("Trying to set the cursor of the window in an unavailable state.");
             break;
         }
     }
@@ -263,7 +263,7 @@ namespace Symphony
             h = mode->height;
             return true;
         }
-        Debug::LogError("Could not access video mode of primary monitor");
+        LogError("Could not access video mode of primary monitor");
         return false;
     }
 
@@ -273,7 +273,7 @@ namespace Symphony
         
         if (filename == nullptr)
         {
-            Debug::LogError("No filename was specified, default window properties will be used");
+            LogError("No filename was specified, default window properties will be used");
             return wProperties;
         }
 
@@ -281,7 +281,7 @@ namespace Symphony
 
         if (!ValidateXmlLoading(filename, doc.LoadFile(filename)))
         {
-            Debug::LogError("Default window properties will be used");
+            LogError("Default window properties will be used");
             return wProperties;
         }
 
@@ -289,14 +289,14 @@ namespace Symphony
 
         if (!windowData)
         {
-            Debug::LogErrorF("Could not find WindowData properties in \"%s\", default window properties will be used", filename);
+            LogErrorF("Could not find WindowData properties in \"%s\", default window properties will be used", filename);
             return wProperties;
         }
 
         const char* windowTitle = GetTextFromXmlElement(windowData, "Title");
         if (windowTitle == nullptr)
         {
-            Debug::LogErrorF("Could not find windowTitle property in  \"%s\"", filename);
+            LogErrorF("Could not find windowTitle property in  \"%s\"", filename);
         }
         else
         {
@@ -326,7 +326,7 @@ namespace Symphony
             wProperties.cursorMode = CursorMode::HIDDEN;
             break;
         default:
-            Debug::LogError("Could not find a correct CursorMode property in the window properties file");
+            LogError("Could not find a correct CursorMode property in the window properties file");
             break;
         }
         

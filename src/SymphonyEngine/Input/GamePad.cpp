@@ -104,7 +104,7 @@ namespace Symphony
                     if (currButtonState == GLFW_RELEASE) buttons[i] = InputState::UP;
                     break;
                 default:
-                    Debug::LogWarning("I shouldn't be here");
+                    LogWarning("I shouldn't be here");
                     break;
                 }
 
@@ -113,7 +113,7 @@ namespace Symphony
         }
         else
         {
-            Debug::LogErrorF("Trying to update gamepad #%d but no buttons were found");
+            LogErrorF("Trying to update gamepad #%d but no buttons were found");
         }
     }
 }

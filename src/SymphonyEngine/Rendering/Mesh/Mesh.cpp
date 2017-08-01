@@ -451,8 +451,8 @@ namespace Symphony
         
         if (ht_map == nullptr)
         {
-            Debug::LogErrorF("SOIL loading error: %s", SOIL_last_result());
-            Debug::LogErrorF("Couldn't load heightmap: %s", heigtmapFileName);
+            LogErrorF("SOIL loading error: %s", SOIL_last_result());
+            LogErrorF("Couldn't load heightmap: %s", heigtmapFileName);
             return nullptr;
         }
 
