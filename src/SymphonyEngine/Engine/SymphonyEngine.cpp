@@ -74,7 +74,9 @@ namespace Symphony
     bool SymphonyEngine::Initialise(const Window::WindowProperties& windowProperties, const char* commandLineFilename)
     {
         std::cout.setf(std::ios::boolalpha);
-        std::cout << std::endl << SymphonyEngine::version << std::endl << std::endl;
+
+        LogInfo(SymphonyEngine::version);
+        //std::cout << std::endl << SymphonyEngine::version << std::endl << std::endl;
         
         //window = new Window(Version(), 800, 600, true, true, true, false);
         //window = Window::CreateFullScreenWindow(Version(), 1920, 1080, false);

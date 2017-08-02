@@ -26,7 +26,7 @@ namespace Symphony
     Debug::Debug()  {}
     Debug::~Debug() {}
 
-    void Debug::LogF(const char* format, ...)
+    void Debug::DoLogF(const char* format, ...)
     {
         va_list arg;
         char buffer[MESSAGE_BUFFER_SIZE];
@@ -35,6 +35,17 @@ namespace Symphony
         va_end(arg);
 
         Instance()->InternalLog(buffer);
+    }
+
+    void Debug::DoLogInfoF(const char* format, ...)
+    {
+        va_list arg;
+        char buffer[MESSAGE_BUFFER_SIZE];
+        va_start(arg, format);
+        int ret = vsprintf_s(buffer, format, arg);
+        va_end(arg);
+
+        Instance()->InternalLogInfo(buffer);
     }
 
     void Debug::DoLogWarningF(const char* format, ...)
@@ -65,6 +76,14 @@ namespace Symphony
         //SET_TERMINAL_TEXT_COLOR(7);
         //log.push_back(message);
         std::cout << message << std::endl;
+    }
+
+    void Debug::InternalLogInfo(const char* message)
+    {
+        SET_TERMINAL_TEXT_COLOR(INFO_COLOR);
+        //warningLog.push_back(message);
+        std::cout << message << std::endl;
+        SET_TERMINAL_TEXT_COLOR(LOG_COLOR);
     }
 
     void Debug::InternalLogWarning(const char* message)

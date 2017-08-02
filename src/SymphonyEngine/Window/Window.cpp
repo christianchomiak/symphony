@@ -9,6 +9,9 @@
 
 //#include <imgui/imgui.h>
 
+#include <SOIL2/SOIL2.h>
+
+#include "../Macros/ResourcesMacros.h"
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 #include "../IO/DataReader.h"
@@ -103,6 +106,15 @@ namespace Symphony
         glfwSetCursorPosCallback(window, InputManager::MousePositionCallback);
         glfwSetJoystickCallback(InputManager::GamePadStatusCallback);
         glfwSetScrollCallback(window, InputManager::ImGui_ImplGlfwGL3_ScrollCallback);
+        
+        /*GLFWimage icons[1];
+        icons[0].pixels = SOIL_load_image(RESOURCES_FOLDER(icon.png), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+        glfwSetWindowIcon(window, 1, icons);
+        SOIL_free_image_data(icons[0].pixels);*/
+        /*GLFWimage images[2];
+        images[0] = load_icon("my_icon.png");
+        images[1] = load_icon("my_icon_small.png");
+        glfwSetWindowIcon(window, 2, images);*/
 
         glewExperimental = GL_TRUE;
         if (glewInit() != GLEW_OK)

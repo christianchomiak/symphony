@@ -12,10 +12,12 @@
 #   define _WATCHPOINT Debug::DoWatchpoint(__FILE__, __LINE__, __FUNCTION__);
 
 #   define LogF(format, ...)        Debug::DoLogF(format, __VA_ARGS__)
+#   define LogInfoF(format, ...)    Debug::DoLogInfoF(format, __VA_ARGS__)
 #   define LogWarningF(format, ...) Debug::DoLogWarningF(format, __VA_ARGS__)
 #   define LogErrorF(format, ...)   Debug::DoLogErrorF(format, __VA_ARGS__)
 
 #   define Log(message)         Debug::DoLog(message)
+#   define LogInfo(message)     Debug::DoLogInfo(message)
 #   define LogWarning(message)  Debug::DoLogWarning(message)
 #   define LogError(message)    Debug::DoLogError(message)
 
@@ -31,14 +33,17 @@ namespace Symphony
         //friend class Singleton<Debug>;
     public:
         static void DoLogF(const char* format, ...);
+        static void DoLogInfoF(const char* format, ...);
         static void DoLogWarningF(const char* format, ...);
         static void DoLogErrorF(const char* format, ...);
 
         static void DoLog(const char* message);
+        static void DoLogInfo(const char* message);
         static void DoLogWarning(const char* message);
         static void DoLogError(const char* message);
 
         static void DoLog(const std::string& message);
+        static void DoLogInfo(const std::string& message);
         static void DoLogWarning(const std::string& message);
         static void DoLogError(const std::string& message);
 
@@ -50,10 +55,12 @@ namespace Symphony
     protected:
         static const size_t MESSAGE_BUFFER_SIZE = 1024; //TO-DO: Is this enough or too much for a log entry?
         static const int LOG_COLOR      = 7;    //WHITE
+        static const int INFO_COLOR     = 3;    //LIGHT BLUE
         static const int WARNING_COLOR  = 14;   //LIGHT YELLOW
         static const int ERROR_COLOR    = 12;   //LIGHT RED
 
         void InternalLog(const char* message);
+        void InternalLogInfo(const char* message);
         void InternalLogWarning(const char* message);
         void InternalLogError(const char* message);
     };
@@ -68,6 +75,16 @@ inline void Symphony::Debug::DoLog(const char* message)
 inline void Symphony::Debug::DoLog(const std::string& message)
 {
     Instance()->InternalLog(message.c_str());
+}
+
+inline void Symphony::Debug::DoLogInfo(const char* message)
+{
+    Instance()->InternalLogInfo(message);
+}
+
+inline void Symphony::Debug::DoLogInfo(const std::string& message)
+{
+    Instance()->InternalLogInfo(message.c_str());
 }
 
 inline void Symphony::Debug::DoLogWarning(const char* message)
@@ -111,10 +128,12 @@ inline void Symphony::Debug::DoWatchpoint(const char* file, int line, const char
 #   define _WATCHPOINT
 
 #   define LogF(format, ...)
+#   define LogInfoF(format, ...)
 #   define LogWarningF(format, ...)
 #   define LogErrorF(format, ...)
 
 #   define Log(message)
+#   define LogInfo(message)
 #   define LogWarning(message)
 #   define LogError(message)
 
