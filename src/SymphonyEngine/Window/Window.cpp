@@ -15,6 +15,7 @@
 #include "../Debugging/Debugging.h"
 #include "../Input/InputManager.h"
 #include "../IO/DataReader.h"
+#include "../Utilities/HashString.h"
 
 #include "../UI/imgui/ImGuiManager.h"
 
@@ -84,9 +85,9 @@ namespace Symphony
         }
         else
         {
-            glfwWindowHint(GLFW_RESIZABLE, properties.resizeable ? GL_TRUE : GL_FALSE);
+            glfwWindowHint(GLFW_RESIZABLE, properties.resizeable ? GL_TRUE  : GL_FALSE);
             glfwWindowHint(GLFW_DECORATED, properties.borderless ? GL_FALSE : GL_TRUE);
-            glfwWindowHint(GLFW_MAXIMIZED, properties.maximised  ? GL_TRUE : GL_FALSE);
+            glfwWindowHint(GLFW_MAXIMIZED, properties.maximised  ? GL_TRUE  : GL_FALSE);
             
             window = glfwCreateWindow(properties.frameBufferWidth, properties.frameBufferHeight, properties.title.c_str(), NULL, NULL);
         }
@@ -101,20 +102,32 @@ namespace Symphony
         glfwMakeContextCurrent(window);
         glfwSetWindowUserPointer(window, this);
         glfwSetWindowSizeCallback(window, WindowResizeCallback);
+        glfwSetJoystickCallback(InputManager::GamePadStatusCallback);
         glfwSetKeyCallback(window, InputManager::KeyboardKeyCallback);
         glfwSetMouseButtonCallback(window, InputManager::MouseButtonCallback);
         glfwSetCursorPosCallback(window, InputManager::MousePositionCallback);
-        glfwSetJoystickCallback(InputManager::GamePadStatusCallback);
         glfwSetScrollCallback(window, InputManager::ImGui_ImplGlfwGL3_ScrollCallback);
         
-        /*GLFWimage icons[1];
-        icons[0].pixels = SOIL_load_image(RESOURCES_FOLDER(icon.png), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
-        glfwSetWindowIcon(window, 1, icons);
-        SOIL_free_image_data(icons[0].pixels);*/
-        /*GLFWimage images[2];
-        images[0] = load_icon("my_icon.png");
-        images[1] = load_icon("my_icon_small.png");
-        glfwSetWindowIcon(window, 2, images);*/
+        //Load icons for the window
+        {
+            GLFWimage icons[WindowProperties::MAX_NUMBER_OF_ICONS];
+
+            for (size_t i = 0; i < WindowProperties::MAX_NUMBER_OF_ICONS; ++i)
+            {
+                icons[i].pixels = SOIL_load_image(properties.iconsPaths[i].c_str(), &icons[i].width, &icons[i].height, 0, SOIL_LOAD_RGBA);
+                AssertF(icons[i].pixels, "Found problems trying to load icon. Path: \"%s\"", properties.iconsPaths[i].c_str());
+            }
+
+            glfwSetWindowIcon(window, 2, icons);
+
+            for (size_t i = 0; i < WindowProperties::MAX_NUMBER_OF_ICONS; ++i)
+            {
+                if (icons[i].pixels)
+                {
+                    SOIL_free_image_data(icons[i].pixels);
+                }
+            }
+        }
 
         glewExperimental = GL_TRUE;
         if (glewInit() != GLEW_OK)
@@ -237,22 +250,23 @@ namespace Symphony
 
     void Window::ChangeMode()
     {
-        if (!properties.switchableToOtherModes) return;
+        if (properties.switchableToOtherModes)
+        {
+            properties.fullscreen = !properties.fullscreen;
 
-        properties.fullscreen = !properties.fullscreen;
-        
-        if (properties.fullscreen)
-        {
-            const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, properties.frameBufferWidth, properties.frameBufferHeight, GLFW_DONT_CARE);
-            // mode->width, mode->height, GLFW_DONT_CARE);// mode->refreshRate);
+            if (properties.fullscreen)
+            {
+                const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+                glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, properties.frameBufferWidth, properties.frameBufferHeight, GLFW_DONT_CARE);
+                // mode->width, mode->height, GLFW_DONT_CARE);// mode->refreshRate);
+            }
+            else
+            {
+                glfwSetWindowMonitor(window, NULL, 0, 0, properties.frameBufferWidth, properties.frameBufferHeight, GLFW_DONT_CARE);
+            }
+
+            HandleResize();
         }
-        else
-        {
-            glfwSetWindowMonitor(window, NULL, 0, 0, properties.frameBufferWidth, properties.frameBufferHeight, GLFW_DONT_CARE);
-        }
-        
-        HandleResize();
     }
 
     bool Window::IsFocused() const
@@ -265,11 +279,9 @@ namespace Symphony
         fprintf(stderr, "Error %d: %s\n", error, description);
     }
 
-    bool Window::GetMonitorResolution(int & w, int & h)
+    bool Window::GetMonitorResolution(int& w, int& h)
     {
-        const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        
-        if (mode)
+        if (const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor()))
         {
             w = mode->width;
             h = mode->height;
@@ -297,49 +309,67 @@ namespace Symphony
             return wProperties;
         }
 
-        tinyxml2::XMLElement* windowData = doc.FirstChildElement("SymphonyConfigData")->FirstChildElement("WindowData");
-
-        if (!windowData)
+        if (tinyxml2::XMLElement* windowData = doc.FirstChildElement("SymphonyConfigData")->FirstChildElement("WindowData"))
         {
-            LogErrorF("Could not find WindowData properties in \"%s\", default window properties will be used", filename);
-            return wProperties;
-        }
+            const char* windowTitle = GetTextFromXmlElement(windowData, "Title");
+            if (windowTitle == nullptr)
+            {
+                LogErrorF("Could not find windowTitle property in  \"%s\"", filename);
+            }
+            else
+            {
+                wProperties.title = windowTitle;
+            }
 
-        const char* windowTitle = GetTextFromXmlElement(windowData, "Title");
-        if (windowTitle == nullptr)
-        {
-            LogErrorF("Could not find windowTitle property in  \"%s\"", filename);
+            ReadFromXmlElement(windowData, "Borderless", wProperties.borderless);
+            ReadFromXmlElement(windowData, "Fullscreen", wProperties.fullscreen);
+            ReadFromXmlElement(windowData, "Maximised",  wProperties.maximised);
+            ReadFromXmlElement(windowData, "Resizeable", wProperties.resizeable);
+            ReadFromXmlElement(windowData, "Switchable", wProperties.switchableToOtherModes);
+
+            ReadFromXmlElement(windowData, "ResolutionWidth",  wProperties.width);
+            ReadFromXmlElement(windowData, "ResolutionHeight", wProperties.height);
+
+            if (const char* cursorMode = GetTextFromXmlElement(windowData, "CursorMode"))
+            {
+                static const HashString disabledCursorMode("DISABLED");
+                static const HashString visibleCursorMode("VISIBLE");
+                static const HashString hiddenCursorMode("HIDDEN");
+
+                HashString cursorModeHash(cursorMode);
+
+                if (cursorModeHash == disabledCursorMode)
+                {
+                    wProperties.cursorMode = CursorMode::DISABLED;
+                }
+                else if (cursorModeHash == visibleCursorMode)
+                {
+                    wProperties.cursorMode = CursorMode::VISIBLE;
+                }
+                else if (cursorModeHash == hiddenCursorMode)
+                {
+                    wProperties.cursorMode = CursorMode::HIDDEN;
+                }
+                else
+                {
+                    LogErrorF("Could not find a proper CursorMode property (%s) in the window properties file.\nTry: DISABLED, VISIBLE or HIDDEN", cursorModeHash.GetStringConstRef().c_str());
+                }
+            }
+            
+            if (const char* iconPath = GetTextFromXmlElement(windowData, "Icon"))
+            {
+                wProperties.iconsPaths[0] = iconPath;
+            }
+
+            if (const char* smallIconPath = GetTextFromXmlElement(windowData, "SmallIcon"))
+            {
+                wProperties.iconsPaths[1] = smallIconPath;
+            }
         }
         else
         {
-            wProperties.title = windowTitle;
-        }
-
-        ReadFromXmlElement(windowData, "Borderless", wProperties.borderless);
-        ReadFromXmlElement(windowData, "Fullscreen", wProperties.fullscreen);
-        ReadFromXmlElement(windowData, "Maximised", wProperties.maximised);
-        ReadFromXmlElement(windowData, "Resizeable", wProperties.resizeable);
-        ReadFromXmlElement(windowData, "Switchable", wProperties.switchableToOtherModes);
-
-        ReadFromXmlElement(windowData, "ResolutionWidth", wProperties.width);
-        ReadFromXmlElement(windowData, "ResolutionHeight", wProperties.height);
-        
-        int cursorMode(-1);
-        ReadFromXmlElement(windowData, "CursorMode", cursorMode);
-        switch (cursorMode)
-        {
-        case 0:
-            wProperties.cursorMode = CursorMode::DISABLED;
-            break;
-        case 1:
-            wProperties.cursorMode = CursorMode::VISIBLE;
-            break;
-        case 2:
-            wProperties.cursorMode = CursorMode::HIDDEN;
-            break;
-        default:
-            LogError("Could not find a correct CursorMode property in the window properties file");
-            break;
+            LogErrorF("Could not find WindowData properties in \"%s\", default window properties will be used", filename);
+            return wProperties;
         }
         
         return wProperties;

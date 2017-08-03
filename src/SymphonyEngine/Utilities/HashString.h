@@ -4,7 +4,9 @@
 */
 #pragma once
 
+#include <iostream>
 #include <string>
+#include <algorithm>
 #include "../Macros/PlatformMacros.h"
 
 namespace Symphony
@@ -16,14 +18,17 @@ namespace Symphony
         {
         }
 
-        HashString(const char* newValue) DEBUG_ONLY(: value(newValue))
+        HashString(const char* newValue)
+            : HashString(std::string(newValue))
         {
-            hash = std::hash<std::string>{}(newValue);
         }
 
-        HashString(const std::string& newValue) DEBUG_ONLY(: value(newValue))
+        HashString(const std::string& newValue)
         {
-            hash = std::hash<std::string>{}(newValue);
+            std::string newVal = newValue;
+            std::transform(newVal.begin(), newVal.end(), newVal.begin(), ::toupper);
+            DEBUG_ONLY(value = newVal);
+            hash = std::hash<std::string>{}(newVal);
         }
         
         ~HashString()
@@ -40,7 +45,6 @@ namespace Symphony
         {
             return !(this->hash == other.hash);
         }
-
 
         inline bool operator==(const std::size_t& otherHash) const
         {

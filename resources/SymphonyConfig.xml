@@ -9,7 +9,9 @@
       <Switchable>true</Switchable>
       <ResolutionWidth>1366</ResolutionWidth>
       <ResolutionHeight>768</ResolutionHeight>
-      <CursorMode>0</CursorMode>
+      <CursorMode>disabled</CursorMode> <!-- 0 -->
+      <Icon>../../resources/Icons/icon.png</Icon>
+      <SmallIcon>../../resources/Icons/icon_small.png</SmallIcon>
     </WindowData>
     <Shaders>shaders.xml</Shaders>
 </SymphonyConfigData>

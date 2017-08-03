@@ -56,7 +56,9 @@ namespace Symphony
     
     const char* GetTextFromXmlElement(tinyxml2::XMLElement* element, const char* property)
     {
-        return TestElementAndProperty(element, property) ? element->FirstChildElement(property)->GetText() : nullptr;
+        return TestElementAndProperty(element, property)
+             ? element->FirstChildElement(property)->GetText()
+             : nullptr;
     }
     
 

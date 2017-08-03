@@ -29,6 +29,9 @@ namespace Symphony
             unsigned int width, height;
             unsigned int frameBufferWidth, frameBufferHeight;
 
+            static const unsigned int MAX_NUMBER_OF_ICONS = 2;
+            std::string iconsPaths[MAX_NUMBER_OF_ICONS];
+
             bool fullscreen;
             
             //Windowed Mode
@@ -39,7 +42,7 @@ namespace Symphony
             bool switchableToOtherModes;
 
             Window::CursorMode cursorMode;
-
+            
             WindowProperties()
                 : WindowProperties("", 800, 600, false, true, false, false, false, Window::CursorMode::VISIBLE)
             {
@@ -47,17 +50,20 @@ namespace Symphony
 
             WindowProperties(const WindowProperties& other)
                 : WindowProperties(other.title, other.width, other.height, other.fullscreen, other.resizeable, 
-                                   other.borderless, other.maximised, other.switchableToOtherModes, other.cursorMode)
+                                   other.borderless, other.maximised, other.switchableToOtherModes, other.cursorMode,
+                                   other.iconsPaths[0].c_str(), other.iconsPaths[1].c_str())
             {
             }
             
             WindowProperties(const std::string& title, unsigned int width, unsigned int height,
                              bool fullscreen, bool resizeable, bool decorated, bool maximised,
-                             bool switchableToOtherModes, Window::CursorMode cursorMode)
+                             bool switchableToOtherModes, Window::CursorMode cursorMode,
+                             const char* bigIconPath = nullptr, const char* smallIconPath = nullptr )
                 : title(title), width(width), height(height), fullscreen(fullscreen),
                   resizeable(resizeable), borderless(decorated), maximised(maximised),
                   switchableToOtherModes(switchableToOtherModes), cursorMode(cursorMode),
-                  frameBufferWidth(width), frameBufferHeight(height)
+                  frameBufferWidth(width), frameBufferHeight(height),
+                  iconsPaths{ bigIconPath ? bigIconPath : "", smallIconPath ? smallIconPath : "" }
             {
             }
 

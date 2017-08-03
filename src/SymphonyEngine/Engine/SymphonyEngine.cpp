@@ -49,7 +49,7 @@ namespace Symphony
             delete editor;
         }
     }
-        
+    
     bool SymphonyEngine::Initialise(const char* commandLineFilename)
     {
         Window::WindowProperties wProperties = Window::WindowProperties();
@@ -62,7 +62,7 @@ namespace Symphony
         wProperties.resizeable  = true;
         wProperties.title       = "Symphony Engine demo";
         wProperties.switchableToOtherModes = false;
-        
+
         return Initialise(wProperties, commandLineFilename);
     }
     
@@ -434,6 +434,7 @@ namespace Symphony
         in_stream.open(commandLineFilename);
         string rawLine;
 
+        LogInfo("**Command line arguments **");
         const char ignoreLineChar = '#';
         while (std::getline(in_stream, rawLine, '\n'))
         {
@@ -453,7 +454,7 @@ namespace Symphony
                     while (token != nullptr)
                     {
                         //TO-DO: Save these!
-                        std::cout << token << std::endl;
+                        LogF("%s", token);
                         token = strtok_s(nullptr, separators, &next_token);
                     }
                 }
@@ -461,6 +462,7 @@ namespace Symphony
                 delete[] line;
             }
         }
+        LogInfo("**End of command line arguments **");
 
         in_stream.close();
     }
