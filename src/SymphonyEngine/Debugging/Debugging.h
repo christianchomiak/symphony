@@ -21,8 +21,16 @@
 #   define LogWarning(message)  Debug::DoLogWarning(message)
 #   define LogError(message)    Debug::DoLogError(message)
 
-#   define Assert(condition,  message)            Debug::DoAssertTest((condition), "Symphony Engine", (message))
-#   define AssertF(condition, msgBodyFormat, ...) Debug::DoAssertTestWithFormat((condition), "Symphony Engine", (msgBodyFormat), __VA_ARGS__)
+#   define Assert(condition,  message)\
+    if ( Debug::DoAssertTest((condition), "Symphony Engine", (message)) == Debug::AssertUserResponse::ASSERT_PAUSE )\
+    {\
+        __debugbreak();\
+    }
+#   define AssertF(condition, msgBodyFormat, ...)\
+    if ( Debug::DoAssertTestWithFormat((condition), "Symphony Engine", (msgBodyFormat), ##__VA_ARGS__) == Debug::AssertUserResponse::ASSERT_PAUSE )\
+    {\
+        __debugbreak(); \
+    }
 
 namespace Symphony
 {
@@ -32,6 +40,12 @@ namespace Symphony
 
         //friend class Singleton<Debug>;
     public:
+        enum class AssertUserResponse
+        {
+            ASSERT_PAUSE,
+            ASSERT_IGNORE
+        };
+
         static void DoLogF(const char* format, ...);
         static void DoLogInfoF(const char* format, ...);
         static void DoLogWarningF(const char* format, ...);
@@ -49,8 +63,8 @@ namespace Symphony
 
         static void DoWatchpoint(const char* file, int line, const char* function);
 
-        static bool DoAssertTest(bool condition, const char* msgTitle, const char* msgBody);
-        static bool DoAssertTestWithFormat(bool condition, const char* msgTitle, const char* msgBodyFormat, ...);
+        static Debug::AssertUserResponse DoAssertTest(bool condition, const char* msgTitle, const char* msgBody);
+        static Debug::AssertUserResponse DoAssertTestWithFormat(bool condition, const char* msgTitle, const char* msgBodyFormat, ...);
 
     protected:
         static const size_t MESSAGE_BUFFER_SIZE = 1024; //TO-DO: Is this enough or too much for a log entry?

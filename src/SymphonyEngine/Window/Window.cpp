@@ -30,13 +30,13 @@ void WindowResizeCallback(GLFWwindow* window, int width, int height)
 namespace Symphony
 {
     Window::Window(const char* title, int width, int height, bool resizeable, bool borderless, bool maximised, bool switchableToFullscreen)
-        : properties(title, width, height, false, resizeable, borderless, maximised, switchableToFullscreen, CursorMode::VISIBLE)
+        : properties(title, width, height, false, resizeable, borderless, maximised, switchableToFullscreen, CursorMode::VISIBLE, {})
     {
         window = nullptr;
     }
     
     Window::Window(const char* title, int width, int height, bool switchableToWindowed)
-        : properties(title, width, height, true, false, false, false, false, CursorMode::VISIBLE)
+        : properties(title, width, height, true, false, false, false, false, CursorMode::VISIBLE, {})
     {
         window = nullptr;
     }
@@ -112,21 +112,38 @@ namespace Symphony
         {
             GLFWimage icons[WindowProperties::MAX_NUMBER_OF_ICONS];
 
-            for (size_t i = 0; i < WindowProperties::MAX_NUMBER_OF_ICONS; ++i)
+            LogInfo("**Loading icons**");
+            for (size_t i = 0; i < properties.iconsPaths.size(); ++i)
             {
-                icons[i].pixels = SOIL_load_image(properties.iconsPaths[i].c_str(), &icons[i].width, &icons[i].height, 0, SOIL_LOAD_RGBA);
-                AssertF(icons[i].pixels, "Found problems trying to load icon. Path: \"%s\"", properties.iconsPaths[i].c_str());
+                if (!properties.iconsPaths[i].empty())
+                {
+                    icons[i].pixels = SOIL_load_image(properties.iconsPaths[i].c_str(), &icons[i].width, &icons[i].height, 0, SOIL_LOAD_RGBA);
+                    AssertF(icons[i].pixels, "Found problems trying to load icon in path: \"%s\"", properties.iconsPaths[i].c_str());
+
+                    if (icons[i].pixels)
+                    {
+                        LogF("New icon! Width = %u, Height = %u", icons[i].width, icons[i].height);
+                    }
+                }
+                else
+                {
+                    icons[i].pixels = nullptr;
+                }
             }
+            LogInfo("**Finished loading icons**");
 
             glfwSetWindowIcon(window, 2, icons);
 
-            for (size_t i = 0; i < WindowProperties::MAX_NUMBER_OF_ICONS; ++i)
+            for (size_t i = 0; i < properties.iconsPaths.size(); ++i)
             {
                 if (icons[i].pixels)
                 {
                     SOIL_free_image_data(icons[i].pixels);
                 }
             }
+
+            //TODO: At this point, we no longer need the icon paths so we could just clear those values from memory
+            properties.iconsPaths.clear();
         }
 
         glewExperimental = GL_TRUE;
@@ -326,9 +343,15 @@ namespace Symphony
             ReadFromXmlElement(windowData, "Maximised",  wProperties.maximised);
             ReadFromXmlElement(windowData, "Resizeable", wProperties.resizeable);
             ReadFromXmlElement(windowData, "Switchable", wProperties.switchableToOtherModes);
+            
+            if (tinyxml2::XMLElement* resolutionData = windowData->FirstChildElement("Resolution"))
+            {
+                ReadAttributeFromXmlElement(resolutionData, "width", wProperties.width);
+                ReadAttributeFromXmlElement(resolutionData, "height", wProperties.height);
+            }
 
-            ReadFromXmlElement(windowData, "ResolutionWidth",  wProperties.width);
-            ReadFromXmlElement(windowData, "ResolutionHeight", wProperties.height);
+            /*ReadFromXmlElement(windowData, "ResolutionWidth",  wProperties.width);
+            ReadFromXmlElement(windowData, "ResolutionHeight", wProperties.height);*/
 
             if (const char* cursorMode = GetTextFromXmlElement(windowData, "CursorMode"))
             {
@@ -356,7 +379,33 @@ namespace Symphony
                 }
             }
             
-            if (const char* iconPath = GetTextFromXmlElement(windowData, "Icon"))
+            if (tinyxml2::XMLElement* iconsList = windowData->FirstChildElement("Icons"))
+            {
+                const char* pathRootRaw = GetTextFromXmlElementAttribute(iconsList, "root");
+                const char* pathRoot    = pathRootRaw ? pathRootRaw : "";
+
+                tinyxml2::XMLElement* iconData = iconsList->FirstChildElement("Icon");
+
+                while (iconData)
+                {
+                    const char* iconFileName = iconData->GetText();
+                    if (iconFileName && iconFileName != "")
+                    {
+                        std::string fullPath(pathRoot);
+                        fullPath.append(iconFileName);
+
+                        wProperties.iconsPaths.push_back(fullPath);
+                    }
+                    else
+                    {
+                        LogWarningF("Empty icon filename in \"%s\"", filename);
+                    }
+                    
+                    iconData = iconData->NextSiblingElement();
+                }
+            }
+
+            /*if (const char* iconPath = GetTextFromXmlElement(windowData, "Icon"))
             {
                 wProperties.iconsPaths[0] = iconPath;
             }
@@ -364,7 +413,7 @@ namespace Symphony
             if (const char* smallIconPath = GetTextFromXmlElement(windowData, "SmallIcon"))
             {
                 wProperties.iconsPaths[1] = smallIconPath;
-            }
+            }*/
         }
         else
         {

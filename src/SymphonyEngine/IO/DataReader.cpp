@@ -24,6 +24,26 @@ namespace Symphony
         return true;
     }
 
+    bool TestElementAndAttribute(const tinyxml2::XMLElement* element, const char* attribute)
+    {
+        if (element == nullptr)
+        {
+            LogError("XML Element cannot be null");
+            return false;
+        }
+        if (attribute == nullptr)
+        {
+            LogError("XML Property name cannot be null");
+            return false;
+        }
+        if (element->FindAttribute(attribute) == nullptr)
+        {
+            LogErrorF("Attribute \"%s\" was not found in element \"%s\"", attribute, element->Name());
+            return false;
+        }
+        return true;
+    }
+
     bool ValidateXmlLoading(const char * filename, tinyxml2::XMLError error)
     {
         switch (error)
@@ -60,23 +80,47 @@ namespace Symphony
              ? element->FirstChildElement(property)->GetText()
              : nullptr;
     }
+
+    const char* GetTextFromXmlElementAttribute(tinyxml2::XMLElement* element, const char* attribute)
+    {
+        return TestElementAndAttribute(element, attribute)
+            ? element->Attribute(attribute) // FirstChildElement(property)->GetText()
+            : nullptr;
+    }
     
 
-#define READ_FROM_XML(TYPE, QUERY) \
-    bool ReadFromXmlElement(tinyxml2::XMLElement * element, const char * property, TYPE & out)\
+#define READ_FROM_XML(TYPE, TEXT_QUERY, ATTRIBUTE_QUERY) \
+    bool ReadFromXmlElement(tinyxml2::XMLElement* element, const char* property, TYPE& out)\
     {\
-        if (!TestElementAndProperty(element, property)) return false;\
-        if (element->FirstChildElement(property)->QUERY(&out) != tinyxml2::XMLError::XML_SUCCESS)\
+        if (!TestElementAndProperty(element, property))\
+        {\
+            return false; \
+        }\
+        if (element->FirstChildElement(property)->TEXT_QUERY(&out) != tinyxml2::XMLError::XML_SUCCESS)\
         {\
             LogErrorF("Unkown error trying to read property \"%s\" from element in XML", property);\
             return false;\
         }\
         return true;\
+    }\
+     \
+    bool ReadAttributeFromXmlElement(tinyxml2::XMLElement* element, const char* attribute, TYPE& out)\
+    {\
+        if (!TestElementAndAttribute(element, attribute))\
+        {\
+            return false; \
+        }\
+        if (element->ATTRIBUTE_QUERY(attribute, &out) != tinyxml2::XMLError::XML_SUCCESS)\
+        {\
+            LogErrorF("Unkown error trying to read attribute \"%s\" from element in XML", attribute); \
+            return false; \
+        }\
+        return true; \
     }
 
-    READ_FROM_XML(unsigned int, QueryUnsignedText)
-    READ_FROM_XML(int, QueryIntText)
-    READ_FROM_XML(bool, QueryBoolText)
+    READ_FROM_XML(unsigned int, QueryUnsignedText, QueryUnsignedAttribute)
+    READ_FROM_XML(int,  QueryIntText,  QueryIntAttribute)
+    READ_FROM_XML(bool, QueryBoolText, QueryBoolAttribute)
 #undef READ_FROM_XML
 
 }

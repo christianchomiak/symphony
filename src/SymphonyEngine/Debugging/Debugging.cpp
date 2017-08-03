@@ -102,7 +102,7 @@ namespace Symphony
         SET_TERMINAL_TEXT_COLOR(LOG_COLOR);
     }
 
-    bool Debug::DoAssertTest(bool condition, const char* msgTitle, const char* msgBody)
+    Debug::AssertUserResponse Debug::DoAssertTest(bool condition, const char* msgTitle, const char* msgBody)
     {
         if (!condition)
         {
@@ -123,16 +123,17 @@ namespace Symphony
                 exit(-1);
                 break;
             case IDRETRY:
+                return AssertUserResponse::ASSERT_PAUSE;
                 break;
             case IDIGNORE:
                 break;
             }
         }
 
-        return condition;
+        return AssertUserResponse::ASSERT_IGNORE;
     }
 
-    bool Debug::DoAssertTestWithFormat(bool condition, const char* msgTitle, const char* msgBodyFormat, ...)
+    Debug::AssertUserResponse Debug::DoAssertTestWithFormat(bool condition, const char* msgTitle, const char* msgBodyFormat, ...)
     {
         va_list arg;
         char buffer[MESSAGE_BUFFER_SIZE];

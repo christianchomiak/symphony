@@ -419,7 +419,7 @@ namespace Symphony
             }
             shaderCategoryData = shaderCategoryData->NextSiblingElement();
         }
-
+        
         return;
     }
     

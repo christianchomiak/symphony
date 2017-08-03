@@ -7,11 +7,12 @@
       <Borderless>false</Borderless>
       <Resizeable>true</Resizeable>
       <Switchable>true</Switchable>
-      <ResolutionWidth>1366</ResolutionWidth>
-      <ResolutionHeight>768</ResolutionHeight>
-      <CursorMode>disabled</CursorMode> <!-- 0 -->
-      <Icon>../../resources/Icons/icon.png</Icon>
-      <SmallIcon>../../resources/Icons/icon_small.png</SmallIcon>
+      <Resolution width="1366" height="768"/>
+      <CursorMode>disabled</CursorMode>
+      <Icons root="../../resources/icons/">
+        <Icon>icon_64.png</Icon>
+        <Icon>icon_512.png</Icon>
+      </Icons>
     </WindowData>
     <Shaders>shaders.xml</Shaders>
 </SymphonyConfigData>
