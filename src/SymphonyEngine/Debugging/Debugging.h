@@ -139,6 +139,7 @@ inline void Symphony::Debug::DoWatchpoint(const char* file, int line, const char
 }
 
 #else
+
 #   define _WATCHPOINT
 
 #   define LogF(format, ...)

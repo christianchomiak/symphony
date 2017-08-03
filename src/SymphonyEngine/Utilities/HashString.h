@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+
 #include "../Macros/PlatformMacros.h"
 
 namespace Symphony
@@ -25,14 +26,27 @@ namespace Symphony
 
         HashString(const std::string& newValue)
         {
-            std::string newVal = newValue;
-            std::transform(newVal.begin(), newVal.end(), newVal.begin(), ::toupper);
-            DEBUG_ONLY(value = newVal);
-            hash = std::hash<std::string>{}(newVal);
+            if (!newValue.empty())
+            {
+                std::string newVal = newValue;
+                std::transform(newVal.begin(), newVal.end(), newVal.begin(), ::toupper);
+                DEBUG_ONLY(value = newVal);
+                hash = std::hash<std::string>{}(newVal);
+            }
+            else
+            {
+                hash = 0;
+                DEBUG_ONLY(value = "");
+            }
         }
         
         ~HashString()
         {
+        }
+
+        inline bool IsValid() const
+        {
+            return hash != 0;
         }
 
         //Comparisson operators
@@ -56,7 +70,6 @@ namespace Symphony
             return !(hash == otherHash);
         }
         
-
         inline bool operator<(const HashString& other) const
         {
             return hash < other.hash;
