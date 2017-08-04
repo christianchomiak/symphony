@@ -13,7 +13,7 @@ using namespace std;
 
 namespace Symphony
 {
-    map<const char*, Shader*, Shader::CharArrayCmp> Shader::shaderPool;
+    map<HashString, Shader*> Shader::shaderPool;
     
     void Shader::Use()       const { glUseProgram(programID); };
     void Shader::Release()   const { glUseProgram(0);         };
@@ -28,12 +28,13 @@ namespace Symphony
         glDeleteProgram(programID);
     }
 
-    /*static*/ Shader* Shader::GetShader(const char* shaderName)
+    /*static*/ Shader* Shader::GetShader(HashString shaderName)
     {
         if (ShaderExists(shaderName))
         {
             return shaderPool[shaderName];
         }
+        AssertF(false, "Trying to use an invalid name (\"%s\") to get a shader.", shaderName.GetCString());
         return nullptr;
     }
 
@@ -148,18 +149,22 @@ namespace Symphony
         return 0;
     }
 
-    Shader* Shader::CreateNewShader(const char* shaderName, const char* vertexShaderFilename,
+    Shader* Shader::CreateNewShader(HashString shaderName, const char* vertexShaderFilename,
                                     const char* fragmentShaderFilename, const char* geometryShaderFilename)
     {
+        if (!shaderName.IsValid())
+        {
+            Assert(false, "Trying to load a shader with no name!");
+        }
 
         //There's no point in creating the same shader over and over again
         if (ShaderExists(shaderName))
         {
-            LogF("Using previously loaded shader: %s", shaderName);
+            LogF("Using previously loaded shader: %s", shaderName.GetString().c_str());
             return shaderPool[shaderName];
         }
 
-        LogF("Creating new shader: \"%s\"", shaderName);
+        LogF("Creating new shader: \"%s\"", shaderName.GetString().c_str());
 
         Shader* newShader = new Shader();
 
@@ -202,17 +207,17 @@ namespace Symphony
 
         newShader->name = shaderName;
 
-        shaderPool[newShader->name.c_str()] = newShader;
+        shaderPool[shaderName] = newShader;
 
         return newShader;
     }
     
-    bool Shader::ShaderExists(const char* shaderName)
+    bool Shader::ShaderExists(HashString shaderName)
     {
         return shaderPool.find(shaderName) != shaderPool.end();
     }
     
-    void Shader::DeleteShader(const char* shaderName)
+    void Shader::DeleteShader(HashString shaderName)
     {
         if (ShaderExists(shaderName))
         {

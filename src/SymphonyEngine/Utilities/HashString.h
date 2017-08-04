@@ -107,6 +107,11 @@ namespace Symphony
             return value;
         }
 
+        inline const char* GetCString()
+        {
+            return value.c_str();
+        }
+
         //Access operators
         inline char operator[](std::size_t idx) const
         {

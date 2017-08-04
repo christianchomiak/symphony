@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <map>
+#include "../Utilities/HashString.h"
 
 namespace Symphony
 {
@@ -17,10 +18,10 @@ namespace Symphony
         
         unsigned int ID() const;
 
-        static Shader* GetShader(const char* shaderName);
+        static Shader* GetShader(HashString shaderName);
 
     protected:
-        std::string name;
+        HashString name;
         unsigned int programID;
 
         //TO-DO: Figure out if caching locations improves perfomance.
@@ -39,24 +40,14 @@ namespace Symphony
         unsigned int LoadFromFile(ShaderType typeOfShader, const char* filename);
         
     protected:
-        static Shader* CreateNewShader(const char* shaderName, const char* vertexShaderFilename,
+        static Shader* CreateNewShader(HashString shaderName, const char* vertexShaderFilename,
                                        const char* fragmentShaderFilename, const char* geometryShaderFilename = nullptr);
-        static bool ShaderExists(const char* shaderName);
-        static void DeleteShader(const char* shaderName);
+        static bool ShaderExists(HashString name);
+        static void DeleteShader(HashString name);
         static void DeleteAllShaders();
-
-        //When using Char* as keys of a map, the comparisson is made over the pointer itself and not the actual string
-        //As such, we need to specify a custom function to compare them properly
-        struct CharArrayCmp
-        {
-            bool operator()(char const* a, char const* b) const
-            {
-                return std::strcmp(a, b) < 0;
-            }
-        };
         
         //TO-DO: Use hashes instead of char*
-        static std::map<const char*, Shader*, CharArrayCmp> shaderPool;
+        static std::map<HashString, Shader*> shaderPool;
     };
 
     inline unsigned int Shader::ID() const

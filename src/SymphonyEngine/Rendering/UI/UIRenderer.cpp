@@ -8,7 +8,7 @@ namespace Symphony
 {
     UIRenderer::UIRenderer()
     {        
-        textShader = Shader::GetShader("TEXT");
+        textShader       = Shader::GetShader("TEXT");
         backgroundShader = Shader::GetShader("TEXTBG");
 
         uiProjectionMatrix = glm::ortho(0.0f, (float)Screen::Width(), 0.0f, (float)Screen::Height());

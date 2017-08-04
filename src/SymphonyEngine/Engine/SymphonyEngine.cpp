@@ -292,7 +292,7 @@ namespace Symphony
         changeSceneFlag = true;
     }
     
-    void SymphonyEngine::LoadShader(const char* shaderName,
+    void SymphonyEngine::LoadShader(HashString shaderName,
                                     const char* vertexShaderFilename, const char* fragmentShaderFilename,
                                     const char* geometryShaderFilename) const
     {
