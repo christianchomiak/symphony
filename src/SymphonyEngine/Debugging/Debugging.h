@@ -2,9 +2,9 @@
 
 //#include "../Utilities/Singleton.h"
 
-#include <iostream>
-
 #ifdef _DEBUG
+
+#include <iostream>
 
 //#   include "../Macros/PlatformMacros.h"
 #   include "../Macros/ClassMacros.h"
@@ -26,6 +26,7 @@
     {\
         __debugbreak();\
     }
+
 #   define AssertF(condition, msgBodyFormat, ...)\
     if ( Debug::DoAssertTestWithFormat((condition), "Symphony Engine", (msgBodyFormat), ##__VA_ARGS__) == Debug::AssertUserResponse::ASSERT_PAUSE )\
     {\

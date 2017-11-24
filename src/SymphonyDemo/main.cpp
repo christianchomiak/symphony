@@ -10,6 +10,10 @@
 #include "../SymphonyEngine/Utilities/HashString.h"
 #include "TestScene.h"
 
+/* #include <algorithm>
+#include <stdlib.h>
+#include <time.h> */
+
 using namespace std;
 using namespace Symphony;
 
@@ -19,11 +23,29 @@ void TestGround()
 {
     std::cout.setf(std::ios::boolalpha);
 
-    HashString hs1 = "Test";
+    /*HashString hs1 = "Test";
     std::string s1 = "Test";
     const char* s2 = "Test";
     hs1 = s2;
-    std::cout << "HS1 == HS2: " << (hs1 == s2) << std::endl;
+    std::cout << "HS1 == HS2: " << (hs1 == s2) << std::endl;*/
+    
+    /*srand(time(NULL));
+    const int SIZE = 10000;
+    int intArray[SIZE];
+
+    for (size_t i = 0; i < SIZE; i++)
+    {
+        intArray[i] = rand() % 10000;
+    }
+
+    StopWatch watch;
+    watch.Start();
+
+    std::sort(intArray, intArray + SIZE);
+
+    watch.Stop();
+
+    LogF("Duration: %f", watch.GetElapsedTime());*/
 }
 
 #ifdef _DEBUG
@@ -55,6 +77,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     sEngine->Run();
     sEngine->Shutdown();
     
+    TestGround();
+
     DEBUG_ONLY(system("pause");)
 
     return 0;

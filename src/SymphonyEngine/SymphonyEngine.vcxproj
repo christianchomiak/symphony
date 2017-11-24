@@ -22,7 +22,7 @@
     <ProjectGuid>{FBE457F3-3BB5-46E1-B6D1-921A927C44B4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SymphonyEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -184,6 +184,7 @@
     <ClInclude Include="Rendering\Shader.h" />
     <ClInclude Include="Rendering\Textures\Texture.h" />
     <ClInclude Include="Rendering\Textures\TextureManager.h" />
+    <ClInclude Include="Time\StopWatch.h" />
     <ClInclude Include="Time\Time.h" />
     <ClInclude Include="Tools\ImGuiMemoryEditor.h" />
     <ClInclude Include="Tools\SymphonyEditor.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Rendering\RenderObject.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Rendering\Textures\TextureManager.cpp" />
+    <ClCompile Include="Time\StopWatch.cpp" />
     <ClCompile Include="Time\Time.cpp" />
     <ClCompile Include="Tools\SymphonyEditor.cpp" />
     <ClCompile Include="UI\imgui\ImGuiManager.cpp" />

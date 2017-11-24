@@ -137,7 +137,7 @@ namespace Symphony
         bool useImGui = true;
 
         ImGuiManager imGuiManager;
-
+        
         while (running)
         {
             InputManager::Update();
