@@ -4,10 +4,13 @@
 */
 #pragma once
 
-#include <iostream>
 #include <string>
 #include <algorithm>
-#include <map>
+
+#ifdef _DEBUG
+#   include <map>
+#   include <iostream>
+#endif
 
 #include "../global.h"
 #include "../Macros/PlatformMacros.h"
