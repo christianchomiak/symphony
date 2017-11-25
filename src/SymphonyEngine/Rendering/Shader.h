@@ -11,7 +11,7 @@ namespace Symphony
         friend class SymphonyEngine;
         
     public:
-        enum ShaderType { VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER };
+        enum class ShaderType { VERTEX_SHADER, FRAGMENT_SHADER, GEOMETRY_SHADER };
         
         void Use()       const;
         void Release()   const;

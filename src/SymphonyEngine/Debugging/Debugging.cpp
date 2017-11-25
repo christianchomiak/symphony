@@ -112,7 +112,7 @@ namespace Symphony
                 msgTitle,
                 MB_ICONERROR | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2
             );
-            
+
             Debug::DoLogError(msgBody);
 
             switch (msgboxID)
@@ -140,7 +140,7 @@ namespace Symphony
         va_start(arg, msgBodyFormat);
         int ret = vsprintf_s(buffer, msgBodyFormat, arg);
         va_end(arg);
-
+        
         return DoAssertTest(condition, msgTitle, buffer);
     }
 }

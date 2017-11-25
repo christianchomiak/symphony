@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
+    <ClInclude Include="global.h" />
     <ClInclude Include="Macros\ResourcesMacros.h" />
     <ClInclude Include="Rendering\UI\Font.h" />
     <ClInclude Include="Input\GamePad.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="Time\Time.cpp" />
     <ClCompile Include="Tools\SymphonyEditor.cpp" />
     <ClCompile Include="UI\imgui\ImGuiManager.cpp" />
+    <ClCompile Include="Utilities\HashString.cpp" />
     <ClCompile Include="Window\Screen.cpp" />
     <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>

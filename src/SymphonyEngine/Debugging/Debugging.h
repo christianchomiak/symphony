@@ -21,7 +21,7 @@
 #   define LogWarning(message)  Debug::DoLogWarning(message)
 #   define LogError(message)    Debug::DoLogError(message)
 
-#   define Assert(condition,  message)\
+#   define Assert(condition, message)\
     if ( Debug::DoAssertTest((condition), "Symphony Engine", (message)) == Debug::AssertUserResponse::ASSERT_PAUSE )\
     {\
         __debugbreak();\
@@ -30,7 +30,7 @@
 #   define AssertF(condition, msgBodyFormat, ...)\
     if ( Debug::DoAssertTestWithFormat((condition), "Symphony Engine", (msgBodyFormat), ##__VA_ARGS__) == Debug::AssertUserResponse::ASSERT_PAUSE )\
     {\
-        __debugbreak(); \
+        __debugbreak();\
     }
 
 namespace Symphony

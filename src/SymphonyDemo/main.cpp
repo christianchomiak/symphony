@@ -22,7 +22,7 @@ SymphonyEngine* sEngine = nullptr;
 void TestGround()
 {
     std::cout.setf(std::ios::boolalpha);
-
+    
     /*HashString hs1 = "Test";
     std::string s1 = "Test";
     const char* s2 = "Test";
@@ -66,10 +66,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     
     if (!sEngine->Initialise(xmlConfig, commandLineArgs))
     {
-#ifdef _DEBUG
-        std::cerr << "Error trying to initialise Symphony Engine" << std::endl;
-        system("pause");
-#endif
+        Assert(false, "Error trying to initialise Symphony Engine");
         return -1;
     }
     
