@@ -293,7 +293,7 @@ namespace Symphony
 
     void Window::glfwErrorCallback(int error, const char* description)
     {
-        fprintf(stderr, "Error %d: %s\n", error, description);
+        LogErrorF("Error %d: %s\n", error, description);
     }
 
     bool Window::GetMonitorResolution(int& w, int& h)

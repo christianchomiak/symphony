@@ -33,7 +33,7 @@ namespace Symphony
 
             const bool mappingIsOk = stringDatabase[hash] == string;
 
-            AssertF(mappingIsOk, "HashString error: hash %zu maps to both \"%s\" and \"%s\".", stringDatabase[hash], string);
+            AssertF(mappingIsOk, "HashString error: hash [%zu] maps to both \"%s\" and \"%s\".", hash, stringDatabase[hash].c_str(), string.c_str());
 
             return mappingIsOk;
         }

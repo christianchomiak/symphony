@@ -104,43 +104,45 @@ namespace Symphony
 
     Debug::AssertUserResponse Debug::DoAssertTest(bool condition, const char* msgTitle, const char* msgBody)
     {
-        if (!condition)
+        if (condition)
         {
-            int msgboxID = MessageBox(
-                NULL,
-                msgBody,
-                msgTitle,
-                MB_ICONERROR | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2
-            );
+            return AssertUserResponse::ASSERT_IGNORE;
+        }
 
-            Debug::DoLogError(msgBody);
+        int msgboxID = MessageBox( NULL, msgBody, msgTitle, MB_ICONERROR | MB_ABORTRETRYIGNORE | MB_DEFBUTTON2 );
 
-            switch (msgboxID)
-            {
+        Debug::DoLogError(msgBody);
+
+        switch (msgboxID)
+        {
             case IDABORT:
                 //TODO1: Flush debug log into disk
                 //TODO2: Should the resources be freed when doing a force exit?
                 exit(-1);
                 break;
+
             case IDRETRY:
                 return AssertUserResponse::ASSERT_PAUSE;
-                break;
-            case IDIGNORE:
-                break;
-            }
-        }
 
-        return AssertUserResponse::ASSERT_IGNORE;
+            case IDIGNORE:
+            default:
+                return AssertUserResponse::ASSERT_IGNORE;
+        }
     }
 
     Debug::AssertUserResponse Debug::DoAssertTestWithFormat(bool condition, const char* msgTitle, const char* msgBodyFormat, ...)
     {
+        if (condition)
+        {
+            return AssertUserResponse::ASSERT_IGNORE;
+        }
+
         va_list arg;
         char buffer[MESSAGE_BUFFER_SIZE];
         va_start(arg, msgBodyFormat);
         int ret = vsprintf_s(buffer, msgBodyFormat, arg);
         va_end(arg);
-        
+
         return DoAssertTest(condition, msgTitle, buffer);
     }
 }
