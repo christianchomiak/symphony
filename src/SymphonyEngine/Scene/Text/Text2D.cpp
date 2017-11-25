@@ -1,6 +1,6 @@
 #include "Text2D.h"
 
-#include "../../Rendering/Mesh/MutableMesh.h"
+#include "../../Rendering/Mesh/MeshHelper.h"
 
 namespace Symphony
 {
@@ -8,21 +8,21 @@ namespace Symphony
         : GameObject(objName)
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
-        renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
+        renderObject = new RenderObject((Mesh*)MeshHelper::CreateTextMesh(), nullptr);
     }
 
     Text2D::Text2D(const Text& t, char* objName)
         : GameObject(objName), text(t)
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
-        renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
+        renderObject = new RenderObject((Mesh*)MeshHelper::CreateTextMesh(), nullptr);
     }
     
     Text2D::Text2D(Font* font, const std::string& content, char* objName)
         : GameObject(objName), text(Text(font, content))
     {
         //TO-DO: Figure out a way to handle the Shader or Mesh being changed outside the class
-        renderObject = new RenderObject((Mesh*)Mesh::TextMesh(), nullptr);
+        renderObject = new RenderObject((Mesh*)MeshHelper::CreateTextMesh(), nullptr);
     }
 
     Text2D::~Text2D()

@@ -4,6 +4,7 @@
 #include <vector>
 #include "Transform.h"
 #include "../Rendering/RenderObject.h"
+#include "../Utilities/HashString.h"
 
 namespace Symphony
 {
@@ -11,7 +12,7 @@ namespace Symphony
     {
     public:
         Transform transform;
-        std::string name;
+        HashString name;
         bool enabled;
 
     protected:

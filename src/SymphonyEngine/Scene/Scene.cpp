@@ -2,21 +2,29 @@
 
 #include "../Debugging/Debugging.h"
 
-Symphony::Scene::Scene()
+using namespace Symphony;
+
+Scene::Scene()
+    : Scene(0u)
 {
-    root     = new SceneRoot();
-    uiRoot   = new SceneRoot();
-    renderer = nullptr;
-	id = 0;
 }
 
-Symphony::Scene::~Scene()
+
+Scene::Scene(HashString sceneId)
+    : id(sceneId),
+      renderer(nullptr)
+{
+    root = new SceneRoot();
+    uiRoot = new SceneRoot();
+}
+
+Scene::~Scene()
 {
     delete root;
     delete uiRoot;
 }
 
-void Symphony::Scene::Clean()
+void Scene::Clean()
 {
     delete root;
     delete uiRoot;
@@ -25,20 +33,20 @@ void Symphony::Scene::Clean()
     uiRoot = new SceneRoot();
 }
 
-void Symphony::Scene::Update()
+void Scene::Update()
 {
     root->Update();
     uiRoot->Update();
 }
 
-void Symphony::Scene::AddGameObject(GameObject* go)
+void Scene::AddGameObject(GameObject* go)
 {
     if (go == nullptr) return;
 
     root->AddChild(go);
 }
 
-void Symphony::Scene::AddGameObject(Camera* cam)
+void Scene::AddGameObject(Camera* cam)
 {
     if (cam == nullptr) return;
     
@@ -46,7 +54,7 @@ void Symphony::Scene::AddGameObject(Camera* cam)
     root->AddChild(cam);
 }
 
-void Symphony::Scene::AddGameObject(Light* light)
+void Scene::AddGameObject(Light* light)
 {
     if (light == nullptr) return;
 
@@ -54,7 +62,7 @@ void Symphony::Scene::AddGameObject(Light* light)
     root->AddChild(light);
 }
 
-void Symphony::Scene::AddGameObject(Text2D* text)
+void Scene::AddGameObject(Text2D* text)
 {
     if (text == nullptr) return;
     uiRoot->AddChild(text);
@@ -62,7 +70,7 @@ void Symphony::Scene::AddGameObject(Text2D* text)
 
 //TO-DO: Make absolutely sure that cameras that are are registered
 //       also belong to the scene tree
-void Symphony::Scene::RegisterCamera(Camera* cam)
+void Scene::RegisterCamera(Camera* cam)
 {
     if (cam == nullptr) return;
     cameras.push_back(cam);
@@ -70,13 +78,13 @@ void Symphony::Scene::RegisterCamera(Camera* cam)
 
 //TO-DO: Make absolutely sure that lights that are are registered
 //       also belong to the scene tree
-void Symphony::Scene::RegisterLight(Light* light)
+void Scene::RegisterLight(Light* light)
 {
     if (light == nullptr) return;
     lights.push_back(light);
 }
 
-void Symphony::Scene::SetID(unsigned int newID)
+void Scene::SetId(const char* newID)
 {
     id = newID;
 }

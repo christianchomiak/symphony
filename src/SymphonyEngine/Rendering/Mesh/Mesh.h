@@ -3,6 +3,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include "../../global.h"
 #include "../Color.h" //Already includes <glm/vec4.hpp>
 
 namespace Symphony
@@ -23,8 +24,9 @@ namespace Symphony
     //TO-DO: Provide means to have pooled meshes and individual meshes (whose lifetimes are determined by the programmer)
     class Mesh
     {
-
     public:
+        friend class MeshHelper;
+
         bool allowFaceCulling;
 
         ~Mesh();
@@ -33,21 +35,21 @@ namespace Symphony
         void BufferData() const;
         bool AllowFaceCulling() const;
 
-        unsigned int GetVBO() const;
-        unsigned int GetVAO() const;
+        uint GetVBO() const;
+        uint GetVAO() const;
 
         //bool UpdateVertices(glm::vec3* newVertexData, int numberOfNewVertexData);
 
     protected:
-        mutable unsigned int vaoID;
-        mutable unsigned int vboID[MAX_BUFFER];
-        unsigned int typeOfPrimitive;
-        unsigned int typeOfDraw;
+        mutable uint vaoID;
+        mutable uint vboID[MAX_BUFFER];
+        uint typeOfPrimitive;
+        uint typeOfDraw;
 
-        unsigned int numberOfVertices,
+        uint numberOfVertices,
                      numberOfIndices;
 
-        unsigned int* indices;
+        uint* indices;
         glm::vec3 *vertices,
                   *normals,
                   *tangents;
@@ -58,24 +60,15 @@ namespace Symphony
         Mesh();
 
         void GenerateNormals();
-
-    public:
-        static Mesh* Triangle();
-        static Mesh* Quad();
-        static Mesh* Cube();
-        static Mesh* HeightMap(const char* heigtmapFileName, float sizeX, float sizeZ, float maxHeight = 1.f);
-        static Mesh* Surface(size_t width, size_t height, float sizeX, float sizeZ);
-        static Mesh* CoordinateSystem(float size = 1.f);
-        static MutableMesh* TextMesh();
     };
 
 
-    inline unsigned int Mesh::GetVBO() const
+    inline uint Mesh::GetVBO() const
     {
         return vboID[VERTEX_BUFFER];
     }
 
-    inline unsigned int Mesh::GetVAO() const
+    inline uint Mesh::GetVAO() const
     {
         return vaoID;
     }

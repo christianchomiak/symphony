@@ -16,28 +16,28 @@ namespace Symphony
         void Use()       const;
         void Release()   const;
         
-        unsigned int ID() const;
+        uint ID() const;
 
         static Shader* GetShader(HashString shaderName);
 
     protected:
         HashString name;
-        unsigned int programID;
+        uint programID;
 
         //TO-DO: Figure out if caching locations improves perfomance.
         //       If so, determine whether a vector might be more suitable than a map for 
         //       small sets of values like locations in a shader
-        /*std::map<const char*, unsigned int> attributeList;
-        std::map<const char*, unsigned int> uniformLocationList;*/
+        /*std::map<const char*, uint> attributeList;
+        std::map<const char*, uint> uniformLocationList;*/
         
     private:
         
         Shader();
         ~Shader();
         
-        bool CreateAndLink(unsigned int vertexShader, unsigned int fragmentShader, unsigned int geometryShader = 0);
-        unsigned int LoadFromString(ShaderType typeOfShader, const char* source);
-        unsigned int LoadFromFile(ShaderType typeOfShader, const char* filename);
+        bool CreateAndLink(uint vertexShader, uint fragmentShader, uint geometryShader = 0);
+        uint LoadFromString(ShaderType typeOfShader, const char* source);
+        uint LoadFromFile(ShaderType typeOfShader, const char* filename);
         
     protected:
         static Shader* CreateNewShader(HashString shaderName, const char* vertexShaderFilename,
@@ -50,7 +50,7 @@ namespace Symphony
         static std::map<HashString, Shader*> shaderPool;
     };
 
-    inline unsigned int Shader::ID() const
+    inline uint Shader::ID() const
     {
         return programID;
     }

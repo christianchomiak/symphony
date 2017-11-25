@@ -147,6 +147,7 @@
     <ClInclude Include="Debugging\Debugging.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Macros\ResourcesMacros.h" />
+    <ClInclude Include="Rendering\Mesh\MeshHelper.h" />
     <ClInclude Include="Rendering\UI\Font.h" />
     <ClInclude Include="Input\GamePad.h" />
     <ClInclude Include="IO\DataReader.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="Debugging\Debugging.cpp" />
     <ClCompile Include="Input\GamePad.cpp" />
     <ClCompile Include="IO\DataReader.cpp" />
+    <ClCompile Include="Rendering\Mesh\MeshHelper.cpp" />
     <ClCompile Include="Rendering\UI\Font.cpp" />
     <ClCompile Include="Rendering\Mesh\MutableMesh.cpp" />
     <ClCompile Include="Rendering\Textures\Skybox.cpp" />

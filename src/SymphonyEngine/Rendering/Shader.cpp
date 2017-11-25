@@ -19,7 +19,7 @@ namespace Symphony
     void Shader::Release()   const { glUseProgram(0);         };
     
     Shader::Shader()
-        : programID(0)
+        : programID(0u)
     {
     }
 
@@ -38,21 +38,21 @@ namespace Symphony
         return nullptr;
     }
 
-    bool Shader::CreateAndLink(unsigned int vertexShader, unsigned int fragmentShader, unsigned int geometryShader)
+    bool Shader::CreateAndLink(uint vertexShader, uint fragmentShader, uint geometryShader)
     {
         programID = glCreateProgram();
 
-        if (vertexShader != 0)
+        if (vertexShader != 0u)
         {
             glAttachShader(programID, vertexShader);
         }
 
-        if (fragmentShader != 0)
+        if (fragmentShader != 0u)
         {
             glAttachShader(programID, fragmentShader);
         }
 
-        if (geometryShader != 0)
+        if (geometryShader != 0u)
         {
             glAttachShader(programID, geometryShader);
         }
@@ -84,7 +84,7 @@ namespace Symphony
         return true;
     }
 
-    unsigned int Shader::LoadFromString(ShaderType typeOfShader, const char* source)
+    uint Shader::LoadFromString(ShaderType typeOfShader, const char* source)
     {
         GLenum whichShader;
 
@@ -110,7 +110,7 @@ namespace Symphony
             std::cerr << "Compile log: " << infoLog << std::endl << std::endl;
             delete[] infoLog;
             
-            return 0;
+            return 0u;
         }
 
         Log("\tCompilation: OK");
@@ -118,7 +118,7 @@ namespace Symphony
         return shader;
     }
 
-    unsigned int Shader::LoadFromFile(ShaderType typeOfShader, const char* filename)
+    uint Shader::LoadFromFile(ShaderType typeOfShader, const char* filename)
     {
         char* shaderName;
         
@@ -152,7 +152,7 @@ namespace Symphony
     Shader* Shader::CreateNewShader(HashString shaderName, const char* vertexShaderFilename,
                                     const char* fragmentShaderFilename, const char* geometryShaderFilename)
     {
-        if (!shaderName.IsValid())
+        if (shaderName.IsNull())
         {
             Assert(false, "Trying to load a shader with no name!");
         }
@@ -170,28 +170,28 @@ namespace Symphony
 
         //Load all programs for this shader
         
-        unsigned int vertexShader = newShader->LoadFromFile(ShaderType::VERTEX_SHADER, vertexShaderFilename);
+        uint vertexShader = newShader->LoadFromFile(ShaderType::VERTEX_SHADER, vertexShaderFilename);
 
-        if (vertexShader == 0)
+        if (vertexShader == 0u)
         {
             delete newShader;
             return nullptr;
         }
 
-        unsigned int fragmentShader = newShader->LoadFromFile(ShaderType::FRAGMENT_SHADER, fragmentShaderFilename);
+        uint fragmentShader = newShader->LoadFromFile(ShaderType::FRAGMENT_SHADER, fragmentShaderFilename);
 
-        if (fragmentShader == 0)
+        if (fragmentShader == 0u)
         {
             delete newShader;
             return nullptr;
         }
         
-        unsigned int geometryShader(0);
+        uint geometryShader(0u);
         if (geometryShaderFilename != nullptr && geometryShaderFilename[0] != '\0')
         {
             geometryShader = newShader->LoadFromFile(ShaderType::GEOMETRY_SHADER, geometryShaderFilename);
 
-            if (geometryShader == 0)
+            if (geometryShader == 0u)
             {
                 delete newShader;
                 return nullptr;

@@ -1,11 +1,14 @@
 #pragma once
 
 #include <vector>
+
+#include "../global.h"
 #include "GameObject.h"
 #include "SceneRoot.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
 #include "Text/Text2D.h"
+#include "../Utilities/HashString.h"
 
 namespace Symphony
 {
@@ -17,6 +20,7 @@ namespace Symphony
         friend class Renderer;
     public:
         Scene();
+        Scene(HashString sceneId);
         virtual ~Scene();
         
         virtual void Initialise() = 0;
@@ -34,36 +38,63 @@ namespace Symphony
         void RegisterCamera(Camera*);
         void RegisterLight(Light*);
 
-        inline unsigned int GetID() const { return id; }
-        inline std::string GetName() const { return name; }
+        HashString GetID() const;
+        
+        const SceneRoot* GetSceneRoot() const;
 
-        inline const SceneRoot* GetSceneRoot() const
-        {
-            return root;
-        }
-        inline const SceneRoot* GetSceneUIRoot() const
-        {
-            return uiRoot;
-        }
-        inline const std::vector<Camera*>& Cameras() const
-        {
-            return cameras;
-        }
-        inline const std::vector<Light*>& Lights() const
-        {
-            return lights;
-        }
+        const SceneRoot* GetSceneUIRoot() const;
+
+        const std::vector<Camera*>& Cameras() const;
+
+        const std::vector<Light*>& Lights() const;
+
+#ifdef _DEBUG
+        const char* GetName() const;
+#endif
 
     protected:
+        HashString id;
         SceneRoot *root, *uiRoot;
-        unsigned int id;
-        std::string name;
         Renderer* renderer;
         
         //std::vector<Text2D*> uiRoot;
         std::vector<Camera*> cameras;
         std::vector<Light*>  lights;
 
-        void SetID(unsigned int);
+        void SetId(const char*);
     };
+
+
+
+    inline HashString Scene::GetID() const
+    {
+        return id;
+    }
+    
+    inline const SceneRoot* Scene::GetSceneRoot() const
+    {
+        return root;
+    }
+
+    inline const SceneRoot* Scene::GetSceneUIRoot() const
+    {
+        return uiRoot;
+    }
+
+    inline const std::vector<Camera*>& Scene::Cameras() const
+    {
+        return cameras;
+    }
+
+    inline const std::vector<Light*>& Scene::Lights() const
+    {
+        return lights;
+    }
+
+#ifdef _DEBUG
+    inline const char* Scene::GetName() const
+    {
+        return id.GetCString();
+    }
+#endif
 }

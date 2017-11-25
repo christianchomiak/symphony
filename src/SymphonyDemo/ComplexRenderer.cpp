@@ -8,6 +8,8 @@
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
 
+#include "../SymphonyEngine/Rendering/Mesh/MeshHelper.h"
+
 #include "../SymphonyEngine/Debugging/Debugging.h"
 
 ComplexRenderer::ComplexRenderer()
@@ -15,7 +17,7 @@ ComplexRenderer::ComplexRenderer()
 	//RBO: Render Buffer Object
     bool useRBO = true;
 
-    screenQuad = Mesh::Quad();
+    screenQuad = MeshHelper::CreateQuad();
     screenShader = Shader::GetShader("SIMPLE");
 
     //TO-DO: These textures should be updated whenever the screen's width & height change. Just saying...

@@ -17,6 +17,8 @@
 #include "../SymphonyEngine/Scene/Light/DirectionalLight.h"
 #include "../SymphonyEngine/Scene/Light/Spotlight.h"
 
+#include "../SymphonyEngine/Rendering/Mesh/MeshHelper.h"
+
 #include "../SymphonyEngine/Rendering/Textures/TextureManager.h"
 
 #include "../SymphonyEngine/Rendering/UI/Font.h"
@@ -28,8 +30,8 @@
 #include <imgui/imgui.h>
 
 TestScene::TestScene()
+    : Scene("TEST_SCENE_1")
 {
-    name = "TEST_SCENE_1";
 }
 
 TestScene::~TestScene()
@@ -97,14 +99,14 @@ void TestScene::Initialise()
 
     GameObject* coord = new GameObject("Coordinate System");
     //AddGameObject(coord);
-    coord->AddRenderObject(new RenderObject(Mesh::CoordinateSystem(), Texture(), Shader::GetShader("UNLIT_COLOR")));
+    coord->AddRenderObject(new RenderObject(MeshHelper::CreateCoordinateSystem(), Texture(), Shader::GetShader("UNLIT_COLOR")));
     //coord->transform.SetLocalPosition(0, 150, -10.f);
     light->AddChild(coord);
 
     GameObject* cube = new GameObject("Cube");
     AddGameObject(cube);
     cube->AddRenderObject(
-        new RenderObject(Mesh::Cube(),
+        new RenderObject(MeshHelper::CreateCube(),
             TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/window.png),
                                         Texture::WrappingType::CLAMP,
                                         Texture::FilteringType::LINEAR,
@@ -127,7 +129,7 @@ void TestScene::Initialise()
     cube = new GameObject("Cube2");
     AddGameObject(cube);
     cube->AddRenderObject(
-        new RenderObject(Mesh::Cube(),
+        new RenderObject(MeshHelper::CreateCube(),
             Texture(), //TextureManager::LoadTexture("../../resources/Textures/window.png", Texture::WrappingType::CLAMP, Texture::FilteringType::LINEAR, true, Texture::Transparency::SEMI),
             Shader::GetShader("REFLECTIVE")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
@@ -138,7 +140,7 @@ void TestScene::Initialise()
     cube = new GameObject("Cube3");
     AddGameObject(cube);
     cube->AddRenderObject(
-        new RenderObject(Mesh::Cube(),
+        new RenderObject(MeshHelper::CreateCube(),
             TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/grass.png), Texture::WrappingType::CLAMP, Texture::FilteringType::NEAREST, true, Texture::Transparency::FULL),
             Shader::GetShader("TRANSPARENT")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
@@ -151,7 +153,7 @@ void TestScene::Initialise()
     GameObject* hMap = new GameObject("Height Map");
     AddGameObject(hMap);
     hMap->AddRenderObject(
-        new RenderObject(Mesh::HeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.0f),
+        new RenderObject(MeshHelper::CreateHeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.0f),
             TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/hmTexture.jpg), Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
             Shader::GetShader("PHONG")));
     hMap->transform.SetLocalPosition(0, 0, -100);

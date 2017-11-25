@@ -19,6 +19,7 @@ namespace Symphony
     const char* SymphonyEngine::version = "Symphony Engine - v0.1.0 \"Bittersweet\"";
 
     SymphonyEngine::SymphonyEngine()
+        : nextSceneIndex(0)
     {
         currentScene    = nullptr;
         window          = nullptr;
@@ -246,7 +247,6 @@ namespace Symphony
 
         if (newScene)
         {
-            newScene->SetID(scenes.size());
             scenes.push_back(newScene);
             return;
         }
@@ -254,44 +254,80 @@ namespace Symphony
     
     void SymphonyEngine::NextScene()
     {
-        ChangeScene(currentScene->GetID() + 1);
-    }
-
-    void SymphonyEngine::ChangeScene(std::string sceneName)
-    {
-        Scene* newScene = nullptr;
-        for (size_t i = 0; i < scenes.size(); ++i)
+        if (scenes.size() == 0)
         {
-            if (scenes[i]->GetName() == sceneName)
-            {
-                newScene = scenes[i];
-            }
+            Assert(false, "No scenes are registered in the engine");
+            return;
+        }
+
+        size_t idx = GetCurrentSceneIndex();
+
+        if (idx != scenes.size()) //Found the next scene!
+        {
+            nextSceneIndex = idx + 1;
+            changeSceneFlag = true;
+            return;
         }
         
-        Assert(newScene, "Trying to change into an inexistent scene");
-
-        if (newScene)
-        {
-            ChangeScene(newScene->GetID());
-        }
+        AssertF(false, "Cannot change to next scene because current scene index [%zu] is not valid", idx)
     }
 
-    void SymphonyEngine::ChangeScene(unsigned int newSceneID)
+    void SymphonyEngine::ChangeScene(const HashString& desiredScene)
     {
         if (scenes.size() == 0)
         {
-            LogError("No scenes are registered in the engine");
+            Assert(false, "No scenes are registered in the engine");
             return;
         }
-        else if (newSceneID >= scenes.size())
+
+        for (size_t i = 0; i < scenes.size(); ++i)
         {
-            LogErrorF("Error trying to load scene #%d, only %d scene(s) exist", newSceneID, scenes.size());
+            if (scenes[i]->GetID() == desiredScene)
+            {
+                nextSceneIndex = i;
+                changeSceneFlag = true;
+                return;
+            }
+        }
+        
+        AssertF(desiredScene.IsNotNull(), "Trying to change into inexistent scene [%s]", desiredScene.GetCString());
+    }
+
+    void SymphonyEngine::ChangeScene(uint desiredSceneIndex)
+    {
+        if (scenes.size() == 0)
+        {
+            Assert(false, "No scenes are registered in the engine");
             return;
         }
-        nextSceneID     = newSceneID;
+        else if (desiredSceneIndex >= scenes.size())
+        {
+            AssertF(false, "Error trying to load scene [%zu], only %zu scene(s) exist", desiredSceneIndex, scenes.size());
+            return;
+        }
+
+        nextSceneIndex  = desiredSceneIndex;
         changeSceneFlag = true;
     }
     
+    uint SymphonyEngine::GetCurrentSceneIndex() const
+    {
+        if (currentScene)
+        {
+            const auto currentSceneId = currentScene->GetID();
+
+            for (size_t i = 0; i < scenes.size(); ++i)
+            {
+                if (scenes[i]->GetID() == currentSceneId)
+                {
+                    return i;
+                }
+            }
+        }
+
+        return scenes.size();
+    }
+
     void SymphonyEngine::LoadShader(HashString shaderName,
                                     const char* vertexShaderFilename, const char* fragmentShaderFilename,
                                     const char* geometryShaderFilename) const
@@ -308,7 +344,10 @@ namespace Symphony
             currentScene->Clean();
         }
 
-        currentScene = scenes[nextSceneID];
+        AssertF(nextSceneIndex >= 0 && nextSceneIndex < scenes.size(),
+                "ENGINE ERROR: Trying to load invalid scene [%zu]. Total number of scenes is [%zu].", nextSceneIndex, scenes.size());
+
+        currentScene = scenes[nextSceneIndex];
         currentScene->Initialise();
     }
     

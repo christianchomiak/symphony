@@ -7,6 +7,7 @@
 #include "../Window/Window.h"
 #include "../Macros/ResourcesMacros.h"
 #include "../Tools/SymphonyEditor.h"
+#include "../Utilities/HashString.h"
 
 using namespace std;
 
@@ -39,8 +40,9 @@ namespace Symphony
         
         void NextScene();
         void AddScene(Scene* newScene);
-        void ChangeScene(string sceneName);
-        void ChangeScene(unsigned int sceneID);
+        void ChangeScene(const HashString& desiredScene);
+        void ChangeScene(uint desiredSceneIndex);
+        uint GetCurrentSceneIndex() const;
         
         void LoadShaders(const char* shadersFilename);
 
@@ -67,7 +69,7 @@ namespace Symphony
         bool changeSceneFlag;
         vector<Scene*> scenes;
         Scene* currentScene;
-        unsigned int nextSceneID = 0;
+        size_t nextSceneIndex;
         Window* window;
         SymphonyEditor* editor;
 

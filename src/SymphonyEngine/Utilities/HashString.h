@@ -20,56 +20,12 @@ namespace Symphony
 {
     class HashString
     {
-#ifdef _DEBUG
-    protected:
-        static std::map<std::size_t, std::string> stringDatabase;
-
-        static bool MapHashToString(const std::size_t hash, const std::string& string)
-        {
-            if (stringDatabase.find(hash) == stringDatabase.end())
-            {
-                stringDatabase[hash] = string;
-            }
-
-            const bool mappingIsOk = stringDatabase[hash] == string;
-
-            AssertF(mappingIsOk, "HashString error: hash [%zu] maps to both \"%s\" and \"%s\".", hash, stringDatabase[hash].c_str(), string.c_str());
-
-            return mappingIsOk;
-        }
-#endif
-
-    protected:
-        std::size_t hash;
-
-        inline void AssignString(const std::string& newString)
-        {
-            std::size_t tempHash;
-
-            if (!newString.empty())
-            {
-                std::string processedString = newString;
-                std::transform(processedString.begin(), processedString.end(), processedString.begin(), ::toupper);
-
-                tempHash = std::hash<std::string>{}(processedString);
-
-#ifdef _DEBUG
-                if (!MapHashToString(tempHash, processedString))
-                {
-                    tempHash = 0u;
-                }
-#endif
-            }
-            else
-            {
-                tempHash = 0u;
-            }
-
-            hash = tempHash;
-        }
-
     public:
         HashString() : hash(0u)
+        {
+        }
+
+        HashString(uint newHash) : hash(newHash)
         {
         }
 
@@ -78,112 +34,245 @@ namespace Symphony
         {
         }
 
-        HashString(const std::string& newString)
+        explicit HashString(const std::string& newString)
         {
-            AssignString(newString);
+            GenerateHash(newString);
+        }
+
+        HashString(const HashString& other)
+            : hash(other.hash)
+        {
         }
         
         ~HashString()
         {
         }
-
-        inline bool IsValid() const
-        {
-            return hash != 0u;
-        }
-
-        inline operator bool() const
-        {
-            return IsValid();
-        }
-
+        
+        bool IsNull() const;
+        bool IsNotNull() const;
+        
         //Comparisson operators
-        inline bool operator==(const HashString& other) const
-        {
-            return this->hash == other.hash;
-        }
+        bool operator==(const HashString& other) const;
         
-        inline bool operator!=(const HashString& other) const
-        {
-            return !(this->hash == other.hash);
-        }
+        bool operator!=(const HashString& other) const;
 
-        inline bool operator==(const std::size_t otherHash) const
-        {
-            return hash == otherHash;
-        }
+        bool operator==(const std::size_t otherHash) const;
         
-        inline bool operator!=(const std::size_t otherHash) const
-        {
-            return !(hash == otherHash);
-        }
+        bool operator!=(const std::size_t otherHash) const;
         
-        inline bool operator<(const HashString& other) const
-        {
-            return hash < other.hash;
-        }
+        bool operator<(const HashString& other) const;
 
         //Assignment operators
-        inline HashString& operator=(const std::string& newString)
-        {
-            AssignString(newString);
+        HashString& operator=(const HashString& other);
 
-            return *this;
-        }
+        HashString& operator=(const std::string& newString);
 
-        inline HashString& operator=(const char* newString)
-        {
-            AssignString(newString);
+        HashString& operator=(const char* newString);
 
-            return *this;
-        }
+        HashString& operator=(size_t newHash);
+        
+        size_t GetHash() const;
 
-#ifdef _DEBUG
+        std::string GetString() const;
 
-        inline const std::string& GetStringConstRef() const
-        {
-            AssertF(stringDatabase.find(hash) != stringDatabase.end(), "HashString error: No string mapped to hash [%zu]");
-
-            return stringDatabase[hash];
-        }
-
-        inline std::string GetString() const
-        {
-            if (stringDatabase.find(hash) != stringDatabase.end())
-            {
-                return stringDatabase[hash];
-            }
-
-            return "";
-        }
-
-        inline const char* GetCString() const
-        {
-            if (stringDatabase.find(hash) != stringDatabase.end())
-            {
-                return stringDatabase[hash].c_str();
-            }
-
-            return "";
-        }
+        const char* GetCString() const;
 
         //Access operators
-        inline char operator[](std::size_t idx) const
-        {
-            if (stringDatabase.find(hash) != stringDatabase.end())
-            {
-                return (stringDatabase[hash])[idx];
-            }
+        char operator[](std::size_t idx) const;
 
-            return '\0';
-        }
+        static size_t CalculateHash(std::string newString);
 
+        //Public debug functions
+#ifdef _DEBUG
+        bool HasString() const;
+
+        const std::string& GetStringConstRef() const;
+        
         inline friend std::ostream& operator<<(std::ostream& os, const HashString& obj)
         {
-            os << obj.GetString();
+            os << obj.GetCString();
 
             return os;
         }
 #endif
+
+    protected:
+        std::size_t hash;
+
+        void GenerateHash(std::string newString);
+
+        //Protected static functions
+#ifdef _DEBUG
+    protected:
+        static std::map<std::size_t, std::string> stringDatabase;
+
+        static bool MapHashToString(const std::size_t hash, const std::string& string)
+        {
+            //Was the mapping already done?
+            if (stringDatabase.find(hash) == stringDatabase.end())
+            {
+                stringDatabase[hash] = string;
+                return true;
+            }
+            
+            const bool mappingIsOk = stringDatabase[hash] == string;
+
+            AssertF(mappingIsOk, "HashString error: hash [%zu] maps to both \"%s\" and \"%s\".", hash, stringDatabase[hash].c_str(), string.c_str());
+
+            return mappingIsOk;
+        }
+#endif
+
     };
+
+
+
+    ///INLINES
+
+    //static
+    inline size_t HashString::CalculateHash(std::string newString)
+    {
+        if (!newString.empty())
+        {
+            return std::hash<std::string>{}(newString);
+        }
+
+        return 0u;
+    }
+
+    inline size_t HashString::GetHash() const
+    {
+        return hash;
+    }
+
+    inline bool HashString::IsNull() const
+    {
+        return hash == 0u;
+    }
+
+    inline bool HashString::IsNotNull() const
+    {
+        return hash != 0u;
+    }
+
+    //Comparisson operators
+    inline bool HashString::operator==(const HashString& other) const
+    {
+        return this->hash == other.hash;
+    }
+
+    inline bool HashString::operator!=(const HashString& other) const
+    {
+        return !(this->hash == other.hash);
+    }
+
+    inline bool HashString::operator==(const std::size_t otherHash) const
+    {
+        return hash == otherHash;
+    }
+
+    inline bool HashString::operator!=(const std::size_t otherHash) const
+    {
+        return !(hash == otherHash);
+    }
+
+    inline bool HashString::operator<(const HashString& other) const
+    {
+        return hash < other.hash;
+    }
+
+    //Assignment operators
+    inline HashString& HashString::operator=(const HashString& other)
+    {
+        hash = other.hash;
+
+        return *this;
+    }
+    
+    inline HashString& HashString::operator=(const std::string& newString)
+    {
+        GenerateHash(newString);
+
+        return *this;
+    }
+
+    inline HashString& HashString::operator=(const char* newString)
+    {
+        GenerateHash(newString);
+
+        return *this;
+    }
+
+    inline HashString& HashString::operator=(size_t newHash)
+    {
+        hash = newHash;
+
+        return *this;
+    }
+
+    inline void HashString::GenerateHash(std::string newString)
+    {
+        std::transform(newString.begin(), newString.end(), newString.begin(), ::toupper);
+
+        std::size_t tempHash = CalculateHash(newString);
+
+#       ifdef _DEBUG
+            if (!MapHashToString(tempHash, newString))
+            {
+                tempHash = 0u;
+            }
+#       endif
+
+        hash = tempHash;
+    }
+    
+    inline std::string HashString::GetString() const
+    {
+#ifdef _DEBUG
+        if (IsNotNull() && stringDatabase.find(hash) != stringDatabase.end())
+        {
+            return stringDatabase[hash];
+        }
+#endif
+
+        return IsNotNull() ? std::to_string(hash) : "";
+    }
+    
+    //Access operators
+    inline char HashString::operator[](std::size_t idx) const
+    {
+#ifdef _DEBUG
+        if (IsNotNull() && stringDatabase.find(hash) != stringDatabase.end())
+        {
+            return (stringDatabase[hash])[idx];
+        }
+#endif
+
+        return '\0';
+    }
+
+#ifdef _DEBUG
+
+    inline bool HashString::HasString() const
+    {
+        return IsNotNull() && stringDatabase.find(hash) != stringDatabase.end();
+    }
+
+    inline const char* HashString::GetCString() const
+    {
+        if (IsNotNull() && stringDatabase.find(hash) != stringDatabase.end())
+        {
+            return stringDatabase[hash].c_str();
+        }
+
+        return "";
+    }
+
+    inline const std::string& HashString::GetStringConstRef() const
+    {
+        AssertF(IsNotNull() && stringDatabase.find(hash) != stringDatabase.end(), "HashString error: No string mapped to hash [%zu]");
+
+        return stringDatabase[hash];
+    }
+#endif
 }

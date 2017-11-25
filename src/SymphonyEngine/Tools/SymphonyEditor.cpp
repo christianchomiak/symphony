@@ -169,6 +169,7 @@ namespace Symphony
             return;
         }
 
+        std::string rootName = root->name.GetString();
 
         ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2); // Increase spacing to differentiate leaves from expanded contents.
         
@@ -181,7 +182,7 @@ namespace Symphony
         if (children.size() == 0)
         {
             // Leaf: The only reason we have a TreeNode at all is to allow selection of the leaf. Otherwise we can use BulletText() or TreeAdvanceToLabelPos()+Text().
-            ImGui::TreeNodeEx((void*)root, node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen, root->name.c_str());
+            ImGui::TreeNodeEx((void*)root, node_flags | ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen, rootName.c_str());
             /*if (ImGui::IsItemClicked())
             {
                 node_clicked = i;
@@ -190,7 +191,7 @@ namespace Symphony
         else
         {
             // Node
-            bool node_open = ImGui::TreeNodeEx((void*)root, node_flags, root->name.c_str());
+            bool node_open = ImGui::TreeNodeEx((void*)root, node_flags, rootName.c_str());
             /*if (ImGui::IsItemClicked())
             {
                 node_clicked = i;

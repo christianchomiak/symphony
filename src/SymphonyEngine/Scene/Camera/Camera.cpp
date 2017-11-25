@@ -4,6 +4,8 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "../../Rendering/Mesh/MeshHelper.h"
+
 namespace Symphony
 {
 
@@ -64,7 +66,7 @@ namespace Symphony
         skybox.shader = sBox.shader;
         skybox.mesh = sBox.mesh;
 
-        if (!skybox.mesh) skybox.mesh = Mesh::Cube();
+        if (!skybox.mesh) skybox.mesh = MeshHelper::CreateCube();
     }
 
     void Camera::SetSkybox(unsigned int newSkybox, Shader* skyboxShader)
@@ -72,7 +74,7 @@ namespace Symphony
         skybox.skyboxID = newSkybox;
         skybox.shader = skyboxShader;
 
-        if (!skybox.mesh) skybox.mesh = Mesh::Cube();
+        if (!skybox.mesh) skybox.mesh = MeshHelper::CreateCube();
     }
 
     void Camera::RenderSkybox() const
