@@ -30,7 +30,7 @@ namespace Symphony
 
             const bool mappingIsOk = stringDatabase[hash] == string;
 
-            AssertF(mappingIsOk, "HashString error: hash %zu maps to both \"%s\" and \"%s\".");
+            AssertF(mappingIsOk, "HashString error: hash %zu maps to both \"%s\" and \"%s\".", stringDatabase[hash], string);
 
             return mappingIsOk;
         }
@@ -53,20 +53,20 @@ namespace Symphony
 #ifdef _DEBUG
                 if (!MapHashToString(tempHash, processedString))
                 {
-                    tempHash = 0;
+                    tempHash = 0u;
                 }
 #endif
             }
             else
             {
-                tempHash = 0;
+                tempHash = 0u;
             }
 
             hash = tempHash;
         }
 
     public:
-        HashString() : hash(0)
+        HashString() : hash(0u)
         {
         }
 
@@ -86,7 +86,7 @@ namespace Symphony
 
         inline bool IsValid() const
         {
-            return hash != 0;
+            return hash != 0u;
         }
 
         inline operator bool() const
