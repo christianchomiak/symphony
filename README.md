@@ -9,7 +9,7 @@ Basic game engine made in C++
 * SOIL 2 (2017-07-30)
 * FreeType 2.8.0
 * TinyXML2 5.0.1
-* ImGUI 1.49
+* ImGUI 1.52
 
 ##etc
 Current support only for x86 builds
