@@ -180,7 +180,7 @@ namespace Symphony
 
                 ImGui::Separator();
 
-                ImGui::AlignFirstTextHeightToWidgets();
+                ImGui::AlignTextToFramePadding();
                 ImGui::PushItemWidth(50);
                 ImGui::PushAllowKeyboardFocus(false);
                 int rows_backup = Rows;

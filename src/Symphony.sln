@@ -1,14 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SymphonyEngine", "SymphonyEngine\SymphonyEngine.vcxproj", "{FBE457F3-3BB5-46E1-B6D1-921A927C44B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90} = {D2329A7A-F1E7-43BC-9E04-6D6668099A90}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SymphonyDemo", "SymphonyDemo\SymphonyDemo.vcxproj", "{6B0CEF5C-8594-4688-ABF7-7BC6873B2D42}"
 	ProjectSection(ProjectDependencies) = postProject
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90} = {D2329A7A-F1E7-43BC-9E04-6D6668099A90}
 		{FBE457F3-3BB5-46E1-B6D1-921A927C44B4} = {FBE457F3-3BB5-46E1-B6D1-921A927C44B4}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "ImGui\ImGui.vcxproj", "{D2329A7A-F1E7-43BC-9E04-6D6668099A90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,8 +40,19 @@ Global
 		{6B0CEF5C-8594-4688-ABF7-7BC6873B2D42}.Release|x64.Build.0 = Release|x64
 		{6B0CEF5C-8594-4688-ABF7-7BC6873B2D42}.Release|x86.ActiveCfg = Release|Win32
 		{6B0CEF5C-8594-4688-ABF7-7BC6873B2D42}.Release|x86.Build.0 = Release|Win32
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Debug|x64.ActiveCfg = Debug|x64
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Debug|x64.Build.0 = Debug|x64
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Debug|x86.ActiveCfg = Debug|Win32
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Debug|x86.Build.0 = Debug|Win32
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Release|x64.ActiveCfg = Release|x64
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Release|x64.Build.0 = Release|x64
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Release|x86.ActiveCfg = Release|Win32
+		{D2329A7A-F1E7-43BC-9E04-6D6668099A90}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85453DA8-8465-4450-9C09-80388EE56B34}
 	EndGlobalSection
 EndGlobal

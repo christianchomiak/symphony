@@ -91,7 +91,7 @@ namespace Symphony
         DrawSceneTreeNode(currentScene->GetSceneUIRoot());
 
         ImGui::NextColumn();
-        ImGui::AlignFirstTextHeightToWidgets();
+        ImGui::AlignTextToFramePadding();
         ImGui::Text("my sailor is rich");
 
         ImGui::NextColumn();
@@ -112,12 +112,12 @@ namespace Symphony
             static void ShowDummyObject(const char* prefix, int uid)
             {
                 ImGui::PushID(uid);                      // Use object uid as identifier. Most commonly you could also use the object pointer as a base ID.
-                ImGui::AlignFirstTextHeightToWidgets();  // Text and Tree nodes are less high than regular widgets, here we add vertical spacing to make the tree lines equal high.
+                ImGui::AlignTextToFramePadding();  // Text and Tree nodes are less high than regular widgets, here we add vertical spacing to make the tree lines equal high.
                 bool node_open = ImGui::TreeNode("Object", "%s_%u", prefix, uid);
                 
                 ImGui::NextColumn();
 
-                ImGui::AlignFirstTextHeightToWidgets();
+                ImGui::AlignTextToFramePadding();
                 ImGui::Text("my sailor is rich");
                 ImGui::NextColumn();
                 if (node_open)
@@ -132,7 +132,7 @@ namespace Symphony
                         }
                         else
                         {
-                            ImGui::AlignFirstTextHeightToWidgets();
+                            ImGui::AlignTextToFramePadding();
                             // Here we use a Selectable (instead of Text) to highlight on hover
                             //ImGui::Text("Field_%d", i);
                             char label[32];
