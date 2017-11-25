@@ -11,7 +11,10 @@ namespace Symphony
 {
     bool MutableMesh::UpdateVertices(glm::vec3* newVertexData, int numberOfNewVertexData)
     {
-        if (numberOfNewVertexData != numberOfVertices) return false;
+        if (numberOfNewVertexData != numberOfVertices)
+        {
+            return false;
+        }
 
         for (size_t i = 0; i < numberOfVertices; ++i)
         {

@@ -7,13 +7,18 @@
 
 namespace Symphony
 {
-    std::map<const char*, unsigned int> TextureManager::texturePool;
+    std::map<HashString, uint> TextureManager::texturePool;
 
-    Texture TextureManager::LoadTexture(const char* textureFilename, Texture::WrappingType typeOfWrapping,
+    Texture TextureManager::LoadTexture(HashString textureAlias, const char* textureFilename, Texture::WrappingType typeOfWrapping,
                                         Texture::FilteringType filtering, bool flipY, Texture::Transparency transparency)
     {
-        Texture newTexture = Texture(0, (transparency != Texture::Transparency::NONE ? Texture::WrappingType::CLAMP_TO_EDGE : typeOfWrapping), filtering);
-        auto id = texturePool[textureFilename];
+        const uint textureId = textureAlias.GetHash();
+        const Texture::WrappingType wrappingMode = transparency != Texture::Transparency::NONE
+                                                 ? Texture::WrappingType::CLAMP_TO_EDGE
+                                                 : typeOfWrapping;
+
+        Texture newTexture = Texture(textureId, wrappingMode, filtering);
+        auto id = texturePool[textureAlias];
 
         if (id == 0) //The texture doesn't exist
         {
@@ -32,12 +37,12 @@ namespace Symphony
             if (id == 0)
             {
                 LogErrorF("SOIL loading error: %s", SOIL_last_result());
-                LogErrorF("Couldn't load texture: %s", textureFilename);
+                LogErrorF("Couldn't load texture: [%s] in path [%s]", textureAlias.GetCString(), textureFilename);
                 return newTexture;
             }
             else
             {
-                texturePool[textureFilename] = id;
+                texturePool[textureAlias] = id;
             }
         }
 
@@ -47,17 +52,14 @@ namespace Symphony
         return newTexture;
     }
 
-    GLuint TextureManager::LoadSkybox(const char* skyboxName,
+    GLuint TextureManager::LoadSkybox(HashString  skyboxAlias,
                                       const char* skyboxPositiveX, const char* skyboxNegativeX,
                                       const char* skyboxPositiveY, const char* skyboxNegativeY,
                                       const char* skyboxPositiveZ, const char* skyboxNegativeZ)
     {
-
-        GLuint newSkybox;
-
-        if (texturePool.find(skyboxName) == texturePool.end())
+        if (texturePool.find(skyboxAlias) == texturePool.end())
         {
-            newSkybox = SOIL_load_OGL_cubemap
+            GLuint newSkybox = SOIL_load_OGL_cubemap
             (
                 skyboxPositiveX,
                 skyboxNegativeX,
@@ -73,17 +75,13 @@ namespace Symphony
             if (newSkybox == 0)
             {
                 LogErrorF("SOIL loading error: %s", SOIL_last_result());
-                LogErrorF("Couldn't load skybox: %s", skyboxName);
+                LogErrorF("Couldn't load skybox: [%s]", skyboxAlias.GetCString());
             }
 
             return newSkybox;
         }
-        else
-        {
-            newSkybox = texturePool[skyboxName];
-        }
-        
-        return newSkybox;
+
+        return texturePool[skyboxAlias];
     }
 
     void TextureManager::FreeTexture(Texture& t)
@@ -91,16 +89,16 @@ namespace Symphony
         glDeleteTextures(1, &t.id);
     }
 
-    void TextureManager::FreeTexture(const char* textureFilename)
+    void TextureManager::FreeTexture(HashString textureAlias)
     {
-        auto tID = texturePool[textureFilename];
+        uint tID = texturePool[textureAlias];
         
         //TO-DO: probably this check won't be necessary as a texture id = 0
         //       is treated as null by OpenGL?
         if (tID != 0)
         {
             glDeleteTextures(1, &tID);
-            texturePool.erase(textureFilename);
+            texturePool.erase(textureAlias);
         }
     }
     
@@ -109,7 +107,7 @@ namespace Symphony
         Log("[Deleting textures]");
         for (const auto& kv : texturePool)
         {
-            LogF("\tDeleting texture: %s", kv.first);
+            LogF("\tDeleting texture: [%s]", kv.first.GetCString());
             glDeleteTextures(1, &kv.second);
         }
         texturePool.clear();

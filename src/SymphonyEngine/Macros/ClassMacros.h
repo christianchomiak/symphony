@@ -10,7 +10,7 @@
         NO_COPY_CONSTRUCTOR(Class)\
         NO_ASSIGNMENT_OPERATOR(Class)
 
-//This should be accompanied by the initialisation of `instance` in the .cpp
+//This should be accompanied by SINGLETON_INSTANCE_INIT() in the .cpp
 #define SINGLETON(T) \
         protected:\
             static T* instance;\

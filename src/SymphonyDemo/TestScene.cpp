@@ -107,7 +107,8 @@ void TestScene::Initialise()
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(MeshHelper::CreateCube(),
-            TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/window.png),
+            TextureManager::LoadTexture("TEXTURE_WINDOW",
+                                        RESOURCES_FOLDER(Textures/window.png),
                                         Texture::WrappingType::CLAMP,
                                         Texture::FilteringType::LINEAR,
                                         true, Texture::Transparency::SEMI),
@@ -141,7 +142,7 @@ void TestScene::Initialise()
     AddGameObject(cube);
     cube->AddRenderObject(
         new RenderObject(MeshHelper::CreateCube(),
-            TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/grass.png), Texture::WrappingType::CLAMP, Texture::FilteringType::NEAREST, true, Texture::Transparency::FULL),
+            TextureManager::LoadTexture("TEXTURE_GRASS", RESOURCES_FOLDER(Textures/grass.png), Texture::WrappingType::CLAMP, Texture::FilteringType::NEAREST, true, Texture::Transparency::FULL),
             Shader::GetShader("TRANSPARENT")));
     cube->GetRenderObject()->SetBoundingRadius(1.5f);
     cube->transform.SetLocalPosition(light->transform.GetLocalPosition());
@@ -154,7 +155,7 @@ void TestScene::Initialise()
     AddGameObject(hMap);
     hMap->AddRenderObject(
         new RenderObject(MeshHelper::CreateHeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.0f),
-            TextureManager::LoadTexture(RESOURCES_FOLDER(Textures/hmTexture.jpg), Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
+            TextureManager::LoadTexture("TEXTURE_HEIGHTMAP", RESOURCES_FOLDER(Textures/hmTexture.jpg), Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
             Shader::GetShader("PHONG")));
     hMap->transform.SetLocalPosition(0, 0, -100);
     hMap->transform.Scale(0.1f);

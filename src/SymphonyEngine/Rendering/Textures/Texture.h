@@ -6,9 +6,9 @@ namespace Symphony
     {
         friend class TextureManager;
     public:
-        enum WrappingType { REPEAT, MIRRORED_REPEAT, CLAMP, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
-        enum FilteringType { NEAREST, LINEAR, TRILINEAR };
-        enum Transparency { NONE, SEMI, FULL };
+        enum class WrappingType  { REPEAT, MIRRORED_REPEAT, CLAMP, CLAMP_TO_EDGE, CLAMP_TO_BORDER };
+        enum class FilteringType { NEAREST, LINEAR, TRILINEAR };
+        enum class Transparency  { NONE, SEMI, FULL };
 
         WrappingType wrapping;
 
@@ -24,9 +24,9 @@ namespace Symphony
 
         void CopyValuesFromTexture(const Texture& original)
         {
-            id = original.id;
-            wrapping = original.wrapping;
-            filter = original.filter;
+            id           = original.id;
+            filter       = original.filter;
+            wrapping     = original.wrapping;
             transparency = original.transparency;
         }
         

@@ -19,8 +19,6 @@ namespace Symphony
         MAX_BUFFER
     };
     
-    class MutableMesh;
-
     //TO-DO: Provide means to have pooled meshes and individual meshes (whose lifetimes are determined by the programmer)
     class Mesh
     {

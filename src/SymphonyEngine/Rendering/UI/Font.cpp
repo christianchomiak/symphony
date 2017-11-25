@@ -7,7 +7,7 @@
 
 namespace Symphony
 {
-    std::map<const char*, Font*> Font::fontPool;
+    std::map<HashString, Font*> Font::fontPool;
 
     Font::Font()
         : Font("NewFont")
@@ -61,7 +61,7 @@ namespace Symphony
 
         if (Font::Exists(fontName))
         {
-            LogWarningF("WARNING: There's an existing font named %s, returning that", fontName);
+            LogWarningF("WARNING: There's an existing font named [%s], returning that", fontName);
             return Font::Find(fontName);
         }
 
@@ -132,7 +132,7 @@ namespace Symphony
 
         fontPool[fontName] = newFont;
 
-        LogF("Loaded font %s from path %s", fontName, fontPath);
+        LogF("Loaded font [%s] from path [%s]", fontName, fontPath);
 
         return newFont;
     }
@@ -142,7 +142,7 @@ namespace Symphony
         Log("[Deleting fonts]");
         for (const auto& kv : fontPool)
         {
-            LogF("[Deleting font %s]", kv.first);
+            LogF("Deleting font [%s]", kv.first.GetCString());
             delete kv.second;
         }
         fontPool.clear();

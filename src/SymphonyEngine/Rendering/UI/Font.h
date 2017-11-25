@@ -6,6 +6,8 @@
 #define GLEW_STATIC
 #include <GLEW/GL/glew.h>
 
+#include "../../Utilities/HashString.h"
+
 namespace Symphony
 {
     struct FontCharacter
@@ -53,7 +55,7 @@ namespace Symphony
             static void UnloadAll();
 
         protected:
-            static std::map<const char*, Font*> fontPool;
+            static std::map<HashString, Font*> fontPool;
     };
 
     inline void Font::AddGlyph(GLchar glyph, FontCharacter& newFontCharacter)

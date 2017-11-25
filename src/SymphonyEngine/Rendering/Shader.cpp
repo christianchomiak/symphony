@@ -28,13 +28,16 @@ namespace Symphony
         glDeleteProgram(programID);
     }
 
-    /*static*/ Shader* Shader::GetShader(HashString shaderName)
+    /*static*/
+    Shader* Shader::GetShader(HashString shaderName)
     {
         if (ShaderExists(shaderName))
         {
             return shaderPool[shaderName];
         }
-        AssertF(false, "Trying to use an invalid name (\"%s\") to get a shader.", shaderName.GetCString());
+
+        AssertF(false, "No shader named [%s] was found.", shaderName.GetCString());
+
         return nullptr;
     }
 
@@ -160,11 +163,11 @@ namespace Symphony
         //There's no point in creating the same shader over and over again
         if (ShaderExists(shaderName))
         {
-            LogF("Using previously loaded shader: %s", shaderName.GetString().c_str());
+            LogF("Using previously loaded shader: [%s]", shaderName.GetCString());
             return shaderPool[shaderName];
         }
 
-        LogF("Creating new shader: \"%s\"", shaderName.GetString().c_str());
+        LogF("Creating new shader: [%s]", shaderName.GetCString());
 
         Shader* newShader = new Shader();
 

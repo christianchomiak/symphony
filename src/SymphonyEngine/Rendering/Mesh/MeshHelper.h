@@ -3,6 +3,8 @@
 #include "Mesh.h"
 #include "MutableMesh.h"
 
+#include "../../Macros/ClassMacros.h"
+
 namespace Symphony
 {
     class MeshHelper
@@ -15,5 +17,8 @@ namespace Symphony
         static Mesh* CreateSurface(size_t width, size_t height, float sizeX, float sizeZ);
         static Mesh* CreateCoordinateSystem(float size = 1.f);
         static MutableMesh* CreateTextMesh();
+
+        NO_DEFAULT_CONSTRUCTORS(MeshHelper)
+        NO_DESTRUCTOR(MeshHelper)
     };
 }

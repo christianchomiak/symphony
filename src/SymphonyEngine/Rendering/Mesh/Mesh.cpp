@@ -35,10 +35,14 @@ namespace Symphony
         glm::vec3 n;
 
         if (!normals)
+        {
             normals = new glm::vec3[numberOfVertices];
+        }
 
         for (uint i = 0; i < numberOfVertices; ++i)
+        {
             normals[i] = glm::vec3();
+        }
 
         if (indices) //Generate per-vertex normals
         {
