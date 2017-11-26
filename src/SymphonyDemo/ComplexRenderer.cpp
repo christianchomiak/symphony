@@ -150,7 +150,7 @@ void ComplexRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObjec
         Shader const& objectShader = *(rObject->GetShader()); //TO-DO: Check if shader is valid!
         objectShader.Use();
 
-        if (rObject->GetMesh()->AllowFaceCulling())
+        if (rObject->GetMesh()->IsFaceCullingEnabled())
         {
             glEnable(GL_CULL_FACE);
             glCullFace(GL_BACK);

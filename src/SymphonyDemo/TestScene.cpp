@@ -150,6 +150,15 @@ void TestScene::Initialise()
     cube->transform.Scale(5.f);
 
 
+    GameObject* floor = new GameObject("Floor");
+    AddGameObject(floor);
+    floor->AddRenderObject(
+        new RenderObject(MeshHelper::CreateCube(8.0f),
+            TextureManager::LoadTexture("TEXTURE_CHESSBOARD", RESOURCES_FOLDER(Textures/chessboard.png), Texture::WrappingType::REPEAT, Texture::FilteringType::NEAREST),
+            Shader::GetShader("PHONG")));
+    floor->transform.SetLocalPosition(100, 100, 100);
+    floor->transform.SetLocalScale(100, 5, 100);
+    floor->GetRenderObject()->GetMesh()->EnableFaceCulling();
 
     GameObject* hMap = new GameObject("Height Map");
     AddGameObject(hMap);
@@ -157,18 +166,18 @@ void TestScene::Initialise()
         new RenderObject(MeshHelper::CreateHeightMap(RESOURCES_FOLDER(Textures/hm2.png), 16.0f, 16.0f, 1000.0f),
             TextureManager::LoadTexture("TEXTURE_HEIGHTMAP", RESOURCES_FOLDER(Textures/hmTexture.jpg), Texture::WrappingType::REPEAT, Texture::FilteringType::TRILINEAR),
             Shader::GetShader("PHONG")));
-    hMap->transform.SetLocalPosition(0, 0, -100);
+    hMap->transform.SetLocalPosition(0, -100, 0);
     hMap->transform.Scale(0.1f);
 
 
-    /*PerspectiveCamera* cam = new PerspectiveCamera(45.f);
-    //OrthographicCamera* cam = new OrthographicCamera(-1, 1, 1, -1);
-    cam->name = "Camera";
-    AddGameObject(cam);*/
+        /*PerspectiveCamera* cam = new PerspectiveCamera(45.f);
+        //OrthographicCamera* cam = new OrthographicCamera(-1, 1, 1, -1);
+        cam->name = "Camera";
+        AddGameObject(cam);*/
 
-    /*txt = new Text("String", glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f),
-                   glm::vec3(1.f, 1.f, 1.f), 1.f, Text::HorizontalCentering::HCENTER);
-    AddText(txt);*/
+        /*txt = new Text("String", glm::vec3(Screen::Width() * 0.5f, Screen::Height() * 0.5f, 0.5f),
+                       glm::vec3(1.f, 1.f, 1.f), 1.f, Text::HorizontalCentering::HCENTER);
+        AddText(txt);*/
     
     
     //TEXT

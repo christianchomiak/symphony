@@ -13,7 +13,7 @@ public:
     FPSCounterObject() = delete;
     
     explicit FPSCounterObject(const Text& text)
-        : Text2D(text)
+        : Text2D(text, "FPS_COUNTER")
     {
     }
 

@@ -83,7 +83,9 @@ namespace Symphony
         ImGui::Text("Gameplay");
 
         if (align_label_with_current_x_position)
+        {
             ImGui::Indent(ImGui::GetTreeNodeToLabelSpacing());
+        }
 
         DrawSceneTreeNode(currentScene->GetSceneRoot());
 
@@ -97,7 +99,9 @@ namespace Symphony
         ImGui::NextColumn();
 
         if (align_label_with_current_x_position)
+        {
             ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
+        }
 
         /*if (ImGui::TreeNode("Root"))
         {
@@ -222,7 +226,6 @@ namespace Symphony
         {
             ImGui::ShowTestWindow();
         }
-
 
         /*static char input[128] = "Enter something...";
 

@@ -71,7 +71,7 @@ void SimpleRenderer::RenderCamera(Camera* cam, const std::vector<OrderableObject
         Shader const& ss = *(rObject->GetShader());
         ss.Use();
 
-        if (rObject->GetMesh()->AllowFaceCulling())
+        if (rObject->GetMesh()->IsFaceCullingEnabled())
         {
             glEnable(GL_CULL_FACE);
             glCullFace(GL_BACK);

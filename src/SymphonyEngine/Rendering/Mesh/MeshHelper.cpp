@@ -92,7 +92,7 @@ namespace Symphony
         return mesh;
     }
 
-    Mesh* MeshHelper::CreateCube()
+    Mesh* MeshHelper::CreateCube(float textureRepetitionFactor)
     {
         Mesh* mesh = new Mesh();
 
@@ -159,53 +159,55 @@ namespace Symphony
         ///TEXTURE COORDINATE DATA
         mesh->textureCoordinates = new glm::vec2[mesh->numberOfVertices];
 
+        float textureRepetition = textureRepetitionFactor <= 0.0f ? 1.0f : textureRepetitionFactor;
+
         //Bottom
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
 
         //Top
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
 
         //Front
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
 
         //Back
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
 
         //Left
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
 
         //Right
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 0.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, 0.0f);
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(1.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(textureRepetition, textureRepetition);
         mesh->textureCoordinates[index++] = glm::vec2(0.0f, 0.0f);
-        mesh->textureCoordinates[index++] = glm::vec2(0.0f, 1.0f);
+        mesh->textureCoordinates[index++] = glm::vec2(0.0f, textureRepetition);
 
 
 

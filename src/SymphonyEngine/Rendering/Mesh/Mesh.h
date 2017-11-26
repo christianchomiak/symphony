@@ -25,13 +25,19 @@ namespace Symphony
     public:
         friend class MeshHelper;
 
+        //TODO: This property should be independent from the mesh.
+        //      The RenderObject should have a pointer to the mesh (in order to save memory!)
+        //      and have a MeshProperties (tentative name) holding instance-specific properties.
         bool allowFaceCulling;
 
         ~Mesh();
 
         void Render() const;
         void BufferData() const;
-        bool AllowFaceCulling() const;
+        bool IsFaceCullingEnabled() const;
+        void EnableFaceCulling();
+        void DisableFaceCulling();
+        void SetFaceCullingStatus(bool cullEnabled);
 
         uint GetVBO() const;
         uint GetVAO() const;
@@ -71,8 +77,23 @@ namespace Symphony
         return vaoID;
     }
 
-    inline bool Mesh::AllowFaceCulling() const
+    inline bool Mesh::IsFaceCullingEnabled() const
     {
         return allowFaceCulling;
+    }
+
+    inline void Mesh::EnableFaceCulling()
+    {
+        allowFaceCulling = true;
+    }
+
+    inline void Mesh::DisableFaceCulling()
+    {
+        allowFaceCulling = false;
+    }
+
+    inline void Mesh::SetFaceCullingStatus(bool cullEnabled)
+    {
+        allowFaceCulling = cullEnabled;
     }
 }
