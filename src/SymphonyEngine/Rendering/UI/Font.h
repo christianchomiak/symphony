@@ -6,7 +6,7 @@
 #define GLEW_STATIC
 #include <GLEW/GL/glew.h>
 
-#include "../../Utilities/HashString.h"
+#include <Utilities/HashString.h>
 
 namespace Symphony
 {

@@ -172,10 +172,10 @@
     <ClInclude Include="Time\StopWatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="global.h">
+    <ClInclude Include="Rendering\Mesh\MeshHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\Mesh\MeshHelper.h">
+    <ClInclude Include="SymphonyGlobal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

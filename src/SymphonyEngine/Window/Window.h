@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "../Macros/ClassMacros.h"
+#include <Macros/ClassMacros.h>
 
 namespace Symphony
 {

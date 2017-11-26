@@ -1,6 +1,6 @@
 #include "Text2D.h"
 
-#include "../../Rendering/Mesh/MeshHelper.h"
+#include <Rendering/Mesh/MeshHelper.h>
 
 namespace Symphony
 {

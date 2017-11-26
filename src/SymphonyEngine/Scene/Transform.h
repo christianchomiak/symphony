@@ -6,16 +6,18 @@
 
 #include <ostream>
 
+#include <Debugging/Debugging.h>
+
 namespace Symphony
 {
     class Transform final
     {
         friend class GameObject;
-        
-    public:
-        GameObject* parent;
 
     protected:
+        const Transform* parent;
+        const GameObject* owner;
+
         glm::vec3 localPosition;
         glm::vec3 localScale;
         glm::quat localRotation;
@@ -29,11 +31,13 @@ namespace Symphony
 
         //glm::quat invertedLocalRotation;
 
-        bool localTransformMatrixDeprecated;
+        bool localTransformIsDirty : 1;
 
     public:
         Transform();
         ~Transform();
+
+        bool IsDirty() const;
 
         void Scale(float amount);
         void Rotate(float xAmount, float yAmount, float zAmount);
@@ -66,6 +70,9 @@ namespace Symphony
 
         void RecomputeLocalTransformMatrix();
 
+        void UpdateCachedParent();
+        void SetOwner(const GameObject* newOwner);
+
     public:
 
         friend std::ostream& operator<<(std::ostream& os, const Transform& obj)
@@ -87,9 +94,14 @@ namespace Symphony
         static glm::vec4 WORLD_UP, WORLD_FORWARD;
     };
     
-    inline const glm::mat4x4& Symphony::Transform::GetLocalTransformMatrix()
+    inline bool Symphony::Transform::IsDirty() const
     {
-        if (localTransformMatrixDeprecated)
+        return localTransformIsDirty;
+    }
+
+    inline const glm::mat4x4& Transform::GetLocalTransformMatrix()
+    {
+        if (localTransformIsDirty)
         {
             //Instead of inlining it in this one,
             //let's call it in a separate function to make this as
@@ -101,58 +113,68 @@ namespace Symphony
         return localTransformMatrix;
     }
 
-    inline const glm::mat4x4& Symphony::Transform::GetWorldTransformMatrix() const
+    inline const glm::mat4x4& Transform::GetWorldTransformMatrix() const
     {
         return worldTransformMatrix;
     }
 
-    inline void Symphony::Transform::SetPosition(float x, float y, float z)
+    inline void Transform::SetPosition(float x, float y, float z)
     {
         glm::vec3 delta = glm::vec3(x, y, z);
         delta -= GetPosition();
         Translate(delta.x, delta.y, delta.z);
     }
     
-    inline const glm::vec3& Symphony::Transform::GetLocalPosition() const
+    inline const glm::vec3& Transform::GetLocalPosition() const
     {
         return localPosition;
     }
 
-    inline const glm::vec3& Symphony::Transform::GetLocalScale() const
+    inline const glm::vec3& Transform::GetLocalScale() const
     {
         return localScale;
     }
 
-    inline const glm::quat& Symphony::Transform::GetLocalRotation() const
+    inline const glm::quat& Transform::GetLocalRotation() const
     {
         return localRotation;
     }
     
     //TO-DO: Can this return `const glm::vec3&` ?
-    inline glm::vec3 Symphony::Transform::GetPosition() const
+    inline glm::vec3 Transform::GetPosition() const
     {
         return glm::vec3(worldTransformMatrix[3]);
     }
 
-    inline const glm::vec3& Symphony::Transform::Forward() const {
+    inline const glm::vec3& Transform::Forward() const
+    {
         return forward;
     }
 
-    inline const glm::vec3& Symphony::Transform::Up() const {
+    inline const glm::vec3& Transform::Up() const {
         return up;
     }
     
-    inline const glm::vec3& Symphony::Transform::Right() const {
+    inline const glm::vec3& Transform::Right() const {
         return right;
     }
         
-    inline void Symphony::Transform::SetPosition(const glm::vec3& newPosition)
+    inline void Transform::SetPosition(const glm::vec3& newPosition)
     {
         SetPosition(newPosition.x, newPosition.y, newPosition.z);
     }
 
-    inline void Symphony::Transform::SetLocalPosition(const glm::vec3& newPosition)
+    inline void Transform::SetLocalPosition(const glm::vec3& newPosition)
     {
         SetLocalPosition(newPosition.x, newPosition.y, newPosition.z);
+    }
+
+    inline void Transform::SetOwner(const GameObject* newOwner)
+    {
+        Assert(newOwner, "Trying to set a non-existing GameObject as the owner of this Transform");
+
+        owner = newOwner;
+
+        UpdateCachedParent();
     }
 }

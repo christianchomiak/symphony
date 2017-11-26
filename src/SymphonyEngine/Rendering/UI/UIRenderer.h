@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Renderer.h"
-#include "../Shader.h"
-#include "../Mesh/Mesh.h"
+#include <Rendering/Renderer.h>
+#include <Rendering/Shader.h>
+#include <Rendering/Mesh/Mesh.h>
 
 namespace Symphony
 {

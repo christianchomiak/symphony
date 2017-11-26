@@ -3,7 +3,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "../../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

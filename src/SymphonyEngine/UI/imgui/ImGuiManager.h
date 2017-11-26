@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Macros/ClassMacros.h"
+#include <Macros/ClassMacros.h>
 
 namespace Symphony
 {

@@ -7,7 +7,7 @@
 
 #ifdef _DEBUG
 
-#   include "../Debugging/Debugging.h"
+#   include <Debugging/Debugging.h>
 
 #   define CHECK_NULL_POINTER(pointer, DEBUG_FUNCTION, FAILURE_INSTRUCTION) \
         if (pointer == nullptr) \

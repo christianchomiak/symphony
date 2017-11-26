@@ -2,7 +2,8 @@
 
 #include <vector>
 #include <map>
-#include "../Utilities/HashString.h"
+
+#include <Utilities/HashString.h>
 
 namespace Symphony
 {

@@ -1,5 +1,5 @@
 #include "StopWatch.h"
-#include "../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 using namespace Symphony;
 

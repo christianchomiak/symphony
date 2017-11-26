@@ -69,13 +69,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\tpl\include;$(SolutionDir)SymphonyEngine;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath);..\$(Configuration);$(SolutionDir)bin\$(Configuration)\</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Demo\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\tpl\include;$(SolutionDir)SymphonyEngine;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath);..\$(Configuration);$(SolutionDir)bin\$(Configuration)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Demo\</IntDir>

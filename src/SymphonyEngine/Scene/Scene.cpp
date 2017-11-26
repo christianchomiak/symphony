@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 using namespace Symphony;
 
@@ -8,7 +8,6 @@ Scene::Scene()
     : Scene(0u)
 {
 }
-
 
 Scene::Scene(HashString sceneId)
     : id(sceneId),
@@ -29,7 +28,7 @@ void Scene::Clean()
     delete root;
     delete uiRoot;
     
-    root = new SceneRoot();
+    root   = new SceneRoot();
     uiRoot = new SceneRoot();
 }
 
@@ -41,31 +40,44 @@ void Scene::Update()
 
 void Scene::AddGameObject(GameObject* go)
 {
-    if (go == nullptr) return;
+    AssertF(go, "Trying to add a null GameObject to Scene [%s]", id.GetCString());
 
-    root->AddChild(go);
+    if (go != nullptr)
+    {
+        root->AddChild(go);
+    }
 }
 
 void Scene::AddGameObject(Camera* cam)
 {
-    if (cam == nullptr) return;
-    
-    cameras.push_back(cam);
-    root->AddChild(cam);
+    AssertF(cam, "Trying to add a null Camera to Scene [%s]", id.GetCString());
+
+    if (cam)
+    {
+        cameras.push_back(cam);
+        root->AddChild(cam);
+    }
 }
 
 void Scene::AddGameObject(Light* light)
 {
-    if (light == nullptr) return;
+    AssertF(light, "Trying to add a null Light to Scene [%s]", id.GetCString());
 
-    lights.push_back(light);
-    root->AddChild(light);
+    if (light)
+    {
+        lights.push_back(light);
+        root->AddChild(light);
+    }
 }
 
 void Scene::AddGameObject(Text2D* text)
 {
-    if (text == nullptr) return;
-    uiRoot->AddChild(text);
+    AssertF(text, "Trying to add a null Text2D to Scene [%s]", id.GetCString());
+
+    if (text)
+    {
+        uiRoot->AddChild(text);
+    }
 }
 
 //TO-DO: Make absolutely sure that cameras that are are registered

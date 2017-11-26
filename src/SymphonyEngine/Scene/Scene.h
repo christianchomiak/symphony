@@ -2,13 +2,14 @@
 
 #include <vector>
 
-#include "../global.h"
+#include <Utilities/HashString.h>
+
+#include <SymphonyGlobal.h>
 #include "GameObject.h"
 #include "SceneRoot.h"
 #include "Camera/Camera.h"
 #include "Light/Light.h"
 #include "Text/Text2D.h"
-#include "../Utilities/HashString.h"
 
 namespace Symphony
 {

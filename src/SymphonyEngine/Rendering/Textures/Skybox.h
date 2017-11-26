@@ -2,8 +2,8 @@
 
 #define GLEW_STATIC
 #include <GLEW/GL/glew.h>
-#include "../Mesh/Mesh.h"
-#include "../Shader.h"
+#include <Rendering/Mesh/Mesh.h>
+#include <Rendering/Shader.h>
 
 namespace Symphony
 {

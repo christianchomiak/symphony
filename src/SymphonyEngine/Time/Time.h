@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iostream>
-//#include "../Utilities/Singleton.h"
-#include "../Macros/ClassMacros.h"
+
+#include <Macros/ClassMacros.h>
 
 namespace Symphony
 {

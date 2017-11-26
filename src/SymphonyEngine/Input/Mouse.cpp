@@ -3,7 +3,7 @@
 #include <cstring>
 #include <iostream>
 
-#include "../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

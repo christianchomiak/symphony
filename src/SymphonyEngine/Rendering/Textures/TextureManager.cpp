@@ -3,7 +3,7 @@
 #include <GLEW/GL/glew.h>
 #include <SOIL2/SOIL2.h>
 
-#include "../../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

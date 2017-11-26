@@ -5,7 +5,7 @@
 #include <SOIL2/SOIL2.h>
 #include <glm/geometric.hpp>
 
-#include "../../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

@@ -12,9 +12,9 @@
 #   include <iostream>
 #endif
 
-#include "../global.h"
-#include "../Macros/PlatformMacros.h"
-#include "../Debugging/Debugging.h"
+#include <SymphonyGlobal.h>
+#include <Macros/PlatformMacros.h>
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

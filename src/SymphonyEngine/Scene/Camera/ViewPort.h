@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Window/Screen.h"
+#include <Window/Screen.h>
 
 namespace Symphony
 {

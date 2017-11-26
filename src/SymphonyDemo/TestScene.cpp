@@ -60,7 +60,7 @@ void TestScene::Initialise()
          RESOURCES_FOLDER(Textures/Skybox/back.jpg  ),
          RESOURCES_FOLDER(Textures/Skybox/front.jpg )),
          Shader::GetShader("SKYBOX"));
-
+    
     Light* light;
 
     int lightType = 0;

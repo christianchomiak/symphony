@@ -1,9 +1,9 @@
 #pragma once
 
 #include <glm/mat4x4.hpp>
-#include "../GameObject.h"
+#include <Scene/GameObject.h>
 #include "ViewPort.h"
-#include "../../Rendering/Textures/Skybox.h"
+#include <Rendering/Textures/Skybox.h>
 
 #include "Frustum.h"
 

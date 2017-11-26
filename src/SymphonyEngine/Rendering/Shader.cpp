@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 
-#include "../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 using namespace std;
 

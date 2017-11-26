@@ -1,9 +1,9 @@
 #include "SymphonyEditor.h"
 
 #include <imgui/imgui.h>
-#include "../Scene/Scene.h"
-#include "../Input/InputManager.h"
-#include "../Time/Time.h"
+#include <Scene/Scene.h>
+#include <Input/InputManager.h>
+#include <Time/Time.h>
 
 
 namespace Symphony

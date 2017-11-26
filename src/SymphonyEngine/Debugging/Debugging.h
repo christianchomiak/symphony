@@ -7,7 +7,7 @@
 #include <iostream>
 
 //#   include "../Macros/PlatformMacros.h"
-#   include "../Macros/ClassMacros.h"
+#   include <Macros/ClassMacros.h>
 
 #   define _WATCHPOINT Debug::DoWatchpoint(__FILE__, __LINE__, __FUNCTION__);
 

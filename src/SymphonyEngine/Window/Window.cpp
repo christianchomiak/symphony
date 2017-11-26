@@ -11,13 +11,13 @@
 
 #include <SOIL2/SOIL2.h>
 
-#include "../Macros/ResourcesMacros.h"
-#include "../Debugging/Debugging.h"
-#include "../Input/InputManager.h"
-#include "../IO/DataReader.h"
-#include "../Utilities/HashString.h"
+#include <Macros/ResourcesMacros.h>
+#include <Debugging/Debugging.h>
+#include <Input/InputManager.h>
+#include <IO/DataReader.h>
+#include <Utilities/HashString.h>
 
-#include "../UI/imgui/ImGuiManager.h"
+#include <UI/imgui/ImGuiManager.h>
 
 #include "Screen.h"
 

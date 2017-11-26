@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "Material.h"
 
-#include "../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

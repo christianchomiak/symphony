@@ -5,11 +5,11 @@
 #include "Keyboard.h"
 #include "GamePad.h"
 
-#include "../Macros/ClassMacros.h"
-#include "../Debugging/Debugging.h"
-#include "../Macros/PlatformMacros.h"
+#include <Macros/ClassMacros.h>
+#include <Debugging/Debugging.h>
+#include <Macros/PlatformMacros.h>
 
-#include "../UI/imgui/ImGuiManager.h"
+#include <UI/imgui/ImGuiManager.h>
 
 namespace Symphony
 {

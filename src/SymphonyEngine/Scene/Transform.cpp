@@ -8,15 +8,28 @@ namespace Symphony
 {
     glm::vec4 Transform::WORLD_UP       = glm::vec4(0.f, 1.f, 0.f, 0.f),
               Transform::WORLD_FORWARD  = glm::vec4(0.f, 0.f, 1.f, 0.f);
-
+    
     Transform::Transform()
-        : localScale(1.f), localTransformMatrixDeprecated(true)
+        : localScale(1.0f), localTransformIsDirty(true), owner(nullptr), parent(nullptr)
     {
-        parent = nullptr;
     }
 
     Transform::~Transform()
     {
+    }
+
+    void Transform::UpdateCachedParent()
+    {
+        Assert(owner, "Caught transform with no owner");
+
+        if (owner && owner->GetParent())
+        {
+            parent = owner->GetParent()->GetTransformPtr();
+        }
+        else
+        {
+            parent = nullptr;
+        }
     }
 
     void Transform::RecomputeLocalTransformMatrix()
@@ -33,7 +46,7 @@ namespace Symphony
         
         //invertedLocalRotation = glm::inverse(localRotation);
 
-        localTransformMatrixDeprecated = false;
+        localTransformIsDirty = false;
     }
 
     void Transform::UpdateWorldMatrix()
@@ -44,12 +57,12 @@ namespace Symphony
         }
         else
         {
-            worldTransformMatrix = parent->transform.GetWorldTransformMatrix() * GetLocalTransformMatrix();
+            worldTransformMatrix = parent->GetWorldTransformMatrix() * GetLocalTransformMatrix();
         }
         
-        up = glm::vec3(worldTransformMatrix * WORLD_UP);
+        up      = glm::vec3(worldTransformMatrix * WORLD_UP);
         forward = glm::vec3(worldTransformMatrix * WORLD_FORWARD);
-        right = glm::cross(up, forward);
+        right   = glm::cross(up, forward);
 
         //We only need to compute two of the directions as the third one
         //can be computed as the cross product of the previous ones
@@ -76,7 +89,7 @@ namespace Symphony
         localPosition.x = x;
         localPosition.y = y;
         localPosition.z = z;
-        localTransformMatrixDeprecated = true;
+        localTransformIsDirty = true;
     }
 
     void Transform::SetLocalScale(float x, float y, float z)
@@ -84,7 +97,7 @@ namespace Symphony
         localScale.x = x;
         localScale.y = y;
         localScale.z = z;
-        localTransformMatrixDeprecated = true;
+        localTransformIsDirty = true;
     }
 
     void Transform::SetLocalRotation(float x, float y, float z)
@@ -94,7 +107,7 @@ namespace Symphony
         /*localScale.x = x;
         localScale.y = y;
         localScale.z = z;*/
-        localTransformMatrixDeprecated = true;
+        localTransformIsDirty = true;
     }
 
     void Transform::Translate(float xAmount, float yAmount, float zAmount)
@@ -102,13 +115,13 @@ namespace Symphony
         localPosition.x += xAmount;
         localPosition.y += yAmount;
         localPosition.z += zAmount;
-        localTransformMatrixDeprecated = true;
+        localTransformIsDirty = true;
     }
     
     void Transform::Scale(float amount)
     {
         localScale *= amount;
-        localTransformMatrixDeprecated = true;
+        localTransformIsDirty = true;
     }
     
     void Transform::Rotate(float xAmount, float yAmount, float zAmount)
@@ -118,6 +131,6 @@ namespace Symphony
         /*localScale.x = x;
         localScale.y = y;
         localScale.z = z;*/
-        localTransformMatrixDeprecated = true;
+        localTransformIsDirty = true;
     }
 }

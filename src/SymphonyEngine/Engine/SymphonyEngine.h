@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../Common.h"
+#include <Common.h>
 
-#include "../Time/Time.h"
-#include "../Scene/Scene.h"
-#include "../Window/Window.h"
-#include "../Macros/ResourcesMacros.h"
-#include "../Tools/SymphonyEditor.h"
-#include "../Utilities/HashString.h"
+#include <Time/Time.h>
+#include <Scene/Scene.h>
+#include <Window/Window.h>
+#include <Macros/ResourcesMacros.h>
+#include <Tools/SymphonyEditor.h>
+#include <Utilities/HashString.h>
 
 using namespace std;
 

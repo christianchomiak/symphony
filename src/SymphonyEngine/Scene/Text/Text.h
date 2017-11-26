@@ -4,7 +4,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-#include "../../Rendering/UI/Font.h"
+
+#include <Rendering/UI/Font.h>
 
 namespace Symphony
 {

@@ -2,20 +2,24 @@
 
 #include <string>
 #include <vector>
+
+#include <Rendering/RenderObject.h>
+#include <Utilities/HashString.h>
+
 #include "Transform.h"
-#include "../Rendering/RenderObject.h"
-#include "../Utilities/HashString.h"
 
 namespace Symphony
 {
     class GameObject
     {
     public:
-        Transform transform;
+        bool enabled : 1;
         HashString name;
-        bool enabled;
+        Transform transform;
 
     protected:
+        GameObject* parent;
+
         //TO-DO: consider using smartpointers
         std::vector<GameObject*> children;
         RenderObject* renderObject;
@@ -29,7 +33,12 @@ namespace Symphony
         //       from the update of its transformation matrix?
         virtual void Update();
         
+        const Transform* GetTransformPtr() const;
+
+        GameObject* GetParent() const;
         void SetParent(GameObject* parent);
+        void RemoveFromCurrentParent();
+
         void AddChild(GameObject* child);
         void RemoveChild(GameObject* child);
 
@@ -38,6 +47,17 @@ namespace Symphony
         void AddRenderObject(RenderObject* rObject);
         RenderObject* GetRenderObject() const;
     };
+
+
+    inline const Transform* GameObject::GetTransformPtr() const
+    {
+        return &transform;
+    }
+
+    inline GameObject* GameObject::GetParent() const
+    {
+        return parent;
+    }
 
     inline const std::vector<GameObject*>& GameObject::GetChildren() const
     {

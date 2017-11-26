@@ -1,7 +1,7 @@
 #include "GamePad.h"
 
 #include <cstring>
-#include "../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

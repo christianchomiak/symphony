@@ -1,6 +1,6 @@
 #include "DataReader.h"
 
-#include "../Debugging/Debugging.h"
+#include <Debugging/Debugging.h>
 
 namespace Symphony
 {

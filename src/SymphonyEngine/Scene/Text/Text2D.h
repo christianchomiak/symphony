@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Text.h"
-#include "../GameObject.h"
+#include <Scene/GameObject.h>
 
 namespace Symphony
 {

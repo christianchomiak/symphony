@@ -4,7 +4,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../../Rendering/Mesh/MeshHelper.h"
+#include <Rendering/Mesh/MeshHelper.h>
 
 namespace Symphony
 {

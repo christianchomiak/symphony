@@ -1,10 +1,11 @@
 #pragma once
 
 #include <map>
+
+#include <Utilities/HashString.h>
+
 #include "Texture.h"
 #include "Skybox.h"
-
-#include "../../Utilities/HashString.h"
 
 namespace Symphony
 {

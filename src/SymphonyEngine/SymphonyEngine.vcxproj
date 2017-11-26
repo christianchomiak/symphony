@@ -70,13 +70,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\tpl\include;.\;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Engine\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\..\tpl\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\tpl\include;.\;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\tpl\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Engine\</IntDir>
@@ -145,7 +145,7 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Debugging\Debugging.h" />
-    <ClInclude Include="global.h" />
+    <ClInclude Include="SymphonyGlobal.h" />
     <ClInclude Include="Macros\ResourcesMacros.h" />
     <ClInclude Include="Rendering\Mesh\MeshHelper.h" />
     <ClInclude Include="Rendering\UI\Font.h" />

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <glm/vec3.hpp>
-#include "../GameObject.h"
-#include "../../Rendering/Shader.h"
+#include <Scene/GameObject.h>
+#include <Rendering/Shader.h>
 
 namespace Symphony
 {

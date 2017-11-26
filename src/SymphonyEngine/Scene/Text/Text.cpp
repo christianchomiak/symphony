@@ -1,6 +1,6 @@
 #include "Text.h"
 
-#include "../../Rendering/Color.h"
+#include <Rendering/Color.h>
 
 namespace Symphony
 {

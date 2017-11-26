@@ -6,7 +6,7 @@
 #include <GLEW/GL/glew.h> //GLEW must be included before any other GL-related header files
 #include <GLFW/glfw3.h>
 
-#include "../../Input/InputManager.h"
+#include <Input/InputManager.h>
 //#include "../../Window/Screen.h"
 
 namespace Symphony
