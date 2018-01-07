@@ -1,7 +1,7 @@
-#Symphony
+# Symphony
 Basic game engine made in C++
 
-##Dependencies:
+## Dependencies:
 
 * GLFW 3.2.1
 * GLEW 2.1.0
@@ -11,5 +11,5 @@ Basic game engine made in C++
 * TinyXML2 5.0.1
 * ImGUI 1.52
 
-##etc
+## etc
 Current support only for x86 builds
